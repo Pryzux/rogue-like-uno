@@ -1,3 +1,4 @@
+// An Uno player, either human or AI
 import { type Card } from './Card'
 
 export default interface Player {
