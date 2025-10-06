@@ -6,4 +6,6 @@ export default interface Player {
   hand: Card[];
   calledUno: boolean;
   isHuman: boolean;
+  // cards added to the player's draw pile from modifiers
+  extraCards: Card[]
 }
