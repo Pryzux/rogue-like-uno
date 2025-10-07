@@ -1,9 +1,9 @@
+import { canPlayCard, createDeck, drawOneCard, shuffleDeck } from "./deck";
+import type { GameLogicInterface } from "./gameLogicInterface";
+import type { CardColor } from "./types/Card";
 import type { Game } from "./types/Game";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
-import { createDeck, shuffleDeck, drawOneCard, canPlayCard } from "./deck";
-import type { CardColor } from "./types/Card";
-import type { GameLogicInterface } from "./gameLogicInterface";
 
 // Singleton implementation of GameLogicInterface.
 export class GameLogic implements GameLogicInterface {

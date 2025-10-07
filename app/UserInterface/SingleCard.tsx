@@ -98,7 +98,7 @@ export default function SingleCard(card: Card) {
 
     return (
         <div className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
-            <img src={card.isFaceDown ? '/public/card_images/unoCard-back.png' : determineCardType(card.color, card.type)}
+            <img src={card.isFaceDown ? '/card_images/unoCard-back.png' : determineCardType(card.color, card.type)}
                 alt="Standard back of Uno Card"
                 className="block w-full h-full object-contain" />
         </div>
