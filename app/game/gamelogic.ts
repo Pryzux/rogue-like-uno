@@ -1,7 +1,7 @@
 import type { Game } from "./types/Game";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
-import { createDeck, shuffleDeck, drawOneCard } from "./deck";
+import { createDeck, shuffleDeck, drawOneCard, canPlayCard } from "./deck";
 import type { CardColor } from "./types/Card";
 import type { GameLogicInterface } from "./gameLogicInterface";
 
@@ -136,19 +136,105 @@ export class GameLogic implements GameLogicInterface {
     }
   }
 
-  public playCard(): Game {
-    const match = this.getCurrentUnoMatch();
 
-    // do play card logic
-    // modify it
-    //modiffy winner -> should redirect to home -- ui needs this from bool outside matches
 
-    return this.currentGame;
+  // returns null if play is invalid 
+  public playCard(cardId: string): (Game | null) {
+    // making a copy of the current game 
+    const newGame = structuredClone(this.currentGame)
+    // a reference to the new current match and new current player
+    const newMatch = this.getCurrentUnoMatchFromGame(newGame)
+    const currentPlayer = this.getCurrentPlayer(newGame)
+
+    const card = currentPlayer.hand.find(card => card.id === cardId)
+
+    // check if play is valid - maybe this check should happen somewhere else?
+    if (card && canPlayCard(card, newMatch.discardPile[0], newMatch.currentColor)) {
+      // removing the played card from the player's hand
+      currentPlayer.hand = currentPlayer.hand.filter(card => card.id !== cardId)
+      // adding the played card to the discard pile
+      newMatch.discardPile =[card, ...newMatch.discardPile]
+      newMatch.currentColor = card.color
+
+      if (currentPlayer.hand.length === 0) {
+        // the current player won!
+
+        //handle this
+      }
+
+      // if the card is a reverse card, turn direction must be updated first 
+      if (card.type === 'reverse') {
+        newMatch.turnDirection = (newMatch.turnDirection === 1) ? -1 : 1
+      }
+
+      // Updating the current player!
+      newMatch.currentPlayerIndex = this.getNextPlayerIndex(newMatch)
+
+      if (card.type === 'skip') {
+        // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
+        newMatch.currentPlayerIndex = this.getNextPlayerIndex(newMatch)
+      }
+
+      if (card.type === 'draw2') {
+        // the current player was updated above to the next player, so they have to draw
+        this.drawCards(2, newMatch.players[newMatch.currentPlayerIndex])
+      }
+
+      if (card.type === 'wild') {
+        // handle wild card effects
+        // temporary logic!!!
+        const validColors = ['red', 'blue', 'green', 'yellow']
+        const colorPick =  validColors[Math.floor(Math.random() * validColors.length)]
+        newMatch.currentColor = colorPick as CardColor
+      }
+
+      if (card.type === 'wildDraw4') {
+        this.drawCards(4, newMatch.players[newMatch.currentPlayerIndex])
+        // temporary logic!!!
+        const validColors = ['red', 'blue', 'green', 'yellow']
+        const colorPick =  validColors[Math.floor(Math.random() * validColors.length)]
+        newMatch.currentColor = colorPick as CardColor
+      }
+
+      return newGame
+    } else {
+      // play is invalid
+      return null
+    }
+  }
+
+  // returns what the next current player index should be based on match state and the type of card that was played
+  private getNextPlayerIndex(match: UnoMatch) {
+    let newIndex
+    
+    if (match.turnDirection === 1) {
+      // checking if we're at the last player in the list yet
+      if (match.currentPlayerIndex === match.players.length - 1) {
+        // if we're at the end of the list, loop back around to the beginning
+        newIndex = 0
+      } else {
+        newIndex = match.currentPlayerIndex + 1
+      }
+    } else { // turn direction is reversed
+      if (match.currentPlayerIndex === 0) {
+        // if we're at the beginning of the list, loop back around to the end
+        newIndex = match.players.length - 1
+      } else {
+        newIndex = match.currentPlayerIndex - 1
+      }
+    }
+
+    return newIndex
   }
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
     return this.currentGame!.matches.at(-1)!;
+  }
+
+  // get the current match from a given game, used when making a new copy of the game
+  private getCurrentUnoMatchFromGame(game: Game): UnoMatch {
+    return game.matches.at(-1)
   }
 
   // Get the Player (User)
@@ -160,5 +246,10 @@ export class GameLogic implements GameLogicInterface {
   public getPlayers(): Player[] {
     console.log("All Players Returned: " + this.currentGame.players);
     return this.currentGame.players;
+  }
+
+  // takes in a Game and returns the current player 
+  public getCurrentPlayer(game: Game): Player {
+    return game.players[this.getCurrentUnoMatchFromGame(game).currentPlayerIndex]
   }
 } // end of class
