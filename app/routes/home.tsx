@@ -1,8 +1,7 @@
 import { useState } from "react";
+import { GameLogic } from "~/game/gamelogic";
 import { TestUi } from "~/UserInterface/TestUi";
 import type { Game } from "../game/types/Game";
-import { GameLogic } from "~/game/gamelogic";
-import type { UnoMatch } from "~/game/types/UnoMatch";
 import UnoMatchPage from "./unoMatchPage";
 
 export default function Home(testMode: false) {

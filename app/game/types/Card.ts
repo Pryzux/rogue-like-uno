@@ -18,6 +18,18 @@ export type CardType =
   | "wild"
   | "wildDraw4";
 
+export function makeCard(
+  id: string,
+  type: CardType,
+  color: CardColor,
+  isFaceDown: boolean,
+  value?: number,): Card {
+
+  return {
+    id, type, color, isFaceDown, value
+  }
+}
+
 export interface Card {
   id: string;
   type: CardType;
