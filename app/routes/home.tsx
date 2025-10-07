@@ -9,7 +9,7 @@ export default function Home() {
   // Initialize the game state on first render
   const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
 
-  // Example: Create new Uno Match
+  // Create new Uno Match
   const handleStartNewGame = () => {
     console.log("Starting New Game..");
     GameLogic.get().initializeUno()
