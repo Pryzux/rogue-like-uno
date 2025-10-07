@@ -229,7 +229,7 @@ export class GameLogic implements GameLogicInterface {
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
-    return this.currentGame!.matches.at(-1)!;
+    return structuredClone(this.currentGame!.matches.at(-1)!);
   }
 
   // get the current match from a given game, used when making a new copy of the game
