@@ -1,7 +1,7 @@
 import type { Game } from "./types/Game";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
-import { createDeck, shuffleDeck, drawCard, canPlayCard } from "./deck";
+import { createDeck, shuffleDeck, drawOneCard, canPlayCard } from "./deck";
 import type { CardColor } from "./types/Card";
 import type { GameLogicInterface } from "./gameLogicInterface";
 
@@ -125,6 +125,14 @@ export class GameLogic implements GameLogicInterface {
     );
 
     return this.currentGame;
+  }
+
+  public drawCard(cardNumber: number) {
+
+  }
+
+  public drawCard(cardNumber: number) {
+ 
   }
 
   // returns null if play is invalid
