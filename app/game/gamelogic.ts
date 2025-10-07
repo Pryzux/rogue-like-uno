@@ -1,7 +1,7 @@
 import type { Game } from "./types/Game";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
-import { createDeck, shuffleDeck, drawCard } from "./deck";
+import { createDeck, shuffleDeck, drawCard, canPlayCard } from "./deck";
 import type { CardColor } from "./types/Card";
 import type { GameLogicInterface } from "./gameLogicInterface";
 
@@ -119,9 +119,20 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame;
   }
 
-  public playCard(): Game {
+  // returns null if play is invalid
+  public playCard(cardId: string): (Game | null) {
     const match = this.getCurrentUnoMatch();
+    const currentPlayer = this.getCurrentPlayer()
 
+    const card = currentPlayer.hand.find(card => card.id === cardId)
+
+    // check if play is valid - maybe this check should happen somewhere else?
+    if (card && canPlayCard(card, match.discardPile[0], match.currentColor)) {
+      const newMatch = structuredClone(match)
+    } else {
+      // play is invalid
+      return null
+    }
     // do play card logic
     // modify it
     //modiffy winner -> should redirect to home -- ui needs this from bool outside matches
@@ -143,5 +154,9 @@ export class GameLogic implements GameLogicInterface {
   public getPlayers(): Player[] {
     console.log("All Players Returned: " + this.currentGame.players);
     return this.currentGame.players;
+  }
+
+  public getCurrentPlayer(): Player {
+    return this.currentGame.players[this.getCurrentUnoMatch().currentPlayerIndex]
   }
 } // end of class

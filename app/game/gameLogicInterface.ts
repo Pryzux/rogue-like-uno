@@ -17,11 +17,14 @@ export interface GameLogicInterface {
   getCurrentUnoMatch(): UnoMatch;
 
   // Plays a card within an Uno match.
-  playCard(): Game;
+  playCard(cardId: string): (Game | null);
 
   // Get the Player Information
   getPlayer(): Player;
 
   // Get all the Players
   getPlayers(): Player[];
+
+  // Get current player in the current match
+  getCurrentPlayer(): Player
 }
