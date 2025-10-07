@@ -121,23 +121,45 @@ export class GameLogic implements GameLogicInterface {
 
   // returns null if play is invalid
   public playCard(cardId: string): (Game | null) {
-    const match = this.getCurrentUnoMatch();
+    // making a copy of the current game 
+    const newGame = structuredClone(this.currentGame)
+    this.currentGame = newGame
+    const newMatch = structuredClone(this.getCurrentUnoMatch())
     const currentPlayer = this.getCurrentPlayer()
 
     const card = currentPlayer.hand.find(card => card.id === cardId)
 
     // check if play is valid - maybe this check should happen somewhere else?
-    if (card && canPlayCard(card, match.discardPile[0], match.currentColor)) {
-      const newMatch = structuredClone(match)
+    if (card && canPlayCard(card, newMatch.discardPile[0], newMatch.currentColor)) {
+      const newHand = currentPlayer.hand.filter(card => card.id !== cardId)
+      currentPlayer.hand = newHand
+      newMatch.discardPile =[card, ...newMatch.discardPile]
+
+      if (currentPlayer.hand.length === 0) {
+        // the current player won!
+      }
+
+      // get the index of who the next current player will be
+
+      // see if any game side effects need to happen as a result of the card that was played
+      if (card.type === 'reverse') {
+        newMatch.turnDirection = (newMatch.turnDirection === 1) ? -1 : 1
+
+      } else if (card.type === 'skip') {
+
+      }
+
+
+      //return newGame
     } else {
       // play is invalid
       return null
     }
-    // do play card logic
-    // modify it
-    //modiffy winner -> should redirect to home -- ui needs this from bool outside matches
+  }
 
-    return structuredClone(this.currentGame);
+  // increments current player index on the given match and wraps around if the end of the list is reached
+  private incrementCurrentPlayerIndex() {
+    const match = 
   }
 
   // Get Current Uno Match -- Last Element of the Matches List
@@ -156,6 +178,7 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame.players;
   }
 
+  // takes in a Game and returns the current player 
   public getCurrentPlayer(): Player {
     return this.currentGame.players[this.getCurrentUnoMatch().currentPlayerIndex]
   }
