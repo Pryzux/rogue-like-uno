@@ -136,9 +136,7 @@ export class GameLogic implements GameLogicInterface {
     }
   }
 
-  public drawCard(cardNumber: number) {
- 
-  }
+
 
   // returns null if play is invalid
   public playCard(cardId: string): (Game | null) {
