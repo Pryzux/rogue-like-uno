@@ -129,7 +129,19 @@ export class GameLogic implements GameLogicInterface {
     return structuredClone(this.currentGame);
   }
 
+  // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
     return this.currentGame!.matches.at(-1)!;
   }
-}
+
+  // Get the Player (User)
+  public getPlayer(): Player {
+    console.log("Player Returned: " + this.currentGame.players[0]);
+    return this.currentGame.players[0];
+  }
+
+  public getPlayers(): Player[] {
+    console.log("All Players Returned: " + this.currentGame.players);
+    return this.currentGame.players;
+  }
+} // end of class
