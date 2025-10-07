@@ -149,46 +149,88 @@ export class GameLogic implements GameLogicInterface {
   public playCard(cardId: string): (Game | null) {
     // making a copy of the current game 
     const newGame = structuredClone(this.currentGame)
-    this.currentGame = newGame
-    const newMatch = structuredClone(this.getCurrentUnoMatch())
-    const currentPlayer = this.getCurrentPlayer()
+    // a reference to the new current match and new current player
+    const newMatch = this.getCurrentUnoMatchFromGame(newGame)
+    const currentPlayer = this.getCurrentPlayer(newGame)
 
     const card = currentPlayer.hand.find(card => card.id === cardId)
 
     // check if play is valid - maybe this check should happen somewhere else?
     if (card && canPlayCard(card, newMatch.discardPile[0], newMatch.currentColor)) {
-      const newHand = currentPlayer.hand.filter(card => card.id !== cardId)
-      currentPlayer.hand = newHand
+      // removing the played card from the player's hand
+      currentPlayer.hand = currentPlayer.hand.filter(card => card.id !== cardId)
+      // adding the played card to the discard pile
       newMatch.discardPile =[card, ...newMatch.discardPile]
+      newMatch.currentColor = card.color
 
       if (currentPlayer.hand.length === 0) {
         // the current player won!
+
+        //handle this
       }
 
-      // get the index of who the next current player will be
-
-      // see if any game side effects need to happen as a result of the card that was played
+      // if the card is a reverse card, turn direction must be updated first 
       if (card.type === 'reverse') {
         newMatch.turnDirection = (newMatch.turnDirection === 1) ? -1 : 1
+      }
+      newMatch.currentPlayerIndex = this.getNextPlayerIndex(newMatch)
 
-      } else if (card.type === 'skip') {
-
+      if (card.type === 'skip') {
+        // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
+        newMatch.currentPlayerIndex = this.getNextPlayerIndex(newMatch)
       }
 
+      if (card.type === 'draw2') {
+        // handle draw 2 effects
+      }
 
-      //return newGame
+      if (card.type === 'wild') {
+        // handle wild card effects
+      }
+
+      if (card.type === 'wildDraw4') {
+        // handle wild draw 4 effects
+      }
+
+      return newGame
     } else {
       // play is invalid
       return null
     }
   }
 
-    return this.currentGame;
+  // returns what the next current player index should be based on match state and the type of card that was played
+  private getNextPlayerIndex(match: UnoMatch) {
+    let newIndex
+    
+    if (match.turnDirection === 1) {
+      // checking if we're at the last player in the list yet
+      if (match.currentPlayerIndex === match.players.length - 1) {
+        // if we're at the end of the list, loop back around to the beginning
+        newIndex = 0
+      } else {
+        newIndex = match.currentPlayerIndex + 1
+      }
+    } else { // turn direction is reversed
+      if (match.currentPlayerIndex === 0) {
+        // if we're at the beginning of the list, loop back around to the end
+        newIndex = match.players.length - 1
+      } else {
+        newIndex = match.currentPlayerIndex - 1
+      }
+    }
+
+    return newIndex
   }
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
     return this.currentGame!.matches.at(-1)!;
+  }
+
+  // get the current match from a given game, used when making a new copy of the game
+  private getCurrentUnoMatchFromGame(game: Game): UnoMatch {
+    return game.matches.at(-1)
   }
 
   // Get the Player (User)
@@ -203,7 +245,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // takes in a Game and returns the current player 
-  public getCurrentPlayer(): Player {
-    return this.currentGame.players[this.getCurrentUnoMatch().currentPlayerIndex]
+  public getCurrentPlayer(game: Game): Player {
+    return game.players[this.getCurrentUnoMatchFromGame(game).currentPlayerIndex]
   }
 } // end of class

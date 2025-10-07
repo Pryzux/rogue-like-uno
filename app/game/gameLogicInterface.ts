@@ -29,5 +29,5 @@ export interface GameLogicInterface {
   getPlayers(): Player[];
 
   // Get current player in the current match
-  getCurrentPlayer(): Player
+  getCurrentPlayer(game: Game): Player
 }
