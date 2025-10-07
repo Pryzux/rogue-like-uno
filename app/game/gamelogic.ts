@@ -166,6 +166,8 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === 'reverse') {
         newMatch.turnDirection = (newMatch.turnDirection === 1) ? -1 : 1
       }
+
+      // Updating the current player!
       newMatch.currentPlayerIndex = this.getNextPlayerIndex(newMatch)
 
       if (card.type === 'skip') {
@@ -174,15 +176,24 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === 'draw2') {
-        // handle draw 2 effects
+        // the current player was updated above to the next player, so they have to draw
+        this.drawCards(2, newMatch.players[newMatch.currentPlayerIndex])
       }
 
       if (card.type === 'wild') {
         // handle wild card effects
+        // temporary logic!!!
+        const validColors = ['red', 'blue', 'green', 'yellow']
+        const colorPick =  validColors[Math.floor(Math.random() * validColors.length)]
+        newMatch.currentColor = colorPick as CardColor
       }
 
       if (card.type === 'wildDraw4') {
-        // handle wild draw 4 effects
+        this.drawCards(4, newMatch.players[newMatch.currentPlayerIndex])
+        // temporary logic!!!
+        const validColors = ['red', 'blue', 'green', 'yellow']
+        const colorPick =  validColors[Math.floor(Math.random() * validColors.length)]
+        newMatch.currentColor = colorPick as CardColor
       }
 
       return newGame
