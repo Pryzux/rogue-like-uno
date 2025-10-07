@@ -6,5 +6,6 @@ export interface Card {
   id: string;
   type: CardType;
   color: CardColor;
+  isFaceDown: boolean;
   value?: number;
 }
