@@ -127,8 +127,13 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame;
   }
 
-  public drawCard(cardNumber: number) {
-
+  public drawCards(cardNumber: number, player: Player) {
+    const currentMatch = this.getCurrentUnoMatch()
+    for (let i=0; i++; i<cardNumber) {
+      // remember drawOneCard updates the current match in place if the deck needs to be shuffled
+      const newCard = drawOneCard(currentMatch)
+      player.hand.push(newCard)
+    }
   }
 
   public drawCard(cardNumber: number) {
