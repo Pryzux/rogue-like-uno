@@ -73,7 +73,7 @@ export class GameLogic implements GameLogicInterface {
     //   // Start the first match
     //   initializeUno(game);
 
-    //   console.log("Initialized Game:", JSON.stringify(game, null, 2));
+    console.log("Initialized Game:", JSON.stringify(game, null, 2));
     this.currentGame = game;
     return game;
   }
@@ -84,11 +84,12 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame;
   }
 
-  // Initialize Uno Round (A)
+  // Initialize Uno Round -- Pushes a new Match to Matches[UnoMatch]
   public initializeUno(): Game {
+    // Create a deck
     let deck = shuffleDeck(createDeck());
 
-    // Reset and deal cards
+    // deal cards to all players
     this.currentGame.players.forEach((player) => {
       player.hand = [];
       for (let i = 0; i < 7 && deck.length > 0; i++) {
@@ -115,6 +116,8 @@ export class GameLogic implements GameLogicInterface {
 
     this.currentGame.matches.push(newMatch);
     this.currentGame.status = "Match 1";
+
+    console.log("initializeUno(): New Matched added to Matches List");
 
     return this.currentGame;
   }

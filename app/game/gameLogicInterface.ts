@@ -11,7 +11,7 @@ export interface GameLogicInterface {
   getGame(): Game;
 
   // Initializes a new Uno match.
-  initializeUno(): void;
+  initializeUno(): Game;
 
   // Gets the current Uno math.
   getCurrentUnoMatch(): UnoMatch;

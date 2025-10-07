@@ -12,11 +12,13 @@ export default function Home(testMode: false) {
   // Initialize the game state on first render
   const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
 
-  // Example: reset or start new game
-  const handleReset = () => {
-    console.log("Game Reset.")
-    setGameState(GameLogic.get().resetGame());
-  };
+  // Example: Create new Uno Match
+  const handleStartNewGame = () => {
+    console.log("Starting New Game..")
+    GameLogic.get().initializeUno() // add a match to matches
+    setGameState(GameLogic.get().getGame()) // update state
+    console.log(gameState.matches)
+  }
 
   return (
     <div className="p-6 space-y-4">
@@ -28,19 +30,14 @@ export default function Home(testMode: false) {
         </p>
         <p>
           <span className="font-medium text-amber-800">Players:</span>{" "}
-          {gameState.matches[0].players.map(p => p.name).join(", ")}
-        </p>
-        <p>
-          <span className="font-medium text-amber-800">Your Cards:</span>{" "}
-          {/* Players is a list now, need to add get_player() {gameState.player.hand.map(card => card.value).join(", ") || "(empty)"} */}
+          {gameState.players.map(p => p.name).join(", ")}
         </p>
       </div>
 
       <button
-        onClick={handleReset}
-        className="px-4 py-2 bg-amber-200 border border-amber-300 rounded hover:bg-amber-300"
-      >
-        Reset Game
+        // Clicking will add a new match to the gameState
+        onClick={handleStartNewGame} className="px-4 py-2 bg-amber-200 border border-amber-300 rounded hover:bg-amber-300">
+        Start Game
       </button>
     </div>
   );
