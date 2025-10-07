@@ -1,2 +1,13 @@
 @import "tailwindcss";
 
+/* adding this box style for a single Card */
+.png-box {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px,
+        rgb(51, 51, 51) 0px 0px 0px 3px;
+    border-radius: 8px;
+    /* optional, smooth corners */
+    padding: 1rem;
+    /* optional, spacing inside */
+    display: inline-block;
+    /* keeps box tight around content */
+}
