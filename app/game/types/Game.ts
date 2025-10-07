@@ -4,8 +4,10 @@ import type Player from './Player'
 import type { UnoMatch } from './UnoMatch'
 
 export interface Game {
-  userPlayer: Player
+  player: Player
   matches: UnoMatch[]
-  currentScreen: 'match' | 'chooseModifier' | 'gameOver'
-  modifiers: Modifier[]
+  currentScreen: 'match' | 'chooseModifier' | 'gameOver' | 'home' | null
+  modifiers: Modifier[],
+  winner: null,
+  status: 'Not Started'
 }

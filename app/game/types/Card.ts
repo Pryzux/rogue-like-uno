@@ -4,7 +4,7 @@ export type CardType = 'number' | 'skip' | 'reverse' | 'draw2' | 'wild' | 'wildD
 
 export interface Card {
   id: string;
-  color: CardColor;
   type: CardType;
+  color: CardColor;
   value?: number;
 }
