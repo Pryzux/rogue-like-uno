@@ -127,7 +127,8 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame;
   }
 
-  public drawCards(cardNumber: number, player: Player) {
+  public drawCards(cardNumber: number, playerIndex: number) {
+    const player = this.getPlayerFromIndex[playerIndex]
     const currentMatch = this.getCurrentUnoMatch();
     for (let i = 0; i++; i < cardNumber) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
@@ -177,7 +178,7 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
-        this.drawCards(2, match.players[match.currentPlayerIndex]);
+        this.drawCards(2, match.currentPlayerIndex);
       }
 
       if (card.type === "wild") {
@@ -190,7 +191,7 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wildDraw4") {
-        this.drawCards(4, match.players[match.currentPlayerIndex]);
+        this.drawCards(4, match.currentPlayerIndex);
         // temporary logic!!!
         const validColors = ["red", "blue", "green", "yellow"];
         const colorPick =
@@ -232,7 +233,7 @@ export class GameLogic implements GameLogicInterface {
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
-    return structuredClone(this.currentGame!.matches.at(-1)!);
+    return this.currentGame!.matches.at(-1)!;
   }
 
   // get the current match from a given game, used when making a new copy of the game
@@ -256,5 +257,11 @@ export class GameLogic implements GameLogicInterface {
     return this.getCurrentUnoMatch().players[
       this.getCurrentUnoMatch().currentPlayerIndex
     ];
+  }
+
+  // get a Player instance from the current match given their index in the players array
+  private getPlayerFromIndex(index: number): Player {
+    const currentMatch = this.getCurrentUnoMatch()
+    return currentMatch.players[index]
   }
 } // end of class
