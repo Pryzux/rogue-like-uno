@@ -136,15 +136,6 @@ export class GameLogic implements GameLogicInterface {
     }
   }
 
-  public drawCards(cardNumber: number, player: Player) {
-    const currentMatch = this.getCurrentUnoMatch()
-    for (let i=0; i++; i<cardNumber) {
-      // remember drawOneCard updates the current match in place if the deck needs to be shuffled
-      const newCard = drawOneCard(currentMatch)
-      player.hand.push(newCard)
-    }
-  }
-
   // returns null if play is invalid 
   public playCard(cardId: string): (Game | null) {
     // making a copy of the current game 
