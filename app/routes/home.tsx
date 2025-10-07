@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { GameLogic } from "~/game/gamelogic";
 import { TestUi } from "~/UserInterface/TestUi";
 import type { Game } from "../game/types/Game";
-import { GameLogic } from "~/game/gamelogic";
-import type { UnoMatch } from "~/game/types/UnoMatch";
 import UnoMatchPage from "./unoMatchPage";
 
 export default function Home(testMode: false) {
   //testing flag to enable testUI.tsx
-  const TEST_UI = false;
+  const TEST_UI = true;
   if (TEST_UI) return <TestUi />
 
   // Initialize the game state on first render
