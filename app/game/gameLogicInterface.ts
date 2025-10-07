@@ -20,7 +20,7 @@ export interface GameLogicInterface {
   playCard(): Game;
 
   // draws a number of cards for a given player
-  drawCard(cardNumber: number):
+  drawCards(cardNumber: number, player: Player): void
 
   // Get the Player Information
   getPlayer(): Player;
