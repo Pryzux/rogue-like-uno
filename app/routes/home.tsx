@@ -8,7 +8,7 @@ import UnoMatchPage from "./unoMatchPage";
 
 export default function Home(testMode: false) {
   //testing flag to enable testUI.tsx
-  const TEST_UI = false;
+  const TEST_UI = true;
   if (TEST_UI) return <TestUi />
 
   // Initialize the game state on first render
