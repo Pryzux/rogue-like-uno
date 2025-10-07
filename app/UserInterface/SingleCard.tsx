@@ -1,13 +1,8 @@
 import type { Card, CardColor, CardType } from '~/game/types/Card';
-
-
-
-
-
+import cardBack from "./UIResources/unoCard-back.png";
 
 //type used to populate a map
 type CardKey = `${CardColor}_${CardType}`;
-
 
 //map of color_cardType pairs
 const cardImages: Record<CardKey, string> = {
@@ -98,13 +93,15 @@ function determineCardType(color: string, type: string): string {
     return (img)
 }
 
-
+//determineCardType(card.color, card.type)
 //takes in a Card type, returns an image 
-export default function Card(card: Card) {
+export default function SingleCard(card: Card) {
 
     return (
         <div className="png-box">
-            <img src={determineCardType(card.color, card.type)} alt="Standard back of Uno Card" className="w-full h-full object-contain" />
+            <img src={card.isFaceDown ? cardBack : determineCardType(card.color, card.type)}
+                alt="Standard back of Uno Card"
+                className="w-full h-full object-contain" />
         </div>
     );
 
