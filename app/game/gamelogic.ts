@@ -21,7 +21,7 @@ export class GameLogic implements GameLogicInterface {
 
   // gets God Object 'gameState'
   public getGame(): Game {
-    return this.currentGame;
+    return structuredClone(this.currentGame);
   }
 
   // Initialize High-Level Game State (God State)
@@ -70,12 +70,10 @@ export class GameLogic implements GameLogicInterface {
       status: "Not Started",
     };
 
-    //   // Start the first match
-    //   initializeUno(game);
-
-    //   console.log("Initialized Game:", JSON.stringify(game, null, 2));
+    console.log("Initialized Game");
+    // console.log("Initialized Game:", JSON.stringify(game, null, 2));
     this.currentGame = game;
-    return game;
+    return structuredClone(game);
   }
 
   // Runs Initialize Game () Name Wrapper for Readability
@@ -84,11 +82,12 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame;
   }
 
-  // Initialize Uno Round (A)
+  // Initialize Uno Round -- Pushes a new Match to Matches[UnoMatch]
   public initializeUno(): Game {
+    // Create a deck
     let deck = shuffleDeck(createDeck());
 
-    // Reset and deal cards
+    // deal cards to all players
     this.currentGame.players.forEach((player) => {
       player.hand = [];
       for (let i = 0; i < 7 && deck.length > 0; i++) {
@@ -110,11 +109,20 @@ export class GameLogic implements GameLogicInterface {
       deck,
       discardPile,
       currentColor: startingColor,
-      status: "In Progress",
+      status: "Match 1",
     };
 
     this.currentGame.matches.push(newMatch);
-    this.currentGame.status = "Match 1";
+    this.currentGame.status = "Match Created";
+
+    console.log("initializeUno(): New Matched added to Matches List");
+    // console.log("Match Details: " + this.currentGame.matches[-1]);
+    console.log(
+      "Match Details:",
+      JSON.stringify(this.currentGame.matches),
+      null,
+      2
+    );
 
     return this.currentGame;
   }
@@ -126,7 +134,7 @@ export class GameLogic implements GameLogicInterface {
     // modify it
     //modiffy winner -> should redirect to home -- ui needs this from bool outside matches
 
-    return structuredClone(this.currentGame);
+    return this.currentGame;
   }
 
   // Get Current Uno Match -- Last Element of the Matches List
