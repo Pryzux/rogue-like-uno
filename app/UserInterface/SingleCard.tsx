@@ -82,6 +82,15 @@ const cardImages: Record<CardKey, string> = {
     black_wild: '/UIResources/unoCard-back.png', //never used
     black_wildDraw4: '/UIResources/unoCard-back.png', //never used
 
+    //throwaway components as a new item has been added to card type:
+    red_number: '/UIResources/unoCard-back.png', //never used
+    blue_number: '/UIResources/unoCard-back.png', //never used
+    yellow_number: '/UIResources/unoCard-back.png', //never used
+    black_number: '/UIResources/unoCard-back.png', //never used
+    green_number: '/UIResources/unoCard-back.png', //never used
+
+
+
 };
 
 
