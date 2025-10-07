@@ -19,6 +19,9 @@ export interface GameLogicInterface {
   // Plays a card within an Uno match.
   playCard(): Game;
 
+  // draws a number of cards for a given player
+  drawCards(cardNumber: number, player: Player): void
+
   // Get the Player Information
   getPlayer(): Player;
 

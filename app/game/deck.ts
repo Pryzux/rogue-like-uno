@@ -1,5 +1,6 @@
 // deck.ts
 import type { Card, CardColor } from "./types/Card";
+import type { UnoMatch } from "./types/UnoMatch";
 
 export function createDeck(): Card[] {
 
@@ -52,13 +53,22 @@ export function shuffleDeck(deck: Card[]): Card[] {
 
 }
 
-export function drawCard(deck: Card[]): Card {
-
-  if (deck.length === 0) {
-    throw new Error("Tried to draw from an empty deck");
+// draw one card from a given match and update the draw and discard piles if necessary
+// MODIFIES MATCH IN PLACE!!!!
+export function drawOneCard(match: UnoMatch): Card {
+  // getting the first card in the draw deck list
+  const card = match.deck.shift()
+  // The deck is empty now, so we need to shuffle the discard pile and make that the new deck
+  // We need to save the card currently on top of the discard pile and make that the first card in the new discard pile
+  if (match.deck.length === 0) {
+    const discardPileTopCard = match.discardPile.shift()
+    const newDeck = shuffleDeck(structuredClone(match.discardPile))
+    match.deck = newDeck
+    // the card that was on top of the discard pile starts the new discard pile
+    match.discardPile = [discardPileTopCard]
   }
 
-  return deck.pop()!
+  return card
 
 }
 
