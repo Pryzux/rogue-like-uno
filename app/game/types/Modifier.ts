@@ -33,6 +33,11 @@ export const BUFFS: Modifier[] = [
     description: "You automatically call UNO when down to one card.",
     modifierType: "buff",
   },
+  {
+    name: 'Color Blind',
+    description: 'You can’t play Wilds until you have 3 or fewer cards left.',
+    modifierType: 'debuff'
+  }
 ];
 
 // Debuffs
