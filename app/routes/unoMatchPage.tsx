@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { GameLogic } from "~/game/gamelogic";
 
+import ColorPicker from "~/UserInterface/ColorPicker";
+import Hand from "~/UserInterface/Hand";
+import type { Card, CardColor } from "../game/types/Card";
 import type { Game } from "../game/types/Game";
 import SimpleCard from "../UserInterface/simpleCard";
-import type Player from "../game/types/Player"; 
-import type { Card, CardColor } from "../game/types/Card"
-import ColorPicker from "~/UserInterface/ColorPicker";
-import HandV0 from "~/UserInterface/HandV0";
 
 
 interface GameProps {
@@ -14,10 +13,10 @@ interface GameProps {
     setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
 
-export function UnoMatchPage({ gameState, setGameState }: GameProps) { 
+export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
-    const [colorPickerCardId, setColorPickerCardId] = useState('') 
+    const [colorPickerCardId, setColorPickerCardId] = useState('')
 
     const drawCard = (cardNumber: number) => {
 
@@ -43,11 +42,11 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
             setShowColorPicker(true)
         } else {
             const success = GameLogic.get().playCard(card.id)
-        if (success) {
-            setGameState(GameLogic.get().getGame())
-            setMatchState(GameLogic.get().getCurrentUnoMatch())
+            if (success) {
+                setGameState(GameLogic.get().getGame())
+                setMatchState(GameLogic.get().getCurrentUnoMatch())
+            }
         }
-    }
     }
 
     useEffect(() => {
@@ -117,7 +116,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
             {/* DRAW + DISCARD */}
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-                {showColorPicker ? <ColorPicker cardId={colorPickerCardId} handleChoice={handleColorPickerChoice}/> : null}
+                {showColorPicker ? <ColorPicker cardId={colorPickerCardId} handleChoice={handleColorPickerChoice} /> : null}
                 <div>
                     <h2 className="font-bold text-lg">Draw deck</h2>
                     <div className="w-24 h-36 flex items-center justify-center">
@@ -151,9 +150,9 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                             </div>
 
                             {/* Render player's hand */}
-                            {/* TODO: Replace with Hand.tsx */}
-                            <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
-                            
+                            {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
+                            {/* <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> */}
+                            <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                         </div>
                     ))}
                 </div>
