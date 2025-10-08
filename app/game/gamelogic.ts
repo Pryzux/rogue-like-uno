@@ -128,7 +128,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
-    const player = this.getPlayerFromIndex[playerIndex]
+    const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
     for (let i = 0; i++; i < cardNumber) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
@@ -146,10 +146,7 @@ export class GameLogic implements GameLogicInterface {
     const card = currentPlayer.hand.find((card) => card.id === cardId);
 
     // check if play is valid - maybe this check should happen somewhere else?
-    if (
-      card &&
-      canPlayCard(card, match.discardPile[0], match.currentColor!)
-    ) {
+    if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
         (card) => card.id !== cardId
@@ -199,7 +196,7 @@ export class GameLogic implements GameLogicInterface {
         match.currentColor = colorPick as CardColor;
       }
 
-      return this.getGame()
+      return this.getGame();
     } else {
       // play is invalid
       return null;
@@ -260,8 +257,8 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // get a Player instance from the current match given their index in the players array
-  private getPlayerFromIndex(index: number): Player {
-    const currentMatch = this.getCurrentUnoMatch()
-    return currentMatch.players[index]
+  public getPlayerFromIndex(index: number): Player {
+    const currentMatch = this.getCurrentUnoMatch();
+    return currentMatch.players[index];
   }
 } // end of class

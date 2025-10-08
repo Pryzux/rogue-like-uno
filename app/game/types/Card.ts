@@ -23,17 +23,19 @@ export function makeCard(
   type: CardType,
   color: CardColor,
   isFaceDown: boolean,
-  value?: number,): Card {
-
+  value?: number
+): Card {
   return {
-    id, type, color, isFaceDown, value
-  }
+    id,
+    type,
+    color,
+    value,
+  };
 }
 
 export interface Card {
   id: string;
   type: CardType;
   color: CardColor;
-  isFaceDown: boolean;
   value?: number;
 }
