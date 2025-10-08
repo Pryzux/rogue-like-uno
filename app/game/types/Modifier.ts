@@ -56,6 +56,10 @@ export const BUFFS: Modifier[] = [
     name: "+3 card",
     description: "When a Draw 2 card is pulled, this card becomes a Draw 3 card",
     modifierType: "buff",
+   },
+    name: 'Color Blind',
+    description: 'You can’t play Wilds until you have 3 or fewer cards left.',
+    modifierType: 'debuff'
   }
 ];
 

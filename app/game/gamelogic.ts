@@ -66,7 +66,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [],
+      modifiers: [DEBUFFS.find(d => d.name === 'Color Blind')],
       status: "Not Started",
     };
 
@@ -119,18 +119,28 @@ export class GameLogic implements GameLogicInterface {
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
-    console.log("drawcards called");
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    console.log("player and currentmatch", player, currentMatch);
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
-      console.log("in for loop");
       const newCard = drawOneCard(currentMatch);
-      console.log("newcard", newCard);
       player.hand.push(newCard);
-      console.log("new hand", player.hand);
     }
+  }
+
+  // Handle the Color Blind debuff
+  private checkForColorBlind(card: Card, currentPlayer: Player): Boolean {
+    // The current player is the user, and they have the Color Blind debuff, AND they have more than 3 cards in their hand
+    // AND the card played is a wild type
+    if (
+      card.type.includes('wild') &&
+      currentPlayer.isHuman &&
+      (this.currentGame.modifiers.find(modifier => modifier.name === 'Color Blind')) &&
+      currentPlayer.hand.length > 3
+    ) {
+      return false
+    }
+    return true
   }
 
   // returns null if play is invalid
@@ -141,8 +151,12 @@ export class GameLogic implements GameLogicInterface {
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
 
-    // check if play is valid 
-    if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
+    // check if play is valid
+    if (
+      card &&
+      canPlayCard(card, match.discardPile[0], match.currentColor!) &&
+      this.checkForColorBlind(card, currentPlayer)
+    ) {
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
         (card) => card.id !== cardId
@@ -153,14 +167,16 @@ export class GameLogic implements GameLogicInterface {
 
       if (currentPlayer.hand.length === 0) {
         // someone won!
-        if (!currentPlayer.isHuman) { // the AI won
+        if (!currentPlayer.isHuman) {
+          // the AI won
           match.status = "Loss";
           this.currentGame.status = "Lost";
-        } else { // human won!
+        } else {
+          // human won!
           match.status = "Won";
           this.currentGame.status = "Next Round";
         }
-        return true
+        return true;
       }
 
       // if the card is a reverse card, turn direction must be updated first
@@ -168,8 +184,16 @@ export class GameLogic implements GameLogicInterface {
         match.turnDirection = match.turnDirection === 1 ? -1 : 1;
       }
 
-      // Updating the current player!
-      match.currentPlayerIndex = this.getNextPlayerIndex(match);
+      // Handle Reverse Momentum buff
+      // If the player does NOT have Reverse Momentum, update the current player as normal
+      // If the player has Reverse Momentum, the current player doesn't get updated because the player gets another turn
+      if (!(currentPlayer.isHuman) || !(this.currentGame.modifiers.find(modifier => modifier.name === 'Reverse Momentum'))) {
+        // The current player is AI OR the user does not have Reverse Momentum
+        match.currentPlayerIndex = this.getNextPlayerIndex(match); // THIS IS THE NORMAL LOGIC FOR GOING TO THE NEXT PLAYER WITHOUT MODIFIERS
+      } else if (card.type !== 'reverse') {
+        // The player has Reverse Momentum, but the card played was not a reverse
+        match.currentPlayerIndex = this.getNextPlayerIndex(match);
+      }
 
       if (card.type === "skip") {
         // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
@@ -182,10 +206,8 @@ export class GameLogic implements GameLogicInterface {
         this.getCurrentModifiers().some(m => m.name === "+3 card") ? this.drawCards(3, match.currentPlayerIndex) : this.drawCards(2, match.currentPlayerIndex);
 
       }
-
+        
       if (card.type === "wild") {
-        // handle wild card effects
-        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
@@ -267,7 +289,7 @@ export class GameLogic implements GameLogicInterface {
       return;
     }
 
-    let turnIsOver = false
+    let turnIsOver = false;
 
     while (!turnIsOver) {
       // Find all playable cards in AI's hand
@@ -277,7 +299,7 @@ export class GameLogic implements GameLogicInterface {
 
       if (playableCards.length > 0) {
         // there's at least one playable card, so we won't have to draw any more
-        turnIsOver = true
+        turnIsOver = true;
 
         // Randomly select a playable card
         const cardToPlay =
@@ -343,16 +365,29 @@ export class GameLogic implements GameLogicInterface {
   // ----- Buffs and Debuffs Logic ----
 
   // Random Buff/Debuffs for nextRoundPage (Picks 2 of Each) - Helper
-  private getRandomModifiers(list: Modifier[], count: number): Modifier[] {
-    const shuffled = [...list].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
+  private getRandomModifiers(list: Modifier[]): Modifier[] {
+    // Get current modifiers the player already has
+    const currentModifiers = this.getCurrentModifiers();
+
+    // Filter out
+    const available = list.filter(
+      (modifier) =>
+        !currentModifiers.some((owned) => owned.name === modifier.name)
+    );
+    console.log(JSON.stringify(available));
+    // Shuffle the remaining options
+    const shuffled = [...available].sort(() => Math.random() - 0.5);
+
+    // Return up to `count` modifiers
+
+    return shuffled.slice(0, 2);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.
   public getNextRoundOptions(): {} {
     return {
-      buffs: this.getRandomModifiers(BUFFS, 2),
-      debuffs: this.getRandomModifiers(DEBUFFS, 2),
+      buffs: this.getRandomModifiers(BUFFS),
+      debuffs: this.getRandomModifiers(DEBUFFS),
     };
   }
 
@@ -364,17 +399,33 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame.modifiers;
   }
 
-  // Add a new modifier to the current game
   public addModifier(modifier: Modifier): void {
-    // need to handle limiting amount of modifiers allowed to add
-    //------needs work---------
-    if (!this.currentGame.modifiers) this.currentGame.modifiers = [];
-    this.currentGame.modifiers.push(modifier);
-  }
+    // 1 modifier of each type for every match in matches
+    const chosenOfType = this.currentGame.modifiers.filter(
+      (m) => m.modifierType === modifier.modifierType
+    ).length;
 
-  // Wipe the modifiers for the game (after they lose)
-  public resetModifiers(): Game {
-    this.currentGame.modifiers = [];
-    return this.getGame();
+    const maxForType = this.currentGame.matches.length; // one per match
+    const canChooseOfType = chosenOfType < maxForType;
+
+    if (!canChooseOfType) {
+      console.warn(
+        `You have already chosen the maximum number of ${modifier.modifierType}s for ${maxForType} match(es).`
+      );
+      return;
+    }
+
+    // Block exact duplicate by name (clicking multiple times)
+    const alreadyChosen = this.currentGame.modifiers.some(
+      (m) => m.name === modifier.name
+    );
+    if (alreadyChosen) {
+      console.warn(`You already chose "${modifier.name}".`);
+      return;
+    }
+
+    // Add modifier
+    this.currentGame.modifiers.push(modifier);
+    console.log(`Added ${modifier.modifierType}: ${modifier.name}`);
   }
 } // end of class
