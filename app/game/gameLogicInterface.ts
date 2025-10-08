@@ -17,7 +17,7 @@ export interface GameLogicInterface {
   getCurrentUnoMatch(): UnoMatch;
 
   // Plays a card within an Uno match.
-  playCard(cardId: string): (Game | null) | null;
+  playCard(cardId: string): Boolean;
 
   // draws a number of cards for a given player
   drawCards(cardNumber: number, playerIndex: number): void;
@@ -33,4 +33,7 @@ export interface GameLogicInterface {
 
   // Get Player from currentPlayerIndex
   getPlayerFromIndex(index: number): Player;
+
+  // Play for the ai
+  playAITurn(): undefined | Game;
 }
