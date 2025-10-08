@@ -140,8 +140,8 @@ export class GameLogic implements GameLogicInterface {
     const currentPlayer = this.getCurrentPlayer();
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
- 
-    // check if play is valid 
+
+    // check if play is valid
     if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
@@ -153,14 +153,16 @@ export class GameLogic implements GameLogicInterface {
 
       if (currentPlayer.hand.length === 0) {
         // someone won!
-        if (!currentPlayer.isHuman) { // the AI won
+        if (!currentPlayer.isHuman) {
+          // the AI won
           match.status = "Loss";
           this.currentGame.status = "Lost";
-        } else { // human won!
+        } else {
+          // human won!
           match.status = "Won";
           this.currentGame.status = "Next Round";
         }
-        return true
+        return true;
       }
 
       // if the card is a reverse card, turn direction must be updated first
@@ -264,7 +266,7 @@ export class GameLogic implements GameLogicInterface {
       return;
     }
 
-    let turnIsOver = false
+    let turnIsOver = false;
 
     while (!turnIsOver) {
       // Find all playable cards in AI's hand
@@ -274,7 +276,7 @@ export class GameLogic implements GameLogicInterface {
 
       if (playableCards.length > 0) {
         // there's at least one playable card, so we won't have to draw any more
-        turnIsOver = true
+        turnIsOver = true;
 
         // Randomly select a playable card
         const cardToPlay =
@@ -341,7 +343,23 @@ export class GameLogic implements GameLogicInterface {
 
   // Random Buff/Debuffs for nextRoundPage (Picks 2 of Each) - Helper
   private getRandomModifiers(list: Modifier[], count: number): Modifier[] {
-    const shuffled = [...list].sort(() => Math.random() - 0.5);
+    // Get current modifiers the player already has
+    const currentModifiers = this.getCurrentModifiers();
+
+    // Filter ou
+    const available = list.filter(
+      (modifier) =>
+        !currentModifiers.some(
+          (owned) =>
+            owned.name === modifier.name ||
+            owned.modifierType === modifier.modifierType
+        )
+    );
+
+    // Shuffle the remaining options
+    const shuffled = [...available].sort(() => Math.random() - 0.5);
+
+    // Return up to `count` modifiers
     return shuffled.slice(0, count);
   }
 
@@ -363,10 +381,22 @@ export class GameLogic implements GameLogicInterface {
 
   // Add a new modifier to the current game
   public addModifier(modifier: Modifier): void {
-    // need to handle limiting amount of modifiers allowed to add
-    //------needs work---------
-    if (!this.currentGame.modifiers) this.currentGame.modifiers = [];
+    // Check if a modifier of this type already exists
+    // will work because you can't add duplicate modifiers anyways, so it's essentially just checking if you already chose something
+    // for buff and debuff
+
+    const alreadyChosen = this.currentGame.modifiers.some(
+      (m) => m.modifierType === modifier.modifierType
+    );
+
+    if (alreadyChosen) {
+      console.warn(`Cannot add another ${modifier.modifierType} this round!`);
+      return;
+    }
+
+    // Add modifier
     this.currentGame.modifiers.push(modifier);
+    console.log(`Added ${modifier.modifierType}: ${modifier.name}`);
   }
 
   // Wipe the modifiers for the game (after they lose)
