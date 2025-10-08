@@ -93,10 +93,35 @@ const cardImages: Record<CardKey, string> = {
 
 };
 
+const numberToType: Record<number, string> = {
+    0: "zero",
+    1: "one",
+    2: "two",
+    3: "three",
+    4: "four",
+    5: "five",
+    6: "six",
+    7: "seven",
+    8: "eight",
+    9: "nine",
+};
+
+
 
 //based on the color and type of card provided, the right png path is provided
-function determineCardType(color: string, type: string): string {
-    const key = `${color}_${type}` as CardKey;
+function determineCardType(color: string, typeOrValue: string | number, id: number | undefined): string {
+
+    //handling card types where type: number could mean zero-nine, so that I don't need to change the structure of the png lookup
+    let typeString: string;
+
+    if (typeof typeOrValue === "number") {
+
+        typeString = numberToType[id!];
+    }
+    else {
+        typeString = typeOrValue;
+    }
+    const key = `${color}_${typeString}` as CardKey;
     const img = cardImages[key];
     return (img)
 }
@@ -107,7 +132,7 @@ export default function SingleCard(card: Card) {
 
     return (
         <div className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
-            <img src={determineCardType(card.color, card.type)}
+            <img src={determineCardType(card.color, card.type, card.value)}
                 alt="Standard back of Uno Card"
                 className="block w-full h-full object-contain" />
         </div>
