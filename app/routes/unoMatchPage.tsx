@@ -24,7 +24,6 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     const drawCard = (cardNumber: number) => {
 
         const match = GameLogic.get().getCurrentUnoMatch();
-        console.log("Drawing Card with currentPlayerIndex=", match.currentPlayerIndex)
         GameLogic.get().drawCards(cardNumber, match.currentPlayerIndex)
 
         // Re-render game and match state

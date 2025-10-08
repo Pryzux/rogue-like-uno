@@ -66,7 +66,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [],
+      modifiers: [DEBUFFS.find(d => d.name === 'Color Blind')],
       status: "Not Started",
     };
 
@@ -119,18 +119,28 @@ export class GameLogic implements GameLogicInterface {
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
-    console.log("drawcards called");
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    console.log("player and currentmatch", player, currentMatch);
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
-      console.log("in for loop");
       const newCard = drawOneCard(currentMatch);
-      console.log("newcard", newCard);
       player.hand.push(newCard);
-      console.log("new hand", player.hand);
     }
+  }
+
+  // Handle the Color Blind debuff
+  private checkForColorBlind(card: Card, currentPlayer: Player): Boolean {
+    // The current player is the user, and they have the Color Blind debuff, AND they have more than 3 cards in their hand
+    // AND the card played is a wild type
+    if (
+      card.type.includes('wild') &&
+      currentPlayer.isHuman &&
+      (this.currentGame.modifiers.find(modifier => modifier.name === 'Color Blind')) &&
+      currentPlayer.hand.length > 3
+    ) {
+      return false
+    }
+    return true
   }
 
   // returns null if play is invalid
@@ -142,7 +152,11 @@ export class GameLogic implements GameLogicInterface {
     const card = currentPlayer.hand.find((card) => card.id === cardId);
 
     // check if play is valid
-    if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
+    if (
+      card &&
+      canPlayCard(card, match.discardPile[0], match.currentColor!) &&
+      this.checkForColorBlind(card, currentPlayer)
+    ) {
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
         (card) => card.id !== cardId
@@ -190,16 +204,13 @@ export class GameLogic implements GameLogicInterface {
         // the current player was updated above to the next player, so they have to draw
         this.drawCards(2, match.currentPlayerIndex);
       }
-
+        
       if (card.type === "wild") {
-        // handle wild card effects
-        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
       if (card.type === "wildDraw4") {
         this.drawCards(4, match.currentPlayerIndex);
-        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
