@@ -3,6 +3,7 @@ import { GameLogic } from "~/game/gamelogic";
 import type { Game } from "../game/types/Game";
 import NextRound from "./nextRoundPage";
 import { UnoMatchPage } from "./unoMatchPage";
+import { TestUi } from "~/UserInterface/TestUi";
 
 export default function Home(testMode: false) {
   //testing flag to enable testUI.tsx
