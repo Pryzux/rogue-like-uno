@@ -87,6 +87,11 @@ export const DEBUFFS: Modifier[] = [
     name: "Uno Delay",
     description: "When you go down to one card, skip your next turn.",
     modifierType: "debuff",
+  },
+  {
+    name: 'Lazy Dealer',
+    description: 'Increase the number of cards in your starting hand by 3',
+    modifierType: 'debuff'
   }
 ];
 
