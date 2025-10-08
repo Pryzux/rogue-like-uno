@@ -5,14 +5,15 @@ import SingleCard from "./SingleCard";
 
 export function TestUi() {
     let hand: Card[] = []
-    hand.push(makeCard('0', 'wild', 'black', true));
+    hand.push(makeCard('0', 'wild', 'black'));
+    hand.push(makeCard('0', 'skip', 'red'));
     //hand.push(makeCard('2', 'eight', 'blue', true));
 
     return (
         <div>
-            {/* <Hand hand={hand} /> */}
+            <Hand hand={hand} />
             {/* <Cards card={{ id: "", type: "reverse",color:"red"}} /> */}
-            <SingleCard card={makeCard('0', 'wild', 'black', true)} onClick={() => console.log("clicked")} />
+            {/* <SingleCard card={makeCard('0', 'wild', 'black', true)} onClick={() => console.log("clicked")} /> */}
 
         </div>
     )
