@@ -2,6 +2,7 @@ import { canPlayCard, createDeck, drawOneCard, shuffleDeck } from "./deck";
 import type { GameLogicInterface } from "./gameLogicInterface";
 import type { CardColor } from "./types/Card";
 import type { Game } from "./types/Game";
+import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
 
@@ -133,7 +134,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string, color: (CardColor | null) = null): Boolean {
+  public playCard(cardId: string, color: CardColor | null = null): Boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -182,13 +183,13 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "wild") {
         // handle wild card effects
-        console.log('chosen color is', color)
+        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
       if (card.type === "wildDraw4") {
         this.drawCards(4, match.currentPlayerIndex);
-        console.log('chosen color is', color)
+        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
@@ -333,6 +334,44 @@ export class GameLogic implements GameLogicInterface {
     this.getCurrentUnoMatch().status = "Won";
     console.log("Set Win");
 
+    return this.getGame();
+  }
+
+  // ----- Buffs and Debuffs Logic ----
+
+  // Random Buff/Debuffs for nextRoundPage (Picks 2 of Each) - Helper
+  private getRandomModifiers(list: Modifier[], count: number): Modifier[] {
+    const shuffled = [...list].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+  }
+
+  // Return a fresh selection of 2 buffs and 2 debuffs.
+  public getNextRoundOptions(): {} {
+    return {
+      buffs: this.getRandomModifiers(BUFFS, 2),
+      debuffs: this.getRandomModifiers(DEBUFFS, 2),
+    };
+  }
+
+  public getCurrentModifiers(): Modifier[] {
+    // Get Modifiers [ Modifier ]
+    if (!this.currentGame || !Array.isArray(this.currentGame.modifiers)) {
+      this.currentGame = { ...this.currentGame, modifiers: [] };
+    }
+    return this.currentGame.modifiers;
+  }
+
+  // Add a new modifier to the current game
+  public addModifier(modifier: Modifier): void {
+    // need to handle limiting amount of modifiers allowed to add
+    //------needs work---------
+    if (!this.currentGame.modifiers) this.currentGame.modifiers = [];
+    this.currentGame.modifiers.push(modifier);
+  }
+
+  // Wipe the modifiers for the game (after they lose)
+  public resetModifiers(): Game {
+    this.currentGame.modifiers = [];
     return this.getGame();
   }
 } // end of class
