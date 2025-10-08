@@ -155,7 +155,7 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
         <img
             src={determineCardType(card.color, card.type, card.value)}
             alt="Standard back of Uno Card"
-            className={classes}
+            className={`${classes} w-16 h-24 object-contain`}
             onClick={isClickable ? onClick : undefined}
         />
 
