@@ -68,6 +68,11 @@ export const BUFFS: Modifier[] = [
     modifierType: "buff",
   },
 
+   {
+    name: "Good Aim",
+    description: "You can choose which player a +2 applies to",
+    modifierType: 'buff'
+   }
 ];
 
 // Debuffs
