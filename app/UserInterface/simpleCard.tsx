@@ -1,4 +1,5 @@
 import type { Card } from "~/game/types/Card";
+import {determineCardType} from "./SingleCard"
 
 
 export default function SimpleCard({
@@ -40,7 +41,10 @@ export default function SimpleCard({
             title={`${card.color} ${label}`}
             onClick={isClickable && isPlayable ? onClick : undefined}
         >
-            {label}
+
+            {/* {label} */}
+
+            
 
         </button>
 

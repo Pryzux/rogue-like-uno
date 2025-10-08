@@ -1,10 +1,11 @@
+import type { JSX } from 'react';
 import type { Card, CardColor, CardType } from '~/game/types/Card';
 
 //type used to populate a map
 type CardKey = `${CardColor}_${CardType}`;
 
 //map of color_cardType pairs
-const cardImages: Record<CardKey, string> = {
+const cardImages: Partial<Record<CardKey, string>> = {
     red_zero: '/UIResources/unoCard-back.png',
     red_one: '/UIResources/unoCard-back.png',
     red_two: '/UIResources/unoCard-back.png',
@@ -111,7 +112,7 @@ const numberToType: Record<number, string> = {
 
 
 //based on the color and type of card provided, the right png path is provided
-function determineCardType(color: string, typeOrValue: string | number, id: number | undefined): string {
+export function determineCardType(color: string, typeOrValue: string | number, id: number | undefined): string {
 
     //handling card types where type: number could mean zero-nine, so that I don't need to change the structure of the png lookup
     let typeString: string;
@@ -124,23 +125,40 @@ function determineCardType(color: string, typeOrValue: string | number, id: numb
         typeString = typeOrValue;
     }
     const key = `${color}_${typeString}` as CardKey;
-    const img = cardImages[key];
+    const img = cardImages[key]!;
     return (img)
 }
 
-//determineCardType(card.color, card.type)
-//takes in a Card type, returns an image 
-export default function SingleCard({card, onClick}) {
+type SingleCardProps = {
+    card: Card;
+    onClick?: () => void;
+    isPlayable?: boolean;
+    isClickable?: boolean;
+}
 
+//takes in a Card type, onClick, whether a card is playable and whether the card  returns an image 
+//TODO: remove pre-set boolean values when using this- but values must be set somewhere 
+export default function SingleCard({ card, onClick, isPlayable = false, isClickable = true }: SingleCardProps): JSX.Element {
 
+    //if a card is not clickable, nothing happens to the image
+    //if a card is clickable, depending on whether it can be played(isPlayable as filter), the image will move when the cursor navigates to it or the images is faded
+    const classes = [
+        isClickable && "cursor-pointer hover:scale-110 transition-transform",
+        isClickable && isPlayable && "ring-2 ring-green-400",
+        isClickable && !isPlayable && "opacity-50 cursor-not-allowed",
+    ]
+        //turns the classes array into a usable CSS class string
+        .filter(Boolean)
+        .join(" ");
 
     return (
-        <button onClick={onClick} className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
-            <img src={determineCardType(card.color, card.type, card.value)}
-                alt="Standard back of Uno Card"
-                className="block w-24 h-36 object-contain" />
+        <img
+            src={determineCardType(card.color, card.type, card.value)}
+            alt="Standard back of Uno Card"
+            className={classes}
+            onClick={isClickable ? onClick : undefined}
+        />
 
-        </button>
     );
 
 }

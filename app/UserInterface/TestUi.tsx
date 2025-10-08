@@ -1,5 +1,7 @@
 import { makeCard, type Card } from "../game/types/Card";
 import Hand from "./Hand";
+import Cards from "./simpleCard"
+import SingleCard from "./SingleCard";
 
 export function TestUi() {
     let hand: Card[] = []
@@ -8,8 +10,10 @@ export function TestUi() {
 
     return (
         <div>
-            <Hand hand={hand} />
-            {/* <SingleCard id={""} type={"reverse"} color={"red"} /> */}
+            {/* <Hand hand={hand} /> */}
+            {/* <Cards card={{ id: "", type: "reverse",color:"red"}} /> */}
+            <SingleCard card={makeCard('0', 'wild', 'black', true)} onClick={() => console.log("clicked")} />
+
         </div>
     )
 }
