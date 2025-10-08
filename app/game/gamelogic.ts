@@ -6,6 +6,9 @@ import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
 
+// the number of cards added to the user's starting hand from the Lazy Dealer debuff
+export const LAZY_DEALER_AMOUNT = 3
+
 // Singleton implementation of GameLogicInterface.
 export class GameLogic implements GameLogicInterface {
   private currentGame: Game;
@@ -66,7 +69,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [],
+      modifiers: [DEBUFFS.find(d => d.name === 'Lazy Dealer')],
       status: "Not Started",
     };
 
@@ -90,7 +93,18 @@ export class GameLogic implements GameLogicInterface {
     // deal cards to all players
     this.currentGame.players.forEach((player) => {
       player.hand = [];
-      for (let i = 0; i < 7 && deck.length > 0; i++) {
+      let numberOfStartingCards = 7
+
+      // Handle Lazy Dealer debuff
+      // If the current player is human and they have the Lazy Dealer debuff
+      if (
+        player.isHuman &&
+        this.currentGame.modifiers.find(m => m.name === 'Lazy Dealer')
+      ) {
+        numberOfStartingCards += LAZY_DEALER_AMOUNT
+      }
+
+      for (let i = 0; i < numberOfStartingCards && deck.length > 0; i++) {
         const card = deck.pop();
         if (card) player.hand.push(card);
       }
