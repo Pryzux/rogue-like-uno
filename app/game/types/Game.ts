@@ -8,5 +8,5 @@ export interface Game {
   matches: UnoMatch[];
   currentScreen: "match" | "chooseModifier" | "gameOver" | "home" | null;
   modifiers: Modifier[];
-  status: "Not Started" | "Match Created" | "Next Round";
+  status: "Not Started" | "Match Created" | "Next Round" | "Lost";
 }

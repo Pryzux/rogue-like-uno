@@ -284,7 +284,8 @@ export class GameLogic implements GameLogicInterface {
 
         // Check if AI won
         if (currentPlayer.hand.length === 0) {
-          match.status = `${currentPlayer.name} wins!`;
+          match.status = "Loss";
+          this.currentGame.status = "Lost";
           return;
         }
 
@@ -342,5 +343,13 @@ export class GameLogic implements GameLogicInterface {
     });
 
     return bestColor;
+  }
+
+  public setWin(): Game {
+    this.currentGame.status = "Next Round";
+    this.getCurrentUnoMatch().status = "Won";
+    console.log("Set Win");
+
+    return this.getGame();
   }
 } // end of class

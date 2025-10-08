@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
@@ -163,6 +164,11 @@ export default function UnoMatch() {
                     ))}
                 </div>
             </section>
+            <button className="border" onClick={() => {
+
+                setGameState(GameLogic.get().setWin())
+
+            }}>WIN</button>
         </div>
 
     )
