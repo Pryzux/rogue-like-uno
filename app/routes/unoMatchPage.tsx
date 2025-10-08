@@ -74,7 +74,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                     setMatchState({ ...newMatch });
                 }
 
-            }, 1000);
+            }, 2000);
 
         }
 

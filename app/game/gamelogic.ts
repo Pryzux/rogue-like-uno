@@ -140,7 +140,7 @@ export class GameLogic implements GameLogicInterface {
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
  
-    // check if play is valid - maybe this check should happen somewhere else?
+    // check if play is valid 
     if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
@@ -151,8 +151,15 @@ export class GameLogic implements GameLogicInterface {
       match.currentColor = card.color;
 
       if (currentPlayer.hand.length === 0) {
-        match.status = "Won";
-        this.currentGame.status = "Next Round";
+        // someone won!
+        if (!currentPlayer.isHuman) { // the AI won
+          match.status = "Loss";
+          this.currentGame.status = "Lost";
+        } else { // human won!
+          match.status = "Won";
+          this.currentGame.status = "Next Round";
+        }
+        return true
       }
 
       // if the card is a reverse card, turn direction must be updated first
@@ -278,7 +285,7 @@ export class GameLogic implements GameLogicInterface {
 
           // Play Wild Card, passing in the chosen color
           this.playCard(cardToPlay.id, chosenColor)!;
-
+          return this.getGame();
         } else {
           // playing a non-wild card
           this.playCard(cardToPlay.id)!;
