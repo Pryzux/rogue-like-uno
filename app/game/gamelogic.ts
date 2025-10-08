@@ -129,7 +129,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string): Game | null {
+  public playCard(cardId: string): Boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -187,10 +187,10 @@ export class GameLogic implements GameLogicInterface {
         match.currentColor = colorPick as CardColor;
       }
 
-      return this.getGame();
+      return true;
     } else {
       // play is invalid
-      return null;
+      return false;
     }
   }
 
@@ -246,5 +246,103 @@ export class GameLogic implements GameLogicInterface {
   public getPlayerFromIndex(index: number): Player {
     const currentMatch = this.getCurrentUnoMatch();
     return currentMatch.players[index];
+  }
+
+  public playAITurn(): undefined | Game {
+    const match = this.getCurrentUnoMatch();
+    const currentPlayer = this.getCurrentPlayer();
+
+    // Make sure it's actually an AI player
+    if (currentPlayer.isHuman) {
+      console.error("playAITurn called on human player");
+      return;
+    }
+
+    // Find all playable cards in AI's hand
+    const playableCards = currentPlayer.hand.filter((card) =>
+      canPlayCard(card, match.discardPile[0], match.currentColor!)
+    );
+
+    if (playableCards.length > 0) {
+      // Randomly select a playable card
+      const cardToPlay =
+        playableCards[Math.floor(Math.random() * playableCards.length)];
+
+      // If it's a wild card, choose the best color before playing
+      if (cardToPlay.type === "wild" || cardToPlay.type === "wildDraw4") {
+        const chosenColor = this.chooseColorForWild(currentPlayer);
+
+        // Remove the card from hand
+        currentPlayer.hand = currentPlayer.hand.filter(
+          (card) => card.id !== cardToPlay.id
+        );
+
+        // Add to discard pile
+        match.discardPile = [cardToPlay, ...match.discardPile];
+
+        // Play Wild Card -- Need to pass chosenColor
+        // match.currentColor = chosenColor;
+        this.playCard(cardToPlay.id)!;
+
+        // Check if AI won
+        if (currentPlayer.hand.length === 0) {
+          match.status = `${currentPlayer.name} wins!`;
+          return;
+        }
+
+        // Handle wildDraw4 effect
+        if (cardToPlay.type === "wildDraw4") {
+          match.currentPlayerIndex = this.getNextPlayerIndex(match);
+          this.drawCards(4, match.currentPlayerIndex);
+        } else {
+          // Regular wild card - just advance turn
+          match.currentPlayerIndex = this.getNextPlayerIndex(match);
+        }
+
+        return;
+      } else {
+        // Use the existing playCard method for non-wild cards
+        this.playCard(cardToPlay.id)!;
+        return this.getGame();
+      }
+    } else {
+      // No playable cards, draw one card
+      this.drawCards(1, match.currentPlayerIndex);
+
+      // After drawing, advance to next player's turn
+      match.currentPlayerIndex = this.getNextPlayerIndex(match);
+
+      return;
+    }
+  }
+
+  // AI Choosing Wild Color
+  private chooseColorForWild(player: Player): CardColor {
+    const colorCounts: Record<string, number> = {
+      red: 0,
+      blue: 0,
+      green: 0,
+      yellow: 0,
+    };
+
+    // Count colors in AI's hand (excluding black/wild cards)
+    player.hand.forEach((card) => {
+      if (card.color !== "black") {
+        colorCounts[card.color] = (colorCounts[card.color] || 0) + 1;
+      }
+    });
+
+    // Find the color with the most cards
+    let maxCount = 0;
+    let bestColor: CardColor = "red";
+
+    (Object.keys(colorCounts) as CardColor[]).forEach((color) => {
+      if (colorCounts[color] > maxCount) {
+        maxCount = colorCounts[color];
+        bestColor = color;
+      }
+    });
+
+    return bestColor;
   }
 } // end of class

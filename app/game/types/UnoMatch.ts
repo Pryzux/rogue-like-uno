@@ -1,6 +1,6 @@
 // A single game of Uno
-import type Player from './Player'
-import type { Card, CardColor } from './Card'
+import type Player from "./Player";
+import type { Card, CardColor } from "./Card";
 
 export interface UnoMatch {
   players: Player[];
@@ -8,6 +8,6 @@ export interface UnoMatch {
   turnDirection: 1 | -1;
   deck: Card[];
   discardPile: Card[];
-  currentColor: CardColor | null;
-  status: string
+  currentColor: CardColor | undefined;
+  status: string;
 }
