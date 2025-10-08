@@ -4,7 +4,7 @@ import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
-import type { Card } from "../game/types/Card"
+import type { Card, CardColor } from "../game/types/Card"
 import ColorPicker from "~/UserInterface/ColorPicker";
 
 
@@ -27,7 +27,7 @@ export default function UnoMatch() {
 
     }
 
-    const handleColorPickerChoice = (cardId, color) => {
+    const handleColorPickerChoice = (cardId: string, color: CardColor) => {
         GameLogic.get().playCard(cardId, color)
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())

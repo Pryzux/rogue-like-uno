@@ -133,7 +133,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string, color = null): Boolean {
+  public playCard(cardId: string, color: (CardColor | null) = null): Boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -280,7 +280,7 @@ export class GameLogic implements GameLogicInterface {
 
         // Play Wild Card -- Need to pass chosenColor
         // match.currentColor = chosenColor;
-        this.playCard(cardToPlay.id)!;
+        this.playCard(cardToPlay.id, chosenColor)!;
 
         // Check if AI won
         if (currentPlayer.hand.length === 0) {

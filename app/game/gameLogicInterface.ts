@@ -1,3 +1,4 @@
+import type { CardColor } from "./types/Card";
 import type { Game } from "./types/Game";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
@@ -17,7 +18,7 @@ export interface GameLogicInterface {
   getCurrentUnoMatch(): UnoMatch;
 
   // Plays a card within an Uno match.
-  playCard(cardId: string, color: (null | string)): Boolean;
+  playCard(cardId: string, color?: (CardColor | null)): Boolean;
 
   // draws a number of cards for a given player
   drawCards(cardNumber: number, playerIndex: number): void;
