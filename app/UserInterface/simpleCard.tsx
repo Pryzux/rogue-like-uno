@@ -6,7 +6,7 @@ export default function SimpleCard({
     card,
     onClick,
     isPlayable = true,
-    isClickable = false,
+    isClickable = true,
 }: {
     card: Card;
     onClick?: () => void;
@@ -36,7 +36,6 @@ export default function SimpleCard({
 
     return (
         <button
-            onClick={onClick}
             className={classes}
             title={`${card.color} ${label}`}
             onClick={isClickable && isPlayable ? onClick : undefined}

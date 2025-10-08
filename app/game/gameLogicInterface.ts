@@ -36,4 +36,7 @@ export interface GameLogicInterface {
 
   // Play for the ai
   playAITurn(): undefined | Game;
+
+  // Set Win (For Dev)
+  setWin(): Game;
 }

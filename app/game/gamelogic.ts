@@ -66,7 +66,6 @@ export class GameLogic implements GameLogicInterface {
       matches: [],
       currentScreen: null,
       modifiers: [],
-      winner: null,
       status: "Not Started",
     };
 
@@ -119,17 +118,17 @@ export class GameLogic implements GameLogicInterface {
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
-    console.log("drawcards called")
+    console.log("drawcards called");
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    console.log('player and currentmatch', player, currentMatch)
+    console.log("player and currentmatch", player, currentMatch);
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
-      console.log('in for loop')
+      console.log("in for loop");
       const newCard = drawOneCard(currentMatch);
-      console.log('newcard', newCard)
+      console.log("newcard", newCard);
       player.hand.push(newCard);
-      console.log("new hand", player.hand)
+      console.log("new hand", player.hand);
     }
   }
 
@@ -152,8 +151,8 @@ export class GameLogic implements GameLogicInterface {
       match.currentColor = card.color;
 
       if (currentPlayer.hand.length === 0) {
-        // the current player won!
-        //handle this
+        match.status = "Won";
+        this.currentGame.status = "Next Round";
       }
 
       // if the card is a reverse card, turn direction must be updated first
@@ -226,8 +225,11 @@ export class GameLogic implements GameLogicInterface {
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
-    console.log('getcurrentunomatchs says', this.currentGame!.matches.at(-1))
-    console.log('matches from within getcurrentunomatch', this.currentGame.matches)
+    console.log("getcurrentunomatchs says", this.currentGame!.matches.at(-1));
+    console.log(
+      "matches from within getcurrentunomatch",
+      this.currentGame.matches
+    );
     return this.currentGame!.matches.at(-1)!;
   }
 
@@ -293,7 +295,8 @@ export class GameLogic implements GameLogicInterface {
 
         // Check if AI won
         if (currentPlayer.hand.length === 0) {
-          match.status = `${currentPlayer.name} wins!`;
+          match.status = "Loss";
+          this.currentGame.status = "Lost";
           return;
         }
 
@@ -351,5 +354,13 @@ export class GameLogic implements GameLogicInterface {
     });
 
     return bestColor;
+  }
+
+  public setWin(): Game {
+    this.currentGame.status = "Next Round";
+    this.getCurrentUnoMatch().status = "Won";
+    console.log("Set Win");
+
+    return this.getGame();
   }
 } // end of class
