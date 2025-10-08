@@ -69,7 +69,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [DEBUFFS.find(d => d.name === 'Lazy Dealer')],
+      modifiers: [],
       status: "Not Started",
     };
 
