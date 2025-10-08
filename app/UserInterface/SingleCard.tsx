@@ -82,6 +82,8 @@ const cardImages: Record<CardKey, string> = {
     black_wild: '/UIResources/unoCard-back.png', //never used
     black_wildDraw4: '/UIResources/unoCard-back.png', //never used
 
+    black_deck: 'UIResources/unoCard-back.png', // the draw deck
+
     //throwaway components as a new item has been added to card type:
     red_number: '/UIResources/unoCard-back.png', //never used
     blue_number: '/UIResources/unoCard-back.png', //never used
@@ -128,14 +130,16 @@ function determineCardType(color: string, typeOrValue: string | number, id: numb
 
 //determineCardType(card.color, card.type)
 //takes in a Card type, returns an image 
-export default function SingleCard(card: Card) {
+export default function SingleCard({card, onClick}) {
+
+
 
     return (
-        <div className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
+        <button onClick={onClick} className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
             <img src={determineCardType(card.color, card.type, card.value)}
                 alt="Standard back of Uno Card"
                 className="block w-full h-full object-contain" />
-        </div>
+        </button>
     );
 
 }

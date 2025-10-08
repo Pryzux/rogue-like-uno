@@ -2,7 +2,9 @@ import { useState } from "react";
 import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
+import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
+import type { Card } from "../game/types/Card"
 
 
 export default function UnoMatch() {
@@ -11,12 +13,12 @@ export default function UnoMatch() {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
 
 
-    const handleStartNewGame = (cardNumber: number) => {
-        console.log("Drawing Card..");
+    const drawCard = (cardNumber: number) => {
+        console.log("Drawing Card with currentplayerindex=", matchState?.currentPlayerIndex!);
         GameLogic.get().drawCards(cardNumber, matchState?.currentPlayerIndex!);
         //re-render gameState and matchState
         setGameState(GameLogic.get().getGame())
-
+        setMatchState(GameLogic.get().getCurrentUnoMatch())
     };
 
     if (!matchState) {
@@ -28,6 +30,9 @@ export default function UnoMatch() {
         matchState;
 
     const topCard = discardPile.at(-1);
+
+    const drawDeckCard: Card = { id: `card-draw-deck`, type: "deck", color: 'black' }
+    console.log('game state rerender', gameState)
 
     return (
 
@@ -51,9 +56,11 @@ export default function UnoMatch() {
                 </div>
             </header>
 
-            {/* Discard Pile */}
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-
+                <div>
+                    <h2 className='font-bold text-lg'>Draw deck</h2>
+                    <div className="w-24 h-36 flex items-center justify-center"> aaa<SingleCard card={drawDeckCard} onClick={() => drawCard(1)} /> </div>
+                </div>
                 <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
 
                 <div className="w-24 h-36 flex items-center justify-center"> <SimpleCard card={topCard!} /> </div>

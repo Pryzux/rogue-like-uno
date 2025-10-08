@@ -128,12 +128,17 @@ export class GameLogic implements GameLogicInterface {
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
+    console.log("drawcards called")
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    for (let i = 0; i++; i < cardNumber) {
+    console.log('player and currentmatch', player, currentMatch)
+    for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
+      console.log('in for loop')
       const newCard = drawOneCard(currentMatch);
+      console.log('newcard', newCard)
       player.hand.push(newCard);
+      console.log("new hand", player.hand)
     }
   }
 
@@ -230,12 +235,9 @@ export class GameLogic implements GameLogicInterface {
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
+    console.log('getcurrentunomatchs says', this.currentGame!.matches.at(-1))
+    console.log('matches from within getcurrentunomatch', this.currentGame.matches)
     return this.currentGame!.matches.at(-1)!;
-  }
-
-  // get the current match from a given game, used when making a new copy of the game
-  private getCurrentUnoMatchFromGame(game: Game): UnoMatch {
-    return game.matches.at(-1)!;
   }
 
   // Get the Player (User)

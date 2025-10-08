@@ -16,7 +16,8 @@ export type CardType =
   | "reverse"
   | "draw2"
   | "wild"
-  | "wildDraw4";
+  | "wildDraw4"
+  | "deck";
 
 export function makeCard(
   id: string,
