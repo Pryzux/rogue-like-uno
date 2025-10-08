@@ -5,6 +5,20 @@ export interface Modifier {
   modifierType: "buff" | "debuff";
 }
 
+export function makeModifier(
+  name: string,
+  description: string,
+  modifierType: "buff" | "debuff"
+) {
+
+  return {
+    name,
+    description,
+    modifierType
+  };
+}
+
+
 // Buffs
 export const BUFFS: Modifier[] = [
   {
@@ -34,10 +48,15 @@ export const BUFFS: Modifier[] = [
     modifierType: "buff",
   },
   {
-    name: 'Color Blind',
-    description: 'You can’t play Wilds until you have 3 or fewer cards left.',
-    modifierType: 'debuff'
-  }
+    name: "+5 card",
+    description: "When a Draw 4 card is pulled, this card becomes a Draw 5 card",
+    modifierType: "buff",
+  },
+   {
+    name: "+3 card",
+    description: "When a Draw 2 card is pulled, this card becomes a Draw 3 card",
+    modifierType: "buff",
+   },
 ];
 
 // Debuffs
@@ -69,6 +88,11 @@ export const DEBUFFS: Modifier[] = [
     description: "When you go down to one card, skip your next turn.",
     modifierType: "debuff",
   },
+  {
+    name: 'Lazy Dealer',
+    description: 'Increase the number of cards in your starting hand by 3',
+    modifierType: 'debuff'
+  }
 ];
 
 // Utility: pick N random modifiers from a list.

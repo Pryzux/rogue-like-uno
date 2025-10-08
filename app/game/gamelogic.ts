@@ -6,6 +6,9 @@ import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
 
+// the number of cards added to the user's starting hand from the Lazy Dealer debuff
+export const LAZY_DEALER_AMOUNT = 3
+
 // Singleton implementation of GameLogicInterface.
 export class GameLogic implements GameLogicInterface {
   private currentGame: Game;
@@ -66,7 +69,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [DEBUFFS.find((d) => d.name === "Color Blind")!],
+      modifiers: [],
       status: "Not Started",
     };
 
@@ -84,13 +87,24 @@ export class GameLogic implements GameLogicInterface {
 
   // Initialize Uno Round -- Pushes a new Match to Matches[UnoMatch]
   public initializeUno(): Game {
+
     // Create a deck
     let deck = shuffleDeck(createDeck());
-
     // deal cards to all players
     this.currentGame.players.forEach((player) => {
       player.hand = [];
-      for (let i = 0; i < 7 && deck.length > 0; i++) {
+      let numberOfStartingCards = 7
+
+      // Handle Lazy Dealer debuff
+      // If the current player is human and they have the Lazy Dealer debuff
+      if (
+        player.isHuman &&
+        this.currentGame.modifiers.find(m => m.name === 'Lazy Dealer')
+      ) {
+        numberOfStartingCards += LAZY_DEALER_AMOUNT
+      }
+
+      for (let i = 0; i < numberOfStartingCards && deck.length > 0; i++) {
         const card = deck.pop();
         if (card) player.hand.push(card);
       }
@@ -209,7 +223,9 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
-        this.drawCards(2, match.currentPlayerIndex);
+        //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
+        this.getCurrentModifiers().some(m => m.name === "+3 card") ? this.drawCards(3, match.currentPlayerIndex) : this.drawCards(2, match.currentPlayerIndex);
+
       }
 
       if (card.type === "wild") {
@@ -217,7 +233,9 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wildDraw4") {
-        this.drawCards(4, match.currentPlayerIndex);
+        //adding logic to handle a Buff, where a draw4 card becomes a draw5 card
+        this.getCurrentModifiers().some(m => m.name === "+5 card") ? this.drawCards(5, match.currentPlayerIndex) : this.drawCards(4, match.currentPlayerIndex);
+        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
