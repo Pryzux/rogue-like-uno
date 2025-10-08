@@ -3,11 +3,12 @@ import { GameLogic } from "~/game/gamelogic";
 import { TestUi } from "~/UserInterface/TestUi";
 import type { Game } from "../game/types/Game";
 import UnoMatchPage from "./unoMatchPage";
+import NextRound from "./nextRoundPage";
 
 export default function Home(testMode: false) {
   //testing flag to enable testUI.tsx
-  const TEST_UI = true;
-  if (TEST_UI) return <TestUi />
+  // const TEST_UI = true;
+  // if (TEST_UI) return <TestUi />
 
   // Initialize the game state on first render
   const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
@@ -18,6 +19,11 @@ export default function Home(testMode: false) {
     GameLogic.get().initializeUno()
     setGameState(GameLogic.get().getGame())
   };
+
+  if (gameState.status === 'Next Round') {
+    console.log(gameState.status)
+    return <NextRound />;
+  }
 
 
   if (gameState.status === 'Match Created') {
