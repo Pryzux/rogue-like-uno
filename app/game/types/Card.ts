@@ -23,7 +23,6 @@ export function makeCard(
   id: string,
   type: CardType,
   color: CardColor,
-  isFaceDown: boolean,
   value?: number
 ): Card {
   return {
