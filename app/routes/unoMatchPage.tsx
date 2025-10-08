@@ -147,6 +147,11 @@ export default function UnoMatch() {
                     ))}
                 </div>
             </section>
+            <button className="border" onClick={() => {
+
+                setGameState(GameLogic.get().setWin())
+
+            }}>WIN</button>
         </div>
 
     )
