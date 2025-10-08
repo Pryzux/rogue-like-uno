@@ -168,8 +168,16 @@ export class GameLogic implements GameLogicInterface {
         match.turnDirection = match.turnDirection === 1 ? -1 : 1;
       }
 
-      // Updating the current player!
-      match.currentPlayerIndex = this.getNextPlayerIndex(match);
+      // Handle Reverse Momentum buff
+      // If the player does NOT have Reverse Momentum, update the current player as normal
+      // If the player has Reverse Momentum, the current player doesn't get updated because the player gets another turn
+      if (!(currentPlayer.isHuman) || !(this.currentGame.modifiers.find(modifier => modifier.name === 'Reverse Momentum'))) {
+        // The current player is AI OR the user does not have Reverse Momentum
+        match.currentPlayerIndex = this.getNextPlayerIndex(match); // THIS IS THE NORMAL LOGIC FOR GOING TO THE NEXT PLAYER WITHOUT MODIFIERS
+      } else if (card.type !== 'reverse') {
+        // The player has Reverse Momentum, but the card played was not a reverse
+        match.currentPlayerIndex = this.getNextPlayerIndex(match);
+      }
 
       if (card.type === "skip") {
         // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
