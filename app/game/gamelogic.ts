@@ -1,6 +1,6 @@
 import { canPlayCard, createDeck, drawOneCard, shuffleDeck } from "./deck";
 import type { GameLogicInterface } from "./gameLogicInterface";
-import type { CardColor } from "./types/Card";
+import type { Card, CardColor } from "./types/Card";
 import type { Game } from "./types/Game";
 import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
 import type Player from "./types/Player";
@@ -66,7 +66,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [DEBUFFS.find(d => d.name === 'Color Blind')],
+      modifiers: [DEBUFFS.find((d) => d.name === "Color Blind")!],
       status: "Not Started",
     };
 
@@ -133,14 +133,16 @@ export class GameLogic implements GameLogicInterface {
     // The current player is the user, and they have the Color Blind debuff, AND they have more than 3 cards in their hand
     // AND the card played is a wild type
     if (
-      card.type.includes('wild') &&
+      card.type.includes("wild") &&
       currentPlayer.isHuman &&
-      (this.currentGame.modifiers.find(modifier => modifier.name === 'Color Blind')) &&
+      this.currentGame.modifiers.find(
+        (modifier) => modifier.name === "Color Blind"
+      ) &&
       currentPlayer.hand.length > 3
     ) {
-      return false
+      return false;
     }
-    return true
+    return true;
   }
 
   // returns null if play is invalid
@@ -187,10 +189,15 @@ export class GameLogic implements GameLogicInterface {
       // Handle Reverse Momentum buff
       // If the player does NOT have Reverse Momentum, update the current player as normal
       // If the player has Reverse Momentum, the current player doesn't get updated because the player gets another turn
-      if (!(currentPlayer.isHuman) || !(this.currentGame.modifiers.find(modifier => modifier.name === 'Reverse Momentum'))) {
+      if (
+        !currentPlayer.isHuman ||
+        !this.currentGame.modifiers.find(
+          (modifier) => modifier.name === "Reverse Momentum"
+        )
+      ) {
         // The current player is AI OR the user does not have Reverse Momentum
         match.currentPlayerIndex = this.getNextPlayerIndex(match); // THIS IS THE NORMAL LOGIC FOR GOING TO THE NEXT PLAYER WITHOUT MODIFIERS
-      } else if (card.type !== 'reverse') {
+      } else if (card.type !== "reverse") {
         // The player has Reverse Momentum, but the card played was not a reverse
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
       }
@@ -204,7 +211,7 @@ export class GameLogic implements GameLogicInterface {
         // the current player was updated above to the next player, so they have to draw
         this.drawCards(2, match.currentPlayerIndex);
       }
-        
+
       if (card.type === "wild") {
         match.currentColor = color! as CardColor;
       }
@@ -423,5 +430,10 @@ export class GameLogic implements GameLogicInterface {
     // Add modifier
     this.currentGame.modifiers.push(modifier);
     console.log(`Added ${modifier.modifierType}: ${modifier.name}`);
+  }
+
+  public resetModifiers(): Game {
+    this.currentGame.modifiers = [];
+    return this.getGame();
   }
 } // end of class
