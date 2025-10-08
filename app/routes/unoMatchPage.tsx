@@ -40,13 +40,11 @@ export default function UnoMatch() {
             setShowColorPicker(true)
         } else {
             const success = GameLogic.get().playCard(card.id)
-
-            if (success) {
-                setGameState(GameLogic.get().getGame())
-                setMatchState(GameLogic.get().getCurrentUnoMatch())
-            }
+        if (success) {
+            setGameState(GameLogic.get().getGame())
+            setMatchState(GameLogic.get().getCurrentUnoMatch())
         }
-
+    }
     }
 
     useEffect(() => {
