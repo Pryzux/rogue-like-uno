@@ -1,11 +1,15 @@
+import { GameLogic } from "~/game/gamelogic";
 import type { Card } from "~/game/types/Card";
 import SingleCard from "./SingleCard";
 
 type HandProps = {
     hand: Card[];
     onCardClick?: (card: Card) => void;
-    isClickable?: boolean;
-    isPlayableFor?: (card: Card) => boolean;
+    isHuman?: boolean;
+    playerIndex: number;
+    //isClickable?: boolean;
+    //isPlayableFor?: (card: Card) => boolean;
+    playCardFn: (card: Card) => void;
 }
 
 //takes in props for a hand of cards (a card array)
@@ -13,16 +17,21 @@ type HandProps = {
 export default function Hand({
     hand,
     onCardClick,
-    isClickable = false,
-    isPlayableFor,
+    isHuman,
+    playerIndex,
+    playCardFn
 }: HandProps) {
+
+    const gameLogic = GameLogic.get();
 
     return (
         <div className="flex gap-2">
             {hand.map((card: Card) => (
-                <SingleCard key={card.id} card={card} onClick={isClickable ? () => onCardClick?.(card) : undefined}
-                    isClickable={isClickable}
-                    isPlayable={isPlayableFor ? isPlayableFor(card) : true} />
+                <SingleCard key={card.id} card={card} onClick={() => {
+                    if (isHuman && playerIndex === gameLogic.getCurrentUnoMatch().currentPlayerIndex) {
+                        playCardFn(card)
+                    };
+                }} />
             ))}
         </div>
     );

@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import type { Game } from "../game/types/Game";
+import { useEffect, useState } from "react";
 import { GameLogic } from "../game/gamelogic";
+import ColorPicker from "../UserInterface/ColorPicker";
+import Hand from "../UserInterface/Hand";
+import type { Game } from "../game/types/Game";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
-import ColorPicker from "~/UserInterface/ColorPicker";
+
 
 
 interface GameProps {
@@ -13,7 +15,7 @@ interface GameProps {
     setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
 
-export function UnoMatchPage({ gameState, setGameState }: GameProps) { 
+export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [colorPickerCardId, setColorPickerCardId] = useState('')
@@ -27,7 +29,6 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         // Re-render game and match state
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
-
     }
 
     const handleColorPickerChoice = (cardId: string, color: CardColor) => {
@@ -151,17 +152,9 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                             </div>
 
                             {/* Render player's hand */}
-                            <div className="flex flex-wrap gap-1">
-                                {player.hand.map((card) => (
-                                    <SimpleCard
-                                        key={card.id}
-                                        card={card}
-                                        onClick={() => {
-                                            if (player.isHuman && i === currentPlayerIndex) playCard(card);
-                                        }}
-                                    />
-                                ))}
-                            </div>
+                            {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
+                            {/* <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> */}
+                            <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                         </div>
                     ))}
                 </div>
