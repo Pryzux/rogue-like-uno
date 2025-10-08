@@ -66,7 +66,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [DEBUFFS.find(d => d.name === 'Color Blind')],
+      modifiers: [],
       status: "Not Started",
     };
 

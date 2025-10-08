@@ -37,6 +37,11 @@ export const BUFFS: Modifier[] = [
     name: 'Color Blind',
     description: 'You can’t play Wilds until you have 3 or fewer cards left.',
     modifierType: 'debuff'
+  },
+  {
+    name: 'Lazy Dealer',
+    description: 'Increase the number of cards in your starting hand by 3',
+    modifierType: 'debuff'
   }
 ];
 
