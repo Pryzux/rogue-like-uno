@@ -15,8 +15,8 @@ const cardImages: Record<CardKey, string> = {
     red_seven: '/UIResources/unoCard-back.png',
     red_eight: '/UIResources/unoCard-back.png',
     red_nine: '/UIResources/unoCard-back.png',
-    red_skip: '/UIResources/unoCard-back.png',
-    red_reverse: '/UIResources/unoCard-back.png',
+    red_skip: 'public/redskip.png',
+    red_reverse: 'public/unoCard-back.png',
     red_draw2: '/UIResources/unoCard-back.png',
     red_wild: '/UIResources/unoCard-back.png', //never used
     red_wildDraw4: '/UIResources/unoCard-back.png', //never used
@@ -79,8 +79,8 @@ const cardImages: Record<CardKey, string> = {
     black_skip: '/UIResources/unoCard-back.png',
     black_reverse: '/UIResources/unoCard-back.png',
     black_draw2: '/UIResources/unoCard-back.png',
-    black_wild: '/UIResources/unoCard-back.png', //never used
-    black_wildDraw4: '/UIResources/unoCard-back.png', //never used
+    black_wild: 'public/wild.png', //wild card used, since wild card is defined as black within deck creation
+    black_wildDraw4: 'public/wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
 
     //throwaway components as a new item has been added to card type:
     red_number: '/UIResources/unoCard-back.png', //never used
@@ -131,10 +131,11 @@ function determineCardType(color: string, typeOrValue: string | number, id: numb
 export default function SingleCard(card: Card) {
 
     return (
-        <div className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
+        <div>
             <img src={determineCardType(card.color, card.type, card.value)}
                 alt="Standard back of Uno Card"
-                className="block w-full h-full object-contain" />
+                className="block w-24 h-36 object-contain" />
+
         </div>
     );
 
