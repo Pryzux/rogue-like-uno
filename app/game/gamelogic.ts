@@ -140,7 +140,7 @@ export class GameLogic implements GameLogicInterface {
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
  
-    // check if play is valid - maybe this check should happen somewhere else?
+    // check if play is valid 
     if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
@@ -151,8 +151,15 @@ export class GameLogic implements GameLogicInterface {
       match.currentColor = card.color;
 
       if (currentPlayer.hand.length === 0) {
-        match.status = "Won";
-        this.currentGame.status = "Next Round";
+        // someone won!
+        if (!currentPlayer.isHuman) { // the AI won
+          match.status = "Loss";
+          this.currentGame.status = "Lost";
+        } else { // human won!
+          match.status = "Won";
+          this.currentGame.status = "Next Round";
+        }
+        return true
       }
 
       // if the card is a reverse card, turn direction must be updated first
@@ -256,62 +263,38 @@ export class GameLogic implements GameLogicInterface {
       return;
     }
 
-    // Find all playable cards in AI's hand
-    const playableCards = currentPlayer.hand.filter((card) =>
-      canPlayCard(card, match.discardPile[0], match.currentColor!)
-    );
+    let turnIsOver = false
 
-    if (playableCards.length > 0) {
-      // Randomly select a playable card
-      const cardToPlay =
-        playableCards[Math.floor(Math.random() * playableCards.length)];
+    while (!turnIsOver) {
+      // Find all playable cards in AI's hand
+      const playableCards = currentPlayer.hand.filter((card) =>
+        canPlayCard(card, match.discardPile[0], match.currentColor!)
+      );
 
-      // If it's a wild card, choose the best color before playing
-      if (cardToPlay.type === "wild" || cardToPlay.type === "wildDraw4") {
-        const chosenColor = this.chooseColorForWild(currentPlayer);
+      if (playableCards.length > 0) {
+        // there's at least one playable card, so we won't have to draw any more
+        turnIsOver = true
 
-        // Remove the card from hand
-        currentPlayer.hand = currentPlayer.hand.filter(
-          (card) => card.id !== cardToPlay.id
-        );
+        // Randomly select a playable card
+        const cardToPlay =
+          playableCards[Math.floor(Math.random() * playableCards.length)];
 
-        // Add to discard pile
-        match.discardPile = [cardToPlay, ...match.discardPile];
+        // If it's a wild card, choose the best color before playing
+        if (cardToPlay.type === "wild" || cardToPlay.type === "wildDraw4") {
+          const chosenColor = this.chooseColorForWild(currentPlayer);
 
-        // Play Wild Card -- Need to pass chosenColor
-        // match.currentColor = chosenColor;
-        this.playCard(cardToPlay.id, chosenColor)!;
-
-        // Check if AI won
-        if (currentPlayer.hand.length === 0) {
-          match.status = "Loss";
-          this.currentGame.status = "Lost";
-          return;
-        }
-
-        // Handle wildDraw4 effect
-        if (cardToPlay.type === "wildDraw4") {
-          match.currentPlayerIndex = this.getNextPlayerIndex(match);
-          this.drawCards(4, match.currentPlayerIndex);
+          // Play Wild Card, passing in the chosen color
+          this.playCard(cardToPlay.id, chosenColor)!;
+          return this.getGame();
         } else {
-          // Regular wild card - just advance turn
-          match.currentPlayerIndex = this.getNextPlayerIndex(match);
+          // playing a non-wild card
+          this.playCard(cardToPlay.id)!;
+          return this.getGame();
         }
-
-        return;
       } else {
-        // Use the existing playCard method for non-wild cards
-        this.playCard(cardToPlay.id)!;
-        return this.getGame();
+        // No playable cards, draw one card and go back to beginning of while loop
+        this.drawCards(1, match.currentPlayerIndex);
       }
-    } else {
-      // No playable cards, draw one card
-      this.drawCards(1, match.currentPlayerIndex);
-
-      // After drawing, advance to next player's turn
-      match.currentPlayerIndex = this.getNextPlayerIndex(match);
-
-      return;
     }
   }
 

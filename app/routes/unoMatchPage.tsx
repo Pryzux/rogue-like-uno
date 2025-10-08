@@ -14,8 +14,6 @@ interface GameProps {
 }
 
 export function UnoMatchPage({ gameState, setGameState }: GameProps) { 
-
-    const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [colorPickerCardId, setColorPickerCardId] = useState('') 
@@ -76,7 +74,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                     setMatchState({ ...newMatch });
                 }
 
-            }, 1000);
+            }, 2000);
 
         }
 
