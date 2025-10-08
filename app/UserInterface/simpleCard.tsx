@@ -1,6 +1,6 @@
 import type { Card } from "../game/types/Card";
 
-export default function Cards({ card }: { card: Card }) {
+export default function Cards({ card, onClick }: { card: Card, onClick }) {
 
     const colorMap: Record<string, string> = {
 
@@ -18,14 +18,15 @@ export default function Cards({ card }: { card: Card }) {
 
     return (
 
-        <div
+        <button
+            onClick={onClick}
             className={`w-10 h-14 rounded-md flex items-center justify-center border border-amber-200 shadow-sm font-bold text-xs capitalize ${colorClass}`}
             title={`${card.color} ${label}`}
         >
 
             {label}
 
-        </div>
+        </button>
 
     );
 }

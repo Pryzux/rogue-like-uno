@@ -21,6 +21,13 @@ export default function UnoMatch() {
         setMatchState(GameLogic.get().getCurrentUnoMatch())
     };
 
+    const playCard = (card: Card) => {
+        console.log('played card', card)
+        GameLogic.get().playCard(card.id)
+        setGameState(GameLogic.get().getGame())
+        setMatchState(GameLogic.get().getCurrentUnoMatch())
+    }
+
     if (!matchState) {
         return <div className="p-6">No active match found.</div>;
     }
@@ -29,7 +36,7 @@ export default function UnoMatch() {
     const { players, discardPile, currentPlayerIndex, currentColor, turnDirection, status } =
         matchState;
 
-    const topCard = discardPile.at(-1);
+    const topCard = discardPile.at(0);
 
     const drawDeckCard: Card = { id: `card-draw-deck`, type: "deck", color: 'black' }
     console.log('game state rerender', gameState)
@@ -59,7 +66,7 @@ export default function UnoMatch() {
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
                 <div>
                     <h2 className='font-bold text-lg'>Draw deck</h2>
-                    <div className="w-24 h-36 flex items-center justify-center"> aaa<SingleCard card={drawDeckCard} onClick={() => drawCard(1)} /> </div>
+                    <div className="w-24 h-36 flex items-center justify-center"><SingleCard card={drawDeckCard} onClick={() => drawCard(1)} /> </div>
                 </div>
                 <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
 
@@ -88,7 +95,7 @@ export default function UnoMatch() {
                             {/* Render player's hand */}
                             <div className="flex flex-wrap gap-1">
 
-                                {player.hand.map((card) => (<SimpleCard key={card.id} card={card} />))}
+                                {player.hand.map((card) => (<SimpleCard onClick={() => playCard(card) } key={card.id} card={card} />))}
 
                             </div>
                         </div>
