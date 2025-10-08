@@ -3,6 +3,7 @@ import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
+import type Player from "../game/types/Player";
 import type { Card } from "../game/types/Card"
 
 
@@ -13,6 +14,7 @@ export default function UnoMatch() {
 
 
     const drawCard = (cardNumber: number) => {
+        console.log("Drawing Card with currentplayerindex=", matchState?.currentPlayerIndex!);
         GameLogic.get().drawCards(cardNumber, matchState?.currentPlayerIndex!);
         //re-render gameState and matchState
         setGameState(GameLogic.get().getGame())
