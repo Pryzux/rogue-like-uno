@@ -130,12 +130,12 @@ function determineCardType(color: string, typeOrValue: string | number, id: numb
 
 //determineCardType(card.color, card.type)
 //takes in a Card type, returns an image 
-export default function SingleCard({card, onClick}) {
+export default function SingleCard(card: Card) {
 
 
 
     return (
-        <button onClick={onClick} className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
+        <button className="png-box inline-flex w-24 h-36 items-center justify-center overflow-hidden rounded-xl border border-neutral-700 p-0">
             <img src={determineCardType(card.color, card.type, card.value)}
                 alt="Standard back of Uno Card"
                 className="block w-24 h-36 object-contain" />
