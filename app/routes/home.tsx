@@ -2,8 +2,8 @@ import { useState } from "react";
 import { GameLogic } from "~/game/gamelogic";
 import { TestUi } from "~/UserInterface/TestUi";
 import type { Game } from "../game/types/Game";
-import UnoMatchPage from "./unoMatchPage";
 import NextRound from "./nextRoundPage";
+import { UnoMatchPage } from "./unoMatchPage";
 
 export default function Home(testMode: false) {
   //testing flag to enable testUI.tsx
@@ -22,13 +22,13 @@ export default function Home(testMode: false) {
 
   if (gameState.status === 'Next Round') {
     console.log(gameState.status)
-    return <NextRound />;
+    return <NextRound gameState={gameState} setGameState={setGameState} />;
   }
 
 
   if (gameState.status === 'Match Created') {
     console.log(gameState.status)
-    return <UnoMatchPage />;
+    return <UnoMatchPage gameState={gameState} setGameState={setGameState} />;
   }
   else {
 

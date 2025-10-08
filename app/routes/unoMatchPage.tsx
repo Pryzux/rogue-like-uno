@@ -4,9 +4,14 @@ import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import type { Card } from "../game/types/Card";
 
-export default function UnoMatch() {
+interface GameProps {
+    gameState: Game;
+    setGameState: React.Dispatch<React.SetStateAction<Game>>;
+}
 
-    const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
+export function UnoMatchPage({ gameState, setGameState }: GameProps) {
+
+    // const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
     const [matchState, setMatchState] = useState(gameState.matches.at(-1));
 
     const drawCard = (cardNumber: number) => {
