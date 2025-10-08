@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { GameLogic } from "~/game/gamelogic";
-import HandV0 from "~/UserInterface/handV0";
-import type { Card } from "../game/types/Card";
+
 import type { Game } from "../game/types/Game";
 import SimpleCard from "../UserInterface/simpleCard";
-import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player"; 
 import type { Card, CardColor } from "../game/types/Card"
 import ColorPicker from "~/UserInterface/ColorPicker";
+import HandV0 from "~/UserInterface/HandV0";
 
 
 interface GameProps {
@@ -22,20 +21,13 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
     const drawCard = (cardNumber: number) => {
 
-        const match = gameLogic.getCurrentUnoMatch();
+        const match = GameLogic.get().getCurrentUnoMatch();
         console.log("Drawing Card with currentPlayerIndex=", match.currentPlayerIndex)
-        gameLogic.drawCards(cardNumber, match.currentPlayerIndex)
+        GameLogic.get().drawCards(cardNumber, match.currentPlayerIndex)
 
         // Re-render game and match state
-        setGameState(gameLogic.getGame())
-        setMatchState(gameLogic.getCurrentUnoMatch())
-    }
-
-    const handleColorPickerChoice = (cardId: string, color: CardColor) => {
-        GameLogic.get().playCard(cardId, color)
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
-        setShowColorPicker(false)
     }
 
     const handleColorPickerChoice = (cardId: string, color: CardColor) => {
@@ -52,8 +44,8 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         } else {
             const success = GameLogic.get().playCard(card.id)
         if (success) {
-            setGameState(gameLogic.getGame())
-            setMatchState(gameLogic.getCurrentUnoMatch())
+            setGameState(GameLogic.get().getGame())
+            setMatchState(GameLogic.get().getCurrentUnoMatch())
         }
     }
     }
@@ -71,11 +63,11 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
             // 'delay' the ai's turn
             setTimeout(() => {
 
-                gameLogic.playAITurn();
-                setGameState(gameLogic.getGame());
-                setMatchState(gameLogic.getCurrentUnoMatch());
+                GameLogic.get().playAITurn();
+                setGameState(GameLogic.get().getGame());
+                setMatchState(GameLogic.get().getCurrentUnoMatch());
 
-                const newMatch = gameLogic.getCurrentUnoMatch();
+                const newMatch = GameLogic.get().getCurrentUnoMatch();
                 const nextPlayer = newMatch.players[newMatch.currentPlayerIndex];
 
                 if (!nextPlayer.isHuman) {
@@ -168,7 +160,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
             </section>
             <button className="border" onClick={() => {
 
-                setGameState(gameLogic.setWin())
+                setGameState(GameLogic.get().setWin())
 
             }}>WIN</button>
         </div>
