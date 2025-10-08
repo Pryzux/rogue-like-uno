@@ -19,6 +19,12 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
         setGameState(GameLogic.get().getGame());
     };
 
+    const handleStartNewGame = () => {
+        console.log("Starting New Game..");
+        GameLogic.get().initializeUno()
+        setGameState(GameLogic.get().getGame())
+    };
+
     // Refresh current modifiers when component mounts
     useEffect(() => { setGameState(GameLogic.get().getGame()) }, []);
 
@@ -102,7 +108,13 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                 </p>
                             )}
                         </div>
+
                     </div>
+                    <button
+                        // Clicking will add a new match to the gameState
+                        onClick={handleStartNewGame} className="px-4 py-2 bg-amber-200 border border-amber-300 rounded hover:bg-amber-300">
+                        Start Game
+                    </button>
                 </div>
             </div>
         </div>

@@ -361,32 +361,29 @@ export class GameLogic implements GameLogicInterface {
   // ----- Buffs and Debuffs Logic ----
 
   // Random Buff/Debuffs for nextRoundPage (Picks 2 of Each) - Helper
-  private getRandomModifiers(list: Modifier[], count: number): Modifier[] {
+  private getRandomModifiers(list: Modifier[]): Modifier[] {
     // Get current modifiers the player already has
     const currentModifiers = this.getCurrentModifiers();
 
-    // Filter ou
+    // Filter out
     const available = list.filter(
       (modifier) =>
-        !currentModifiers.some(
-          (owned) =>
-            owned.name === modifier.name ||
-            owned.modifierType === modifier.modifierType
-        )
+        !currentModifiers.some((owned) => owned.name === modifier.name)
     );
-
+    console.log(JSON.stringify(available));
     // Shuffle the remaining options
     const shuffled = [...available].sort(() => Math.random() - 0.5);
 
     // Return up to `count` modifiers
-    return shuffled.slice(0, count);
+
+    return shuffled.slice(0, 2);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.
   public getNextRoundOptions(): {} {
     return {
-      buffs: this.getRandomModifiers(BUFFS, 2),
-      debuffs: this.getRandomModifiers(DEBUFFS, 2),
+      buffs: this.getRandomModifiers(BUFFS),
+      debuffs: this.getRandomModifiers(DEBUFFS),
     };
   }
 
@@ -398,29 +395,33 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame.modifiers;
   }
 
-  // Add a new modifier to the current game
   public addModifier(modifier: Modifier): void {
-    // Check if a modifier of this type already exists
-    // will work because you can't add duplicate modifiers anyways, so it's essentially just checking if you already chose something
-    // for buff and debuff
-
-    const alreadyChosen = this.currentGame.modifiers.some(
+    // 1 modifier of each type for every match in matches
+    const chosenOfType = this.currentGame.modifiers.filter(
       (m) => m.modifierType === modifier.modifierType
-    );
+    ).length;
 
+    const maxForType = this.currentGame.matches.length; // one per match
+    const canChooseOfType = chosenOfType < maxForType;
+
+    if (!canChooseOfType) {
+      console.warn(
+        `You have already chosen the maximum number of ${modifier.modifierType}s for ${maxForType} match(es).`
+      );
+      return;
+    }
+
+    // Block exact duplicate by name (clicking multiple times)
+    const alreadyChosen = this.currentGame.modifiers.some(
+      (m) => m.name === modifier.name
+    );
     if (alreadyChosen) {
-      console.warn(`Cannot add another ${modifier.modifierType} this round!`);
+      console.warn(`You already chose "${modifier.name}".`);
       return;
     }
 
     // Add modifier
     this.currentGame.modifiers.push(modifier);
     console.log(`Added ${modifier.modifierType}: ${modifier.name}`);
-  }
-
-  // Wipe the modifiers for the game (after they lose)
-  public resetModifiers(): Game {
-    this.currentGame.modifiers = [];
-    return this.getGame();
   }
 } // end of class
