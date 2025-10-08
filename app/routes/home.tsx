@@ -7,8 +7,8 @@ import { UnoMatchPage } from "./unoMatchPage";
 
 export default function Home(testMode: false) {
   //testing flag to enable testUI.tsx
-  // const TEST_UI = true;
-  // if (TEST_UI) return <TestUi />
+  const TEST_UI = false;
+  if (TEST_UI) return <TestUi />
 
   // Initialize the game state on first render
   const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
