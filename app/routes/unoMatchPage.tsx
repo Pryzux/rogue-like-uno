@@ -7,6 +7,7 @@ import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
+import HandV0 from "~/UserInterface/HandV0";
 
 
 
@@ -153,8 +154,8 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
                             {/* Render player's hand */}
                             {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
-                            {/* <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> */}
-                            <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                            <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                            {/* <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> */}
                         </div>
                     ))}
                 </div>

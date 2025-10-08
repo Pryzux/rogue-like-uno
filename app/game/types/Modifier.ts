@@ -5,6 +5,20 @@ export interface Modifier {
   modifierType: "buff" | "debuff";
 }
 
+export function makeModifier(
+  name: string,
+  description: string,
+  modifierType: "buff" | "debuff"
+) {
+
+  return {
+    name,
+    description,
+    modifierType
+  };
+}
+
+
 // Buffs
 export const BUFFS: Modifier[] = [
   {
@@ -33,6 +47,16 @@ export const BUFFS: Modifier[] = [
     description: "You automatically call UNO when down to one card.",
     modifierType: "buff",
   },
+  {
+    name: "+5 card",
+    description: "When a Draw 4 card is pulled, this card becomes a Draw 5 card",
+    modifierType: "buff",
+  },
+   {
+    name: "+3 card",
+    description: "When a Draw 2 card is pulled, this card becomes a Draw 3 card",
+    modifierType: "buff",
+  }
 ];
 
 // Debuffs
@@ -63,7 +87,7 @@ export const DEBUFFS: Modifier[] = [
     name: "Uno Delay",
     description: "When you go down to one card, skip your next turn.",
     modifierType: "debuff",
-  },
+  }
 ];
 
 // Utility: pick N random modifiers from a list.
