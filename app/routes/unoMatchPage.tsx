@@ -3,7 +3,7 @@ import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
-import type Player from "../game/types/Player"; 
+import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
 import ColorPicker from "~/UserInterface/ColorPicker";
 
@@ -13,12 +13,12 @@ interface GameProps {
     setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
 
-export function UnoMatchPage({ gameState, setGameState }: GameProps) { 
+export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
-    const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
+    // const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
-    const [colorPickerCardId, setColorPickerCardId] = useState('') 
+    const [colorPickerCardId, setColorPickerCardId] = useState('')
 
     const drawCard = (cardNumber: number) => {
 
@@ -45,11 +45,11 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
             setShowColorPicker(true)
         } else {
             const success = GameLogic.get().playCard(card.id)
-        if (success) {
-            setGameState(GameLogic.get().getGame())
-            setMatchState(GameLogic.get().getCurrentUnoMatch())
+            if (success) {
+                setGameState(GameLogic.get().getGame())
+                setMatchState(GameLogic.get().getCurrentUnoMatch())
+            }
         }
-    }
     }
 
     useEffect(() => {
@@ -119,7 +119,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
             {/* DRAW + DISCARD */}
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-                {showColorPicker ? <ColorPicker cardId={colorPickerCardId} handleChoice={handleColorPickerChoice}/> : null}
+                {showColorPicker ? <ColorPicker cardId={colorPickerCardId} handleChoice={handleColorPickerChoice} /> : null}
                 <div>
                     <h2 className="font-bold text-lg">Draw deck</h2>
                     <div className="w-24 h-36 flex items-center justify-center">
