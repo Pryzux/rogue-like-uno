@@ -34,12 +34,15 @@ export default function SimpleCard({
         .join(" ");
 
     return (
-        <div
+        <button
+            onClick={onClick}
             className={classes}
             title={`${card.color} ${label}`}
             onClick={isClickable && isPlayable ? onClick : undefined}
         >
             {label}
-        </div>
+
+        </button>
+
     );
 }

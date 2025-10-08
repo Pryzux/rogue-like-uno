@@ -2,7 +2,9 @@ import { useState } from "react";
 import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
+import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
+import type { Card } from "../game/types/Card"
 
 
 export default function UnoMatch() {
@@ -11,13 +13,19 @@ export default function UnoMatch() {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
 
 
-    const handleStartNewGame = (cardNumber: number) => {
-        console.log("Drawing Card..");
+    const drawCard = (cardNumber: number) => {
+        console.log("Drawing Card with currentplayerindex=", matchState?.currentPlayerIndex!);
         GameLogic.get().drawCards(cardNumber, matchState?.currentPlayerIndex!);
         //re-render gameState and matchState
         setGameState(GameLogic.get().getGame())
-
+        setMatchState(GameLogic.get().getCurrentUnoMatch())
     };
+
+    const playCard = (card: Card) => {
+        GameLogic.get().playCard(card.id)
+        setGameState(GameLogic.get().getGame())
+        setMatchState(GameLogic.get().getCurrentUnoMatch())
+    }
 
     if (!matchState) {
         return <div className="p-6">No active match found.</div>;
@@ -27,7 +35,9 @@ export default function UnoMatch() {
     const { players, discardPile, currentPlayerIndex, currentColor, turnDirection, status } =
         matchState;
 
-    const topCard = discardPile.at(-1);
+    const topCard = discardPile.at(0);
+
+    const drawDeckCard: Card = { id: `card-draw-deck`, type: "deck", color: 'black' }
 
     return (
 
@@ -51,9 +61,11 @@ export default function UnoMatch() {
                 </div>
             </header>
 
-            {/* Discard Pile */}
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-
+                <div>
+                    <h2 className='font-bold text-lg'>Draw deck</h2>
+                    <div className="w-24 h-36 flex items-center justify-center"><SingleCard card={drawDeckCard} onClick={() => drawCard(1)} /> </div>
+                </div>
                 <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
 
                 <div className="w-24 h-36 flex items-center justify-center"> <SimpleCard card={topCard!} /> </div>
@@ -81,7 +93,7 @@ export default function UnoMatch() {
                             {/* Render player's hand */}
                             <div className="flex flex-wrap gap-1">
 
-                                {player.hand.map((card) => (<SimpleCard key={card.id} card={card} />))}
+                                {player.hand.map((card) => (<SimpleCard onClick={() => playCard(card) } key={card.id} card={card} />))}
 
                             </div>
                         </div>
