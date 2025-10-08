@@ -84,9 +84,9 @@ export class GameLogic implements GameLogicInterface {
 
   // Initialize Uno Round -- Pushes a new Match to Matches[UnoMatch]
   public initializeUno(): Game {
+
     // Create a deck
     let deck = shuffleDeck(createDeck());
-
     // deal cards to all players
     this.currentGame.players.forEach((player) => {
       player.hand = [];
@@ -202,7 +202,9 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
-        this.drawCards(2, match.currentPlayerIndex);
+        //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
+        this.getCurrentModifiers().some(m => m.name === "+3 card") ? this.drawCards(3, match.currentPlayerIndex) : this.drawCards(2, match.currentPlayerIndex);
+
       }
         
       if (card.type === "wild") {
@@ -210,7 +212,9 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wildDraw4") {
-        this.drawCards(4, match.currentPlayerIndex);
+        //adding logic to handle a Buff, where a draw4 card becomes a draw5 card
+        this.getCurrentModifiers().some(m => m.name === "+5 card") ? this.drawCards(5, match.currentPlayerIndex) : this.drawCards(4, match.currentPlayerIndex);
+        console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
 
