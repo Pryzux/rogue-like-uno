@@ -32,6 +32,12 @@ export default function Home(testMode: false) {
     return <UnoMatchPage gameState={gameState} setGameState={setGameState} />;
   }
 
+  if (gameState.status === 'Lost') {
+    console.log(gameState.status)
+    setGameState(GameLogic.get().resetGame())
+    return <UnoMatchPage gameState={gameState} setGameState={setGameState} />;
+  }
+
   else {
 
     return (
