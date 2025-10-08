@@ -2,19 +2,30 @@ import { useState } from "react";
 import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
+import type Player from "../game/types/Player";
 
 
 export default function UnoMatch() {
-    const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
-    const currentMatch = gameState.matches.at(-1);
 
-    if (!currentMatch) {
+    const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
+    const [matchState, setMatchState] = useState(gameState.matches.at(-1))
+
+
+    const handleStartNewGame = (cardNumber: number) => {
+        console.log("Drawing Card..");
+        GameLogic.get().drawCards(cardNumber, matchState?.currentPlayerIndex!);
+        //re-render gameState and matchState
+        setGameState(GameLogic.get().getGame())
+
+    };
+
+    if (!matchState) {
         return <div className="p-6">No active match found.</div>;
     }
 
     // Extract match data
     const { players, discardPile, currentPlayerIndex, currentColor, turnDirection, status } =
-        currentMatch;
+        matchState;
 
     const topCard = discardPile.at(-1);
 
