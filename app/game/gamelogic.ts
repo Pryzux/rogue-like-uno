@@ -134,13 +134,13 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string): Boolean {
+  public playCard(cardId: string, color = null): Boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
-
+ 
     // check if play is valid - maybe this check should happen somewhere else?
     if (card && canPlayCard(card, match.discardPile[0], match.currentColor!)) {
       // removing the played card from the player's hand
@@ -176,20 +176,14 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "wild") {
         // handle wild card effects
-        // temporary logic!!!
-        const validColors = ["red", "blue", "green", "yellow"];
-        const colorPick =
-          validColors[Math.floor(Math.random() * validColors.length)];
-        match.currentColor = colorPick as CardColor;
+        console.log('chosen color is', color)
+        match.currentColor = color! as CardColor;
       }
 
       if (card.type === "wildDraw4") {
         this.drawCards(4, match.currentPlayerIndex);
-        // temporary logic!!!
-        const validColors = ["red", "blue", "green", "yellow"];
-        const colorPick =
-          validColors[Math.floor(Math.random() * validColors.length)];
-        match.currentColor = colorPick as CardColor;
+        console.log('chosen color is', color)
+        match.currentColor = color! as CardColor;
       }
 
       return true;
@@ -226,8 +220,6 @@ export class GameLogic implements GameLogicInterface {
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
-    console.log('getcurrentunomatchs says', this.currentGame!.matches.at(-1))
-    console.log('matches from within getcurrentunomatch', this.currentGame.matches)
     return this.currentGame!.matches.at(-1)!;
   }
 

@@ -5,13 +5,15 @@ import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
 import type { Card } from "../game/types/Card"
+import ColorPicker from "~/UserInterface/ColorPicker";
 
 
 export default function UnoMatch() {
 
     const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
-
+    const [showColorPicker, setShowColorPicker] = useState(false)
+    const [colorPickerCardId, setColorPickerCardId] = useState('')
 
     const drawCard = (cardNumber: number) => {
         console.log("Drawing Card with currentplayerindex=", matchState?.currentPlayerIndex!);
@@ -21,10 +23,24 @@ export default function UnoMatch() {
         setMatchState(GameLogic.get().getCurrentUnoMatch())
     };
 
-    const playCard = (card: Card) => {
-        GameLogic.get().playCard(card.id)
+    const handleColorPickerChoice = (cardId, color) => {
+        GameLogic.get().playCard(cardId, color)
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
+        setShowColorPicker(false)
+    }
+
+
+    const playCard = (card: Card) => {
+        if (card.type.includes('wild')) {
+            setColorPickerCardId(card.id)
+            setShowColorPicker(true)
+        } else {
+            GameLogic.get().playCard(card.id)
+            setGameState(GameLogic.get().getGame())
+            setMatchState(GameLogic.get().getCurrentUnoMatch())
+        }
+        
     }
 
     if (!matchState) {
@@ -62,6 +78,7 @@ export default function UnoMatch() {
             </header>
 
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
+                {showColorPicker ? <ColorPicker cardId={colorPickerCardId} handleChoice={handleColorPickerChoice}/> : null}
                 <div>
                     <h2 className='font-bold text-lg'>Draw deck</h2>
                     <div className="w-24 h-36 flex items-center justify-center"><SingleCard card={drawDeckCard} onClick={() => drawCard(1)} /> </div>
