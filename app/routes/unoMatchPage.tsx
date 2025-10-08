@@ -1,20 +1,24 @@
 import { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
 import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
-import type Player from "../game/types/Player";
+import type Player from "../game/types/Player"; 
 import type { Card, CardColor } from "../game/types/Card"
 import ColorPicker from "~/UserInterface/ColorPicker";
 
 
-export default function UnoMatch() {
+interface GameProps {
+    gameState: Game;
+    setGameState: React.Dispatch<React.SetStateAction<Game>>;
+}
+
+export function UnoMatchPage({ gameState, setGameState }: GameProps) { 
 
     const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
-    const [colorPickerCardId, setColorPickerCardId] = useState('')
+    const [colorPickerCardId, setColorPickerCardId] = useState('') 
 
     const drawCard = (cardNumber: number) => {
 

@@ -1,5 +1,5 @@
 import type { Card } from "~/game/types/Card";
-import {determineCardType} from "./SingleCard"
+import { determineCardType } from "./SingleCard"
 
 
 export default function SimpleCard({
@@ -41,9 +41,9 @@ export default function SimpleCard({
             onClick={isClickable && isPlayable ? onClick : undefined}
         >
 
-            {/* {label} */}
+            {label}
 
-            
+
 
         </button>
 
