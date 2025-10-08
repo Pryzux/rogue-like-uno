@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { GameLogic } from "~/game/gamelogic";
-
-import ColorPicker from "~/UserInterface/ColorPicker";
-import Hand from "~/UserInterface/Hand";
-import type { Card, CardColor } from "../game/types/Card";
+import { GameLogic } from "../game/gamelogic";
+import ColorPicker from "../UserInterface/ColorPicker";
+import Hand from "../UserInterface/Hand";
 import type { Game } from "../game/types/Game";
 import SimpleCard from "../UserInterface/simpleCard";
+import SingleCard from "../UserInterface/SingleCard"
+import type Player from "../game/types/Player";
+import type { Card, CardColor } from "../game/types/Card"
+
 
 
 interface GameProps {
