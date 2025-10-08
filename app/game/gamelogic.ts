@@ -279,15 +279,8 @@ export class GameLogic implements GameLogicInterface {
           // Play Wild Card, passing in the chosen color
           this.playCard(cardToPlay.id, chosenColor)!;
 
-          // Check if AI won
-          if (currentPlayer.hand.length === 0) {
-            match.status = "Loss";
-            this.currentGame.status = "Lost";
-            return;
-          }
-
-          return;
         } else {
+          // playing a non-wild card
           this.playCard(cardToPlay.id)!;
           return this.getGame();
         }
