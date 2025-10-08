@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { GameLogic } from "~/game/gamelogic";
-import { TestUi } from "~/UserInterface/TestUi";
 import type { Game } from "../game/types/Game";
 import NextRound from "./nextRoundPage";
 import { UnoMatchPage } from "./unoMatchPage";

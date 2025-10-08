@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { GameLogic } from "~/game/gamelogic";
+import HandV0 from "~/UserInterface/handV0";
+import type { Card } from "../game/types/Card";
 import type { Game } from "../game/types/Game";
-import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player"; 
@@ -20,14 +22,20 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
     const drawCard = (cardNumber: number) => {
 
-        const match = GameLogic.get().getCurrentUnoMatch();
+        const match = gameLogic.getCurrentUnoMatch();
         console.log("Drawing Card with currentPlayerIndex=", match.currentPlayerIndex)
-        GameLogic.get().drawCards(cardNumber, match.currentPlayerIndex)
+        gameLogic.drawCards(cardNumber, match.currentPlayerIndex)
 
         // Re-render game and match state
+        setGameState(gameLogic.getGame())
+        setMatchState(gameLogic.getCurrentUnoMatch())
+    }
+
+    const handleColorPickerChoice = (cardId: string, color: CardColor) => {
+        GameLogic.get().playCard(cardId, color)
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
-
+        setShowColorPicker(false)
     }
 
     const handleColorPickerChoice = (cardId: string, color: CardColor) => {
@@ -44,8 +52,8 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         } else {
             const success = GameLogic.get().playCard(card.id)
         if (success) {
-            setGameState(GameLogic.get().getGame())
-            setMatchState(GameLogic.get().getCurrentUnoMatch())
+            setGameState(gameLogic.getGame())
+            setMatchState(gameLogic.getCurrentUnoMatch())
         }
     }
     }
@@ -63,11 +71,11 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
             // 'delay' the ai's turn
             setTimeout(() => {
 
-                GameLogic.get().playAITurn();
-                setGameState(GameLogic.get().getGame());
-                setMatchState(GameLogic.get().getCurrentUnoMatch());
+                gameLogic.playAITurn();
+                setGameState(gameLogic.getGame());
+                setMatchState(gameLogic.getCurrentUnoMatch());
 
-                const newMatch = GameLogic.get().getCurrentUnoMatch();
+                const newMatch = gameLogic.getCurrentUnoMatch();
                 const nextPlayer = newMatch.players[newMatch.currentPlayerIndex];
 
                 if (!nextPlayer.isHuman) {
@@ -151,24 +159,16 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                             </div>
 
                             {/* Render player's hand */}
-                            <div className="flex flex-wrap gap-1">
-                                {player.hand.map((card) => (
-                                    <SimpleCard
-                                        key={card.id}
-                                        card={card}
-                                        onClick={() => {
-                                            if (player.isHuman && i === currentPlayerIndex) playCard(card);
-                                        }}
-                                    />
-                                ))}
-                            </div>
+                            {/* TODO: Replace with Hand.tsx */}
+                            <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                            
                         </div>
                     ))}
                 </div>
             </section>
             <button className="border" onClick={() => {
 
-                setGameState(GameLogic.get().setWin())
+                setGameState(gameLogic.setWin())
 
             }}>WIN</button>
         </div>

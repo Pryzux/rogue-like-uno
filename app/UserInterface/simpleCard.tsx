@@ -41,7 +41,7 @@ export default function SimpleCard({
             onClick={isClickable && isPlayable ? onClick : undefined}
         >
 
-            {label}
+         {label} 
 
 
 

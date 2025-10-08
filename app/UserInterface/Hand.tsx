@@ -13,7 +13,7 @@ type HandProps = {
 export default function Hand({
     hand,
     onCardClick,
-    isClickable = false,
+    isClickable = true,
     isPlayableFor,
 }: HandProps) {
 
