@@ -115,30 +115,16 @@ export class GameLogic implements GameLogicInterface {
     this.currentGame.matches.push(newMatch);
     this.currentGame.status = "Match Created";
 
-    console.log("initializeUno(): New Matched added to Matches List");
-    // console.log("Match Details: " + this.currentGame.matches[-1]);
-    console.log(
-      "Match Details:",
-      JSON.stringify(this.currentGame.matches),
-      null,
-      2
-    );
-
     return this.currentGame;
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
-    console.log("drawcards called")
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    console.log('player and currentmatch', player, currentMatch)
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
-      console.log('in for loop')
       const newCard = drawOneCard(currentMatch);
-      console.log('newcard', newCard)
       player.hand.push(newCard);
-      console.log("new hand", player.hand)
     }
   }
 
@@ -235,8 +221,6 @@ export class GameLogic implements GameLogicInterface {
 
   // Get Current Uno Match -- Last Element of the Matches List
   public getCurrentUnoMatch(): UnoMatch {
-    console.log('getcurrentunomatchs says', this.currentGame!.matches.at(-1))
-    console.log('matches from within getcurrentunomatch', this.currentGame.matches)
     return this.currentGame!.matches.at(-1)!;
   }
 

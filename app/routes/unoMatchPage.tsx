@@ -3,7 +3,6 @@ import type { Game } from "../game/types/Game";
 import { GameLogic } from "../game/gamelogic";
 import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
-import type Player from "../game/types/Player";
 import type { Card } from "../game/types/Card"
 
 
@@ -14,7 +13,6 @@ export default function UnoMatch() {
 
 
     const drawCard = (cardNumber: number) => {
-        console.log("Drawing Card with currentplayerindex=", matchState?.currentPlayerIndex!);
         GameLogic.get().drawCards(cardNumber, matchState?.currentPlayerIndex!);
         //re-render gameState and matchState
         setGameState(GameLogic.get().getGame())
@@ -22,7 +20,6 @@ export default function UnoMatch() {
     };
 
     const playCard = (card: Card) => {
-        console.log('played card', card)
         GameLogic.get().playCard(card.id)
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
@@ -39,7 +36,6 @@ export default function UnoMatch() {
     const topCard = discardPile.at(0);
 
     const drawDeckCard: Card = { id: `card-draw-deck`, type: "deck", color: 'black' }
-    console.log('game state rerender', gameState)
 
     return (
 
