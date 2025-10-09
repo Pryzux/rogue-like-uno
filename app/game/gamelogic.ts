@@ -243,43 +243,55 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
+
         // Handling Good Aim buff
         // Note: the current player index has been updated, but currentPlayer is still the player who played this card
-        if (
-          currentPlayer.isHuman &&
-          this.getCurrentModifiers().find((m) => m.name === "Good Aim")
-        ) {
+        if (currentPlayer.isHuman && this.hasModifier("Good Aim")) {
           draw2TargetPlayer = this.getPlayerIndexFromPlayer(
             options!.targetPlayer!
           );
         }
-        //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
-        this.getCurrentModifiers().some((m) => m.name === "+3 card")
-          ? this.drawCards(3, draw2TargetPlayer)
-          : this.drawCards(2, draw2TargetPlayer);
+
+        // '+3 card' -> if current player making others draw -> modify
+        if (currentPlayer.isHuman && this.hasModifier("+3 card")) {
+          this.drawCards(3, draw2TargetPlayer);
+        }
+
+        // 'Draw Fatigue' -> if Human recieving draw -> enable +1
+        else if (!currentPlayer.isHuman && this.hasModifier("Draw Fatigue")) {
+          const targetIsHuman =
+            this.getPlayerFromIndex(draw2TargetPlayer).isHuman;
+
+          // if the person recieving the draw is human
+          if (targetIsHuman) {
+            this.drawCards(3, draw2TargetPlayer);
+          } else {
+            this.drawCards(2, draw2TargetPlayer);
+          }
+        }
+
+        // no buffs or ai
+        else {
+          this.drawCards(2, draw2TargetPlayer);
+        }
       }
 
       if (card.type === "wild") {
-        // Check if Wild Surge is active and it's the human player
-        const hasWildSurge = this.getCurrentModifiers().some(
-          (m) => m.name === "Wild Surge" && currentPlayer.isHuman
-        );
-
-        console.log(hasWildSurge);
-        if (hasWildSurge) {
+        if (this.hasModifier("Wild Surge") && currentPlayer.isHuman) {
           console.log("'Wild Surge' Activated");
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
-
         // Set color for Wild card
         match.currentColor = options!.color as CardColor;
       }
 
       if (card.type === "wildDraw4") {
-        //adding logic to handle a Buff, where a draw4 card becomes a draw5 card
-        this.getCurrentModifiers().some((m) => m.name === "+5 card")
-          ? this.drawCards(5, match.currentPlayerIndex)
-          : this.drawCards(4, match.currentPlayerIndex);
+        if (this.hasModifier("+5 card") && currentPlayer.isHuman) {
+          this.drawCards(5, match.currentPlayerIndex);
+        } else {
+          this.drawCards(4, match.currentPlayerIndex);
+        }
+
         match.currentColor = options!.color as CardColor;
       }
 
