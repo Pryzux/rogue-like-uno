@@ -227,9 +227,6 @@ export class GameLogic implements GameLogicInterface {
           : undefined;
       }
 
-      const targetPlayer = options!.targetPlayer!;
-      const color = options!.color;
-
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
@@ -239,7 +236,7 @@ export class GameLogic implements GameLogicInterface {
           currentPlayer.isHuman &&
           this.getCurrentModifiers().find((m) => m.name === "Good Aim")
         ) {
-          draw2TargetPlayer = this.getPlayerIndexFromPlayer(targetPlayer);
+          draw2TargetPlayer = this.getPlayerIndexFromPlayer(options!.targetPlayer!);
         }
         //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
         this.getCurrentModifiers().some((m) => m.name === "+3 card")
@@ -248,7 +245,7 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wild") {
-        match.currentColor = color! as CardColor;
+        match.currentColor = options!.color as CardColor;
       }
 
       if (card.type === "wildDraw4") {
@@ -256,8 +253,7 @@ export class GameLogic implements GameLogicInterface {
         this.getCurrentModifiers().some((m) => m.name === "+5 card")
           ? this.drawCards(5, match.currentPlayerIndex)
           : this.drawCards(4, match.currentPlayerIndex);
-        console.log("chosen color is", color);
-        match.currentColor = color! as CardColor;
+        match.currentColor = options!.color as CardColor;
       }
 
       return true;
