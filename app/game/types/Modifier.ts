@@ -19,10 +19,11 @@ export function makeModifier(
 
 // Buffs
 export const BUFFS: Modifier[] = [
+  // Delete for Demo
+
   {
-    name: "Lucky Draw",
-    description:
-      "When you draw a card, you have a 25% chance to draw two and keep the better one.",
+    name: "Dev Buff",
+    description: "Does Nothing, for Dev.",
     modifierType: "buff",
   },
   {
@@ -33,16 +34,6 @@ export const BUFFS: Modifier[] = [
   {
     name: "Wild Surge",
     description: "Playing a Wild automatically skips the next players turn",
-    modifierType: "buff",
-  },
-  {
-    name: "Stack Master",
-    description: "You can stack +2 or +4 cards regardless of color.",
-    modifierType: "buff",
-  },
-  {
-    name: "Reflex UNO",
-    description: "You automatically call UNO when down to one card.",
     modifierType: "buff",
   },
   {
@@ -69,8 +60,22 @@ export const BUFFS: Modifier[] = [
   },
 ];
 
+// To add?
+
+// {
+//     name: "Uno Delay",
+//     description: "When you go down to one card, skip your next turn.",
+//     modifierType: "debuff",
+//   },
+
 // Debuffs
 export const DEBUFFS: Modifier[] = [
+  {
+    name: "Dev Debuff",
+    description: "Does nothing, for dev",
+    modifierType: "debuff",
+  },
+
   {
     name: "Color Focus",
     description: "AI Players prefer to play cards matching the current color.",
@@ -93,21 +98,11 @@ export const DEBUFFS: Modifier[] = [
     modifierType: "debuff",
   },
   {
-    name: "Misfire",
-    description:
-      "When you play a card, 10% chance it plays a random card instead.",
-    modifierType: "debuff",
-  },
-  {
     name: "Draw Fatigue",
     description: "Every Draw 2 played against you adds one extra card.",
     modifierType: "debuff",
   },
-  {
-    name: "Uno Delay",
-    description: "When you go down to one card, skip your next turn.",
-    modifierType: "debuff",
-  },
+
   {
     name: "Lazy Dealer",
     description: "Increase the number of cards in your starting hand by 3",
