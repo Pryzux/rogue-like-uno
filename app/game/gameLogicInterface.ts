@@ -4,6 +4,7 @@ import type { Modifier } from "./types/Modifier";
 import type { PlayCardOptions } from "./types/PlayCardOptions";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
+import type RoundOptions from "./types/RoundOptions";
 
 // Interface for interacting with a game.
 export interface GameLogicInterface {
@@ -46,7 +47,7 @@ export interface GameLogicInterface {
   // --- Buffs and Debuffs Functions ---
 
   // Return a fresh selection of 2 buffs and 2 debuffs.
-  getNextRoundOptions(): {};
+  getNextRoundOptions(): RoundOptions;
 
   // Get Modifiers [ Modifier ]
   getCurrentModifiers(): Modifier[];
