@@ -237,8 +237,9 @@ export class GameLogic implements GameLogicInterface {
           draw2TargetPlayer = this.getPlayerIndexFromPlayer(targetPlayer)
         }
         //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
-        this.getCurrentModifiers().some(m => m.name === "+3 card") ? this.drawCards(3, draw2TargetPlayer) : this.drawCards(2, draw2TargetPlayer);
-
+        this.getCurrentModifiers().some((m) => m.name === "+3 card")
+          ? this.drawCards(3, draw2TargetPlayer)
+          : this.drawCards(2, draw2TargetPlayer);
       }
 
       if (card.type === "wild") {
