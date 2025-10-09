@@ -166,6 +166,8 @@ export class GameLogic implements GameLogicInterface {
   public playCard(cardId: string, options?: PlayCardOptions): boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
+
+    // NEVER CHANGE THIS, This is for identifying the current play, player index is for who will play next
     const currentPlayer = this.getCurrentPlayer();
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
@@ -220,12 +222,18 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "skip") {
-        // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
+        // Base Skip behavior — advance by one player
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
-        //if there
-        this.getCurrentModifiers().some((m) => m.name === "Double Skip")
-          ? (match.currentPlayerIndex = this.getNextPlayerIndex(match))
-          : undefined;
+
+        // Check if "Double Skip" modifier is active
+        const hasDoubleSkip = this.getCurrentModifiers().some(
+          (m) => m.name === "Double Skip" && currentPlayer.isHuman
+        );
+
+        if (hasDoubleSkip) {
+          console.log("'Double Skip' Activated");
+          match.currentPlayerIndex = this.getNextPlayerIndex(match);
+        }
       }
 
       if (card.type === "draw2") {
@@ -237,7 +245,9 @@ export class GameLogic implements GameLogicInterface {
           currentPlayer.isHuman &&
           this.getCurrentModifiers().find((m) => m.name === "Good Aim")
         ) {
-          draw2TargetPlayer = this.getPlayerIndexFromPlayer(options!.targetPlayer!);
+          draw2TargetPlayer = this.getPlayerIndexFromPlayer(
+            options!.targetPlayer!
+          );
         }
         //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
         this.getCurrentModifiers().some((m) => m.name === "+3 card")
@@ -246,6 +256,18 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wild") {
+        // Check if Wild Surge is active and it's the human player
+        const hasWildSurge = this.getCurrentModifiers().some(
+          (m) => m.name === "Wild Surge" && currentPlayer.isHuman
+        );
+
+        console.log(hasWildSurge);
+        if (hasWildSurge) {
+          console.log("'Wild Surge' Activated");
+          match.currentPlayerIndex = this.getNextPlayerIndex(match);
+        }
+
+        // Set color for Wild card
         match.currentColor = options!.color as CardColor;
       }
 
@@ -445,8 +467,10 @@ export class GameLogic implements GameLogicInterface {
 
   // remove a modifier from the current game's modifiers
   public removeModifier(modifier: Modifier): void {
-    this.currentGame.modifiers = this.currentGame.modifiers.filter(m => m.name !== modifier.name)
-    this.currentGame.nextRoundStatus = ''
+    this.currentGame.modifiers = this.currentGame.modifiers.filter(
+      (m) => m.name !== modifier.name
+    );
+    this.currentGame.nextRoundStatus = "";
   }
 
   public addModifier(modifier: Modifier): void {
@@ -529,7 +553,7 @@ export class GameLogic implements GameLogicInterface {
     // pushes a new match
     this.initializeUno();
     // reset next round message
-    this.currentGame.nextRoundStatus = ''
+    this.currentGame.nextRoundStatus = "";
     return true;
   }
 } // end of class
