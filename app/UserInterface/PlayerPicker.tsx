@@ -1,6 +1,6 @@
+import type { Game } from "../game/types/Game";
 
-
-export default function PlayerPicker({cardId, handleChoice}: {cardId: string, handleChoice: any}) {
+export default function PlayerPicker({cardId, gameState, handleChoice}: {cardId: string, gameState: Game, handleChoice: any}) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
       <div className="bg-white rounded-lg shadow p-6">

@@ -20,6 +20,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [colorPickerCardId, setColorPickerCardId] = useState('')
+    const [showPlayerPicker, setShowPlayerPicker] = useState(false)
 
     const drawCard = (cardNumber: number) => {
 
@@ -38,7 +39,19 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         setShowColorPicker(false)
     }
 
+    const handlePlayerPickerChoice = (cardId: string, targetPlayer: Player) {
+        
+    }
+
     const playCard = (card: Card) => {
+        // Handle Good Aim buff
+        if (
+            card.type === 'draw2' &&
+            gameState.modifiers.find(m => m.name === 'Good Aim')
+        ) {
+            setShowPlayerPicker(true)
+        }
+
         if (card.type.includes('wild')) {
             setColorPickerCardId(card.id)
             setShowColorPicker(true)
