@@ -1,13 +1,9 @@
 import type { CardColor } from "./types/Card";
 import type { Game } from "./types/Game";
 import type { Modifier } from "./types/Modifier";
+import type { PlayCardOptions } from "./types/PlayCardOptions";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
-
-interface PlayCardOptions {
-  color?: CardColor | null;
-  targetPlayer?: Player | null;
-}
 
 // Interface for interacting with a game.
 export interface GameLogicInterface {

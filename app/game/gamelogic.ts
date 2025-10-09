@@ -5,6 +5,7 @@ import type { Game } from "./types/Game";
 import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
+import type { PlayCardOptions } from "./types/PlayCardOptions";
 
 // the number of cards added to the user's starting hand from the Lazy Dealer debuff
 export const LAZY_DEALER_AMOUNT = 3;
@@ -161,9 +162,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string, 
-     { color = null, targetPlayer = null }: { color?: CardColor | null; targetPlayer?: Player | null } = {}
-  ): Boolean {
+  public playCard(cardId: string, options?: PlayCardOptions): boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -228,13 +227,19 @@ export class GameLogic implements GameLogicInterface {
           : undefined;
       }
 
+      const targetPlayer = options!.targetPlayer!;
+      const color = options!.color;
+
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
-        let draw2TargetPlayer = match.currentPlayerIndex
+        let draw2TargetPlayer = match.currentPlayerIndex;
         // Handling Good Aim buff
         // Note: the current player index has been updated, but currentPlayer is still the player who played this card
-        if (currentPlayer.isHuman && this.getCurrentModifiers().find(m => m.name === 'Good Aim')) {
-          draw2TargetPlayer = this.getPlayerIndexFromPlayer(targetPlayer)
+        if (
+          currentPlayer.isHuman &&
+          this.getCurrentModifiers().find((m) => m.name === "Good Aim")
+        ) {
+          draw2TargetPlayer = this.getPlayerIndexFromPlayer(targetPlayer);
         }
         //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
         this.getCurrentModifiers().some((m) => m.name === "+3 card")
@@ -318,7 +323,7 @@ export class GameLogic implements GameLogicInterface {
 
   // get a Player's index from their player index
   public getPlayerIndexFromPlayer(player: Player): number {
-    return this.currentGame.players.findIndex(p => p.id === player.id)
+    return this.currentGame.players.findIndex((p) => p.id === player.id);
   }
 
   public playAITurn(): undefined | Game {
@@ -352,7 +357,7 @@ export class GameLogic implements GameLogicInterface {
           const chosenColor = this.chooseColorForWild(currentPlayer);
 
           // Play Wild Card, passing in the chosen color
-          this.playCard(cardToPlay.id, {color: chosenColor})!;
+          this.playCard(cardToPlay.id, { color: chosenColor })!;
           return this.getGame();
         } else {
           // playing a non-wild card
