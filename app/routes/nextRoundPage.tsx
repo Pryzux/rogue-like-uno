@@ -13,11 +13,22 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
     // Pull the random round modifiers from GameLogic
     const [options] = useState(() => GameLogic.get().getNextRoundOptions());
 
+    // The buff and debuff that were chosen for this next round, we need to keep track of this so we can let the player
+    // toggle them on or off while in the selection screen
+    const [newMods, setNewMods] = useState<Modifier[]>([]);
+
     // Handle selecting a modifier (buff or debuff)
     const handleSelectModifier = (modifier: Modifier) => {
         GameLogic.get().addModifier(modifier);
         setGameState(GameLogic.get().getGame());
+        setNewMods([modifier, ...newMods])
     };
+
+    const handleDeselectModifier = (modifier: Modifier) => {
+        GameLogic.get().removeModifier(modifier)
+        setGameState(GameLogic.get().getGame());
+        setNewMods(newMods.filter(m => m.name !== modifier.name))
+    }
 
     const handleStartNewGame = () => {
         console.log("Starting New Game..");
@@ -44,6 +55,11 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                         ? "border-green-500 bg-green-100"
                                         : "border-red-500 bg-red-100"
                                         }`}
+                                        onClick={ () => {
+                                            if (newMods.find(m => m.name === mod.name)) {
+                                                handleDeselectModifier(mod)
+                                            }
+                                        }}
                                 >
                                     <p className="font-semibold">{mod.name}</p>
                                     <p className="text-sm text-amber-700">{mod.description}</p>

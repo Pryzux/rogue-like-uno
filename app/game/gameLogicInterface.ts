@@ -54,6 +54,9 @@ export interface GameLogicInterface {
   // Add a new modifier to the current game
   addModifier(modifier: Modifier): void;
 
+  // Remove a modifier from the current game
+  removeModifier(modifier: Modifier): void;
+
   // Wipe the modifiers for the game (after they lose)
   resetModifiers(): Game;
 
