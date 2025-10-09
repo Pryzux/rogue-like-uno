@@ -166,6 +166,8 @@ export class GameLogic implements GameLogicInterface {
   public playCard(cardId: string, options?: PlayCardOptions): boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
+
+    // NEVER CHANGE THIS, This is for identifying the current play, player index is for who will play next
     const currentPlayer = this.getCurrentPlayer();
 
     const card = currentPlayer.hand.find((card) => card.id === cardId);
@@ -220,8 +222,6 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "skip") {
-        const currentPlayer = match.players[match.currentPlayerIndex];
-
         // Base Skip behavior — advance by one player
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
 
@@ -256,13 +256,12 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wild") {
-        const currentPlayer = match.players[match.currentPlayerIndex];
-
         // Check if Wild Surge is active and it's the human player
         const hasWildSurge = this.getCurrentModifiers().some(
           (m) => m.name === "Wild Surge" && currentPlayer.isHuman
         );
 
+        console.log(hasWildSurge);
         if (hasWildSurge) {
           console.log("'Wild Surge' Activated");
           match.currentPlayerIndex = this.getNextPlayerIndex(match);

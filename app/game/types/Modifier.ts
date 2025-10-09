@@ -10,14 +10,12 @@ export function makeModifier(
   description: string,
   modifierType: "buff" | "debuff"
 ) {
-
   return {
     name,
     description,
-    modifierType
+    modifierType,
   };
 }
-
 
 // Buffs
 export const BUFFS: Modifier[] = [
@@ -30,6 +28,11 @@ export const BUFFS: Modifier[] = [
   {
     name: "Reverse Momentum",
     description: "When you play a Reverse, take an extra turn immediately.",
+    modifierType: "buff",
+  },
+  {
+    name: "Wild Surge",
+    description: "Playing a Wild automatically skips the next players turn",
     modifierType: "buff",
   },
   {
@@ -49,25 +52,26 @@ export const BUFFS: Modifier[] = [
   },
   {
     name: "+5 card",
-    description: "When a Draw 4 card is pulled, this card becomes a Draw 5 card",
+    description:
+      "When a Draw 4 card is pulled, this card becomes a Draw 5 card",
     modifierType: "buff",
   },
   {
     name: "+3 card",
-    description: "When a Draw 2 card is pulled, this card becomes a Draw 3 card",
+    description:
+      "When a Draw 2 card is pulled, this card becomes a Draw 3 card",
     modifierType: "buff",
   },
-   {
+  {
     name: "Good Aim",
     description: "You can choose which player a +2 applies to",
-    modifierType: 'buff'
-   },
+    modifierType: "buff",
+  },
   {
     name: "Double Skip",
     description: "Double Skip skips 2 players instead of 1",
     modifierType: "buff",
   },
-
 ];
 
 // Debuffs
@@ -100,10 +104,10 @@ export const DEBUFFS: Modifier[] = [
     modifierType: "debuff",
   },
   {
-    name: 'Lazy Dealer',
-    description: 'Increase the number of cards in your starting hand by 3',
-    modifierType: 'debuff'
-  }
+    name: "Lazy Dealer",
+    description: "Increase the number of cards in your starting hand by 3",
+    modifierType: "debuff",
+  },
 ];
 
 // Utility: pick N random modifiers from a list.
