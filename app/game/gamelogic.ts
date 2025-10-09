@@ -161,7 +161,9 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string, color: CardColor | null = null): Boolean {
+  public playCard(cardId: string, 
+     { color = null, targetPlayer = null }: { color?: CardColor | null; targetPlayer?: Player | null } = {}
+  ): Boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -228,10 +230,16 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "draw2") {
         // the current player was updated above to the next player, so they have to draw
+        let draw2TargetPlayer = match.currentPlayerIndex
+        // Handling Good Aim buff
+        // Note: the current player index has been updated, but currentPlayer is still the player who played this card
+        if (currentPlayer.isHuman && this.getCurrentModifiers().find(m => m.name === 'Good Aim')) {
+          draw2TargetPlayer = this.getPlayerIndexFromPlayer(targetPlayer)
+        }
         //adding logic to handle a Buff, where a draw2 card becomes a draw3 card
         this.getCurrentModifiers().some((m) => m.name === "+3 card")
-          ? this.drawCards(3, match.currentPlayerIndex)
-          : this.drawCards(2, match.currentPlayerIndex);
+          ? this.drawCards(3, draw2TargetPlayer)
+          : this.drawCards(2, draw2TargetPlayer);
       }
 
       if (card.type === "wild") {
@@ -308,6 +316,11 @@ export class GameLogic implements GameLogicInterface {
     return currentMatch.players[index];
   }
 
+  // get a Player's index from their player index
+  public getPlayerIndexFromPlayer(player: Player): number {
+    return this.currentGame.players.findIndex(p => p.id === player.id)
+  }
+
   public playAITurn(): undefined | Game {
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -339,7 +352,7 @@ export class GameLogic implements GameLogicInterface {
           const chosenColor = this.chooseColorForWild(currentPlayer);
 
           // Play Wild Card, passing in the chosen color
-          this.playCard(cardToPlay.id, chosenColor)!;
+          this.playCard(cardToPlay.id, {color: chosenColor})!;
           return this.getGame();
         } else {
           // playing a non-wild card
@@ -409,7 +422,7 @@ export class GameLogic implements GameLogicInterface {
 
     // Return up to `count` modifiers (ex: 2 = 2 buffs and 2 debuffs)
 
-    return shuffled.slice(0, 2);
+    return shuffled.slice(0, 10);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GameLogic } from "../game/gamelogic";
 import ColorPicker from "../UserInterface/ColorPicker";
+import PlayerPicker from "~/UserInterface/PlayerPicker";
 import Hand from "../UserInterface/Hand";
 import type { Game } from "../game/types/Game";
 import SimpleCard from "../UserInterface/simpleCard";
@@ -19,7 +20,8 @@ interface GameProps {
 export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
-    const [colorPickerCardId, setColorPickerCardId] = useState('')
+    const [pickerCardId, setPickerCardId] = useState('')
+    const [showPlayerPicker, setShowPlayerPicker] = useState(false)
 
     const drawCard = (cardNumber: number) => {
 
@@ -32,15 +34,32 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     }
 
     const handleColorPickerChoice = (cardId: string, color: CardColor) => {
-        GameLogic.get().playCard(cardId, color)
+        GameLogic.get().playCard(cardId, {color: color})
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
         setShowColorPicker(false)
     }
 
+    const handlePlayerPickerChoice = (cardId: string, targetPlayer: Player) => {
+        console.log('handle player pickerf choice called')
+        GameLogic.get().playCard(cardId, {targetPlayer: targetPlayer})
+        setGameState(GameLogic.get().getGame())
+        setMatchState(GameLogic.get().getCurrentUnoMatch())
+        setShowPlayerPicker(false)
+    }
+
     const playCard = (card: Card) => {
-        if (card.type.includes('wild')) {
-            setColorPickerCardId(card.id)
+        // Handle Good Aim buff
+        if (
+            card.type === 'draw2' &&
+            gameState.modifiers.find(m => m.name === 'Good Aim')
+        ) {
+            setPickerCardId(card.id)
+            setShowPlayerPicker(true)
+        }
+        // Handle wild card color picker
+        else if (card.type.includes('wild')) {
+            setPickerCardId(card.id)
             setShowColorPicker(true)
         } else {
             const success = GameLogic.get().playCard(card.id)
@@ -120,7 +139,8 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
             {/* DRAW + DISCARD */}
             <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-                {showColorPicker ? <ColorPicker cardId={colorPickerCardId} handleChoice={handleColorPickerChoice} /> : null}
+                {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
+                {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
                 <div>
                     <h2 className="font-bold text-lg">Draw deck</h2>
                     <div className="w-24 h-36 flex items-center justify-center">
@@ -130,8 +150,9 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                                 const currentPlayer = matchState.players[matchState.currentPlayerIndex];
                                 if (!currentPlayer.isHuman) {
                                     console.log("Can't draw")
-                                    return;
-                                }// Disable during AI turn
+                                    return; // Disable during AI turn
+                                }
+                                   
                                 drawCard(1);
                             }}
                         />
