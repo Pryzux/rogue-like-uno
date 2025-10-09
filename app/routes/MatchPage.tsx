@@ -112,6 +112,9 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     const topCard = discardPile.at(0);
     const drawDeckCard: Card = { id: "card-draw-deck", type: "deck", color: "black" };
 
+    // this is the flag to show all AI hands!!!!!!!
+    const developerMode = true
+
     return (
 
         <div className="p-6 space-y-6">
@@ -159,6 +162,8 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                                     )}
                                 </div>
                                 <AIPlayer player={player} />
+                                {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
+                                {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}
                             </div>
                         ))}
                     </div>
