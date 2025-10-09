@@ -1,5 +1,5 @@
 // An Uno player, either human or AI
-import { type Card } from './Card'
+import { type Card } from "./Card";
 
 export default interface Player {
   id: string;
@@ -8,5 +8,6 @@ export default interface Player {
   calledUno: boolean;
   isHuman: boolean;
   // cards added to the player's draw pile from modifiers
-  extraCards: Card[]
+  extraCards: Card[];
+  turns: number;
 }
