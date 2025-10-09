@@ -422,7 +422,7 @@ export class GameLogic implements GameLogicInterface {
 
     // Return up to `count` modifiers (ex: 2 = 2 buffs and 2 debuffs)
 
-    return shuffled.slice(0, 2);
+    return shuffled.slice(0, 10);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.

@@ -72,7 +72,13 @@ export const BUFFS: Modifier[] = [
     name: "Good Aim",
     description: "You can choose which player a +2 applies to",
     modifierType: 'buff'
-   }
+   },
+  {
+    name: "Double Skip",
+    description: "Double Skip skips 2 players instead of 1",
+    modifierType: "buff",
+  },
+
 ];
 
 // Debuffs
