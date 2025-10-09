@@ -1,6 +1,6 @@
 import { GameLogic } from "~/game/gamelogic";
 import type { Card } from "~/game/types/Card";
-import SimpleCard from "./simpleCard";
+import SimpleCard from "./deprecatedsimpleCard";
 
 type HandV0Props = {
     hand: Card[];

@@ -6,91 +6,71 @@ type CardKey = `${CardColor}_${CardType}`;
 
 //map of color_cardType pairs
 const cardImages: Partial<Record<CardKey, string>> = {
-    red_zero: '/UIResources/unoCard-back.png',
-    red_one: '/UIResources/unoCard-back.png',
-    red_two: '/UIResources/unoCard-back.png',
-    red_three: '/UIResources/unoCard-back.png',
-    red_four: '/UIResources/unoCard-back.png',
-    red_five: '/UIResources/unoCard-back.png',
-    red_six: '/UIResources/unoCard-back.png',
-    red_seven: '/UIResources/unoCard-back.png',
-    red_eight: '/UIResources/unoCard-back.png',
-    red_nine: '/UIResources/unoCard-back.png',
-    red_skip: 'public/redskip.png',
-    red_reverse: 'public/redreverse.png',
-    red_draw2: '/UIResources/unoCard-back.png',
-    red_wild: '/UIResources/unoCard-back.png', //never used
-    red_wildDraw4: '/UIResources/unoCard-back.png', //never used
-    blue_zero: '/UIResources/unoCard-back.png',
-    blue_one: '/UIResources/unoCard-back.png',
-    blue_two: '/UIResources/unoCard-back.png',
-    blue_three: '/UIResources/unoCard-back.png',
-    blue_four: '/UIResources/unoCard-back.png',
-    blue_five: '/UIResources/unoCard-back.png',
-    blue_six: '/UIResources/unoCard-back.png',
-    blue_seven: '/UIResources/unoCard-back.png',
-    blue_eight: '/UIResources/unoCard-back.png',
-    blue_nine: '/UIResources/unoCard-back.png',
-    blue_skip: 'public/blueskip.png',
-    blue_reverse: '/UIResources/unoCard-back.png',
-    blue_draw2: '/UIResources/unoCard-back.png',
+    red_zero: 'redzero.png',
+    red_one: 'redone.png',
+    red_two: 'redtwo.png',
+    red_three: 'redthree.png',
+    red_four: 'redfour.png',
+    red_five: 'redfive.png',
+    red_six: 'redsix.png',
+    red_seven: 'redseven.png',
+    red_eight: 'redeight.png',
+    red_nine: 'rednine.png',
+    red_skip: 'redskip.png',
+    red_reverse: 'redreverse.png',
+    red_draw2: 'reddraw2.png',
+    red_wild: 'public/unoCard-back.png',  //never used
+    red_wildDraw4: 'public/unoCard-back.png',  //never used
+    blue_zero: 'bluezero.png',
+    blue_one: 'blueone.png',
+    blue_two: 'bluetwo.png',
+    blue_three: 'bluethree.png',
+    blue_four: 'bluefour.png',
+    blue_five: 'bluefive.png',
+    blue_six: 'bluesix.png',
+    blue_seven: 'blueseven.png',
+    blue_eight: 'blueeight.png',
+    blue_nine: 'bluenine.png',
+    blue_skip: 'blueskip.png',
+    blue_reverse: 'bluereverse.png',
+    blue_draw2: 'bluedraw2.png',
     blue_wild: '/UIResources/unoCard-back.png', //never used
     blue_wildDraw4: '/UIResources/unoCard-back.png', //never used
-    yellow_zero: '/UIResources/unoCard-back.png',
-    yellow_one: '/UIResources/unoCard-back.png',
-    yellow_two: '/UIResources/unoCard-back.png',
-    yellow_three: '/UIResources/unoCard-back.png',
-    yellow_four: '/UIResources/unoCard-back.png',
-    yellow_five: '/UIResources/unoCard-back.png',
-    yellow_six: '/UIResources/unoCard-back.png',
-    yellow_seven: '/UIResources/unoCard-back.png',
-    yellow_eight: '/UIResources/unoCard-back.png',
-    yellow_nine: '/UIResources/unoCard-back.png',
-    yellow_skip: 'public/yellowskip.png',
-    yellow_reverse: '/UIResources/unoCard-back.png',
-    yellow_draw2: '/UIResources/unoCard-back.png',
+    yellow_zero: 'yellowzero.png',
+    yellow_one: 'yellowone.png',
+    yellow_two: 'yellowtwo.png',
+    yellow_three: 'yellowthree.png',
+    yellow_four: 'yellowfour.png',
+    yellow_five: 'yellowfive.png',
+    yellow_six: 'yellowsix.png',
+    yellow_seven: 'yellowseven.png',
+    yellow_eight: 'yelloweight.png',
+    yellow_nine: 'yellownine.png',
+    yellow_skip: 'yellowskip.png',
+    yellow_reverse: 'yellowreverse.png',
+    yellow_draw2: 'yellowdraw2.png',
     yellow_wild: '/UIResources/unoCard-back.png', //never used
     yellow_wildDraw4: '/UIResources/unoCard-back.png', //never used
-    green_zero: '/UIResources/unoCard-back.png',
-    green_one: '/UIResources/unoCard-back.png',
-    green_two: '/UIResources/unoCard-back.png',
-    green_three: '/UIResources/unoCard-back.png',
-    green_four: '/UIResources/unoCard-back.png',
-    green_five: '/UIResources/unoCard-back.png',
-    green_six: '/UIResources/unoCard-back.png',
-    green_seven: '/UIResources/unoCard-back.png',
-    green_eight: '/UIResources/unoCard-back.png',
-    green_nine: '/UIResources/unoCard-back.png',
-    green_skip: 'public/greenskip.png',
-    green_reverse: '/UIResources/unoCard-back.png',
-    green_draw2: '/UIResources/unoCard-back.png',
-    green_wild: '/UIResources/unoCard-back.png', //never used
-    green_wildDraw4: '/UIResources/unoCard-back.png', //never used
-    //TODO: sunk cost- added png's, later today I will figure out another route to take OR I will painfully add pngs
-    black_zero: '/UIResources/unoCard-back.png',
-    black_one: '/UIResources/unoCard-back.png',
-    black_two: '/UIResources/unoCard-back.png',
-    black_three: '/UIResources/unoCard-back.png',
-    black_four: '/UIResources/unoCard-back.png',
-    black_five: '/UIResources/unoCard-back.png',
-    black_six: '/UIResources/unoCard-back.png',
-    black_seven: '/UIResources/unoCard-back.png',
-    black_eight: '/UIResources/unoCard-back.png',
-    black_nine: '/UIResources/unoCard-back.png',
-    black_skip: '/UIResources/unoCard-back.png',
-    black_reverse: '/UIResources/unoCard-back.png',
-    black_draw2: '/UIResources/unoCard-back.png',
+    green_zero: 'greenzero.png',
+    green_one: 'greenone.png',
+    green_two: 'greentwo.png',
+    green_three: 'greenthree.png',
+    green_four: 'greenfour.png',
+    green_five: 'greenfive.png',
+    green_six: 'greensix.png',
+    green_seven: 'greenseven.png',
+    green_eight: 'greeneight.png',
+    green_nine: 'greennine.png',
+    green_skip: 'greenskip.png',
+    green_reverse: 'greenreverse.png',
+    green_draw2: 'greendraw2.png',
+   
+    
     black_wild: 'public/wild.png', //wild card used, since wild card is defined as black within deck creation
     black_wildDraw4: 'public/wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
 
-    black_deck: 'UIResources/unoCard-back.png', // the draw deck
+    black_deck: 'unoCard-back.png', // the draw deck
 
-    //throwaway components as a new item has been added to card type:
-    red_number: '/UIResources/unoCard-back.png', //never used
-    blue_number: '/UIResources/unoCard-back.png', //never used
-    yellow_number: '/UIResources/unoCard-back.png', //never used
-    black_number: '/UIResources/unoCard-back.png', //never used
-    green_number: '/UIResources/unoCard-back.png', //never used
 
 
 
@@ -112,21 +92,24 @@ const numberToType: Record<number, string> = {
 
 
 //based on the color and type of card provided, the right png path is provided
-export function determineCardType(color: string, typeOrValue: string | number, id: number | undefined): string {
+export function determineCardType(color: string, typeOrValue: string, value: number | undefined): string {
 
     //handling card types where type: number could mean zero-nine, so that I don't need to change the structure of the png lookup
     let typeString: string;
 
-    if (typeof typeOrValue === "number") {
-
-        typeString = numberToType[id!];
+    if (typeOrValue === "number") {
+        if (value !== undefined) {
+            typeString = numberToType[value];
+        }
     }
     else {
         typeString = typeOrValue;
     }
-    const key = `${color}_${typeString}` as CardKey;
+
+    const key = `${color}_${typeString!}` as CardKey;
     const img = cardImages[key]!;
     return (img)
+
 }
 
 type SingleCardProps = {

@@ -1,7 +1,5 @@
 import { makeCard, type Card } from "../game/types/Card";
 import Hand from "./Hand";
-import Cards from "./simpleCard"
-import SingleCard from "./SingleCard";
 
 export function TestUi() {
     let hand: Card[] = []

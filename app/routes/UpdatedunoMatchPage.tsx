@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import Hand from "~/UserInterface/Hand";
 import PlayerPicker from "~/UserInterface/PlayerPicker";
-import SingleCard from "~/UserInterface/SingleCard";
 import { GameLogic } from "../game/gamelogic";
 import type { Card, CardColor } from "../game/types/Card";
 import type { Game } from "../game/types/Game";
 import type Player from "../game/types/Player";
 import ColorPicker from "../UserInterface/ColorPicker";
+import SimpleCard from "../UserInterface/deprecatedsimpleCard";
+import Hand from "../UserInterface/Hand";
+import SingleCard from "~/UserInterface/SingleCard";
 
 
 
@@ -15,7 +16,7 @@ interface GameProps {
     setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
 
-export function UnoMatchPage({ gameState, setGameState }: GameProps) {
+export function UpdatedunoMatchPage({ gameState, setGameState }: GameProps) {
     const [matchState, setMatchState] = useState(gameState.matches.at(-1))
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [pickerCardId, setPickerCardId] = useState('')
@@ -109,6 +110,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         matchState;
 
     const topCard = discardPile.at(0);
+    //deck calls 
     const drawDeckCard: Card = { id: "card-draw-deck", type: "deck", color: "black" };
 
     return (
@@ -184,7 +186,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                             </div>
 
                             {/* Render player's hand */}
-                            {/* Replaced with Hand.tsx, and it currently works-replace with HandV0 if you need to revert */}
+                            {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
                             {/* <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> */}
                             <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                         </div>
@@ -201,8 +203,3 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
     )
 
 }
-
-
-
-
-

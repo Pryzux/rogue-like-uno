@@ -25,7 +25,7 @@ export default function Hand({
     const gameLogic = GameLogic.get();
 
     return (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-1">
             {hand.map((card: Card) => (
                 <SingleCard key={card.id} card={card} onClick={() => {
                     if (isHuman && playerIndex === gameLogic.getCurrentUnoMatch().currentPlayerIndex) {

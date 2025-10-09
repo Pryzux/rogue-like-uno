@@ -6,6 +6,10 @@ import { UnoMatchPage } from "./unoMatchPage";
 import { TestUi } from "~/UserInterface/TestUi";
 
 
+
+
+//notes: there are two references to UnoMatchPage, which I(Aarti) have disabled in order to re-write it within 
+
 export function UnoTitle({ scheme = "red" }: { scheme?: "red"|"blue"|"green"|"yellow"|"black" }) {
   const stops: Record<string,string> = {
     red:    "from-red-600 via-amber-400 to-orange-500",
@@ -51,13 +55,16 @@ export default function Home(testMode: false) {
 
   if (gameState.status === 'Match Created') {
     console.log(gameState.status)
-    return <UnoMatchPage gameState={gameState} setGameState={setGameState} />;
+    return <UnoMatchPage gameState={gameState} setGameState={setGameState} />; //original return stmt
+    // return <UpdatedunoMatchPage gameState={gameState} setGameState={setGameState} />;
+
   }
 
   if (gameState.status === 'Lost') {
     console.log(gameState.status)
     setGameState(GameLogic.get().resetGame())
-    return <UnoMatchPage gameState={gameState} setGameState={setGameState} />;
+    return <UnoMatchPage gameState={gameState} setGameState={setGameState} />; //original return stmt
+    //  return <UpdatedunoMatchPage gameState={gameState} setGameState={setGameState} />;
   }
 
   else {
