@@ -38,6 +38,9 @@ export interface GameLogicInterface {
   // Get Player from currentPlayerIndex
   getPlayerFromIndex(index: number): Player;
 
+  // Get a player's index using their player instance
+  getPlayerIndexFromPlayer(player: Player): number
+
   // Play for the ai
   playAITurn(): undefined | Game;
 

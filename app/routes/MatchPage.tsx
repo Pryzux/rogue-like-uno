@@ -141,36 +141,34 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                 {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
                 {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
                 {/* Top row with AI players */}
-                <div className='flex-none p-4'>
+                <div className='flex-none p-4 items-center'>
                     <h2 className="font-bold text-lg text-amber-900 mb-4">Opponents</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 content-center">
                         {players.filter(player => !player.isHuman).map((player, i) => (
                             <div
                                 key={player.id}
-                                className={`p-4 rounded-lg border shadow-sm ${i === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
+                                className={`p-4 rounded-lg border shadow-sm ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
                                     }`}
                             >
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="font-semibold text-amber-900">{player.name}</h3>
-                                    {i === currentPlayerIndex && (
+                                    {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
                                         <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
                                             Current Turn
                                         </span>
                                     )}
                                 </div>
                                 <AIPlayer player={player} />
-                                {/* Render player's hand */}
-                                {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
-                                <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                             </div>
                         ))}
                     </div>
                 </div>
+
                 {/* Middle row with draw deck and discard */}
-                <div className='flex-1 flex items-center justify-center p-4'>
-                    <div className="w-24 h-36">
+                <div className='flex flex-none items-center justify-center p-4'>
+                    <div className="m-4">
                         <h2 className="font-bold text-lg mb-3 text-amber-900">Draw deck</h2>
-                        <div className="w-24 h-36 flex items-center justify-center">
+                        <div className="flex items-center justify-center">
                             <SingleCard
                                 card={drawDeckCard}
                                 onClick={() => {
@@ -184,15 +182,26 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                             />
                         </div>
                     </div>
-                    <div className="w-24 h-36">
+                    <div className="m-4">
                         <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
-                        <SingleCard card={topCard!} />
+                        <div className="flex items-center justify-center">
+                            <SingleCard card={topCard!} />
+                        </div>
                     </div>
                 </div>
+
                 {/* Bottom row with the user's hand */}
                 <div className='flex-none p-4'>
+                    
                     {players.filter(player => player.isHuman).map((player, i) => (
+                        <div>
+                            {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
+                            <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
+                                Current Turn
+                            </span>
+                        )}
                         <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                        </div>
                     ))}
                     
                 </div>
