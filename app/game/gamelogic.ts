@@ -8,12 +8,18 @@ import type { UnoMatch } from "./types/UnoMatch";
 import type { PlayCardOptions } from "./types/PlayCardOptions";
 import type RoundOptions from "./types/RoundOptions";
 
-// the number of cards added to the user's starting hand from the Lazy Dealer debuff
-export const LAZY_DEALER_AMOUNT = 3;
-
 // Singleton implementation of GameLogicInterface.
 export class GameLogic implements GameLogicInterface {
+  // The 'God' Object - Manages Global System State
   private currentGame: Game;
+
+  // Number of Modifiers to Display To User
+  private numberOfModifiersToDisplay: number;
+  // Lazy Dealer Modifier
+  private lazyDealerAmount: number;
+
+  // Buffs are static
+  private modifiers: { Buffs: typeof BUFFS; DEBUFFS: typeof DEBUFFS };
 
   private static instance: GameLogicInterface = new GameLogic();
 
@@ -23,6 +29,9 @@ export class GameLogic implements GameLogicInterface {
 
   private constructor() {
     this.currentGame = this.initializeGame();
+    this.numberOfModifiersToDisplay = 2;
+    this.lazyDealerAmount = 3;
+    //load in buffs/debuffs
   }
 
   // gets God Object 'gameState'
@@ -103,12 +112,8 @@ export class GameLogic implements GameLogicInterface {
       let numberOfStartingCards = 7;
 
       // Handle Lazy Dealer debuff
-      // If the current player is human and they have the Lazy Dealer debuff
-      if (
-        player.isHuman &&
-        this.currentGame.modifiers.find((m) => m.name === "Lazy Dealer")
-      ) {
-        numberOfStartingCards += LAZY_DEALER_AMOUNT;
+      if (player.isHuman && this.hasModifier("Lazy Dealer")) {
+        numberOfStartingCards += this.lazyDealerAmount;
       }
 
       for (let i = 0; i < numberOfStartingCards && deck.length > 0; i++) {
@@ -151,8 +156,9 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // has('modifier name') -> true/false
-  public hasModifier = (name: string): boolean =>
-    this.currentGame.modifiers?.some((m) => m.name === name) ?? false;
+  public hasModifier(name: string): boolean {
+    return this.currentGame.modifiers?.some((m) => m.name === name) ?? false;
+  }
 
   // Handle the Color Blind debuff
   private checkForColorBlind(card: Card, currentPlayer: Player): Boolean {
@@ -161,9 +167,7 @@ export class GameLogic implements GameLogicInterface {
     if (
       card.type.includes("wild") &&
       currentPlayer.isHuman &&
-      this.currentGame.modifiers.find(
-        (modifier) => modifier.name === "Color Blind"
-      ) &&
+      this.hasModifier("Color Blind") &&
       currentPlayer.hand.length > 3
     ) {
       return false;
@@ -220,17 +224,16 @@ export class GameLogic implements GameLogicInterface {
       // Handle Reverse Momentum buff
       // If the player does NOT have Reverse Momentum, update the current player as normal
       // If the player has Reverse Momentum, the current player doesn't get updated because the player gets another turn
-      if (
-        !currentPlayer.isHuman ||
-        !this.currentGame.modifiers.find(
-          (modifier) => modifier.name === "Reverse Momentum"
-        )
-      ) {
+
+      if (!currentPlayer.isHuman || !this.hasModifier("Reverse Momentum")) {
         // The current player is AI OR the user does not have Reverse Momentum
         match.currentPlayerIndex = this.getNextPlayerIndex(match); // THIS IS THE NORMAL LOGIC FOR GOING TO THE NEXT PLAYER WITHOUT MODIFIERS
       } else if (card.type !== "reverse") {
         // The player has Reverse Momentum, but the card played was not a reverse
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
+      } else {
+        console.log("Reverse Momentum Activated");
+        // reverse momentum activated
       }
 
       if (card.type === "skip") {
@@ -238,11 +241,7 @@ export class GameLogic implements GameLogicInterface {
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
 
         // Check if "Double Skip" modifier is active
-        const hasDoubleSkip = this.getCurrentModifiers().some(
-          (m) => m.name === "Double Skip" && currentPlayer.isHuman
-        );
-
-        if (hasDoubleSkip) {
+        if (this.hasModifier("Double Skip") && currentPlayer.isHuman) {
           console.log("'Double Skip' Activated");
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
@@ -369,6 +368,8 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame.players.findIndex((p) => p.id === player.id);
   }
 
+  // -------------- START AI Functionality (Buffs, Debuffs, Turn -----------------------)
+
   public playAITurn(): undefined | Game {
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();
@@ -391,12 +392,9 @@ export class GameLogic implements GameLogicInterface {
         // There's at least one playable card, won't have to draw any more
         turnIsOver = true;
 
-        // Color Focus Check
-        const hasColorFocus = this.hasModifier("Color Focus");
-
         let cardToPlay: Card;
 
-        if (hasColorFocus) {
+        if (this.hasModifier("Color Focus")) {
           // 'Color Focus' Debuff -- picks random if no same colors
           console.log("'Color Focus' Activated");
           cardToPlay = this.chooseCardColorFocus(
@@ -493,6 +491,8 @@ export class GameLogic implements GameLogicInterface {
     return bestColor;
   }
 
+  // -------------- END AI Functionality (Buffs, Debuffs, Turn -----------------------)
+
   public setWin(): Game {
     this.currentGame.status = "Next Round";
     this.getCurrentUnoMatch().status = "Won";
@@ -519,7 +519,7 @@ export class GameLogic implements GameLogicInterface {
 
     // Return up to `count` modifiers (ex: 2 = 2 buffs and 2 debuffs)
 
-    return shuffled.slice(0, 10);
+    return shuffled.slice(0, this.numberOfModifiersToDisplay);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.
