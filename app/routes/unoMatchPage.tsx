@@ -122,7 +122,17 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                 <div>
                     <h2 className="font-bold text-lg">Draw deck</h2>
                     <div className="w-24 h-36 flex items-center justify-center">
-                        <SimpleCard card={drawDeckCard} onClick={() => drawCard(1)} />
+                        <SimpleCard
+                            card={drawDeckCard}
+                            onClick={() => {
+                                const currentPlayer = matchState.players[matchState.currentPlayerIndex];
+                                if (!currentPlayer.isHuman)
+                                    console.log("Can't draw")
+                                return; // Disable during AI turn
+                                drawCard(1);
+                            }}
+                        />
+
                     </div>
                 </div>
 
