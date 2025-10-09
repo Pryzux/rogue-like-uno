@@ -145,6 +145,10 @@ export class GameLogic implements GameLogicInterface {
     }
   }
 
+  // has('modifier name') -> true/false
+  private hasModifier = (name: string): boolean =>
+    this.currentGame.modifiers?.some((m) => m.name === name) ?? false;
+
   // Handle the Color Blind debuff
   private checkForColorBlind(card: Card, currentPlayer: Player): Boolean {
     // The current player is the user, and they have the Color Blind debuff, AND they have more than 3 cards in their hand
@@ -364,34 +368,83 @@ export class GameLogic implements GameLogicInterface {
       );
 
       if (playableCards.length > 0) {
-        // there's at least one playable card, so we won't have to draw any more
+        // There's at least one playable card, won't have to draw any more
         turnIsOver = true;
 
-        // Randomly select a playable card
-        const cardToPlay =
-          playableCards[Math.floor(Math.random() * playableCards.length)];
+        // Color Focus Check
+        const hasColorFocus = this.hasModifier("Color Focus");
 
-        // If it's a wild card, choose the best color before playing
+        let cardToPlay: Card;
+
+        if (hasColorFocus) {
+          // 'Color Focus' Debuff -- picks random if no same colors
+          console.log("'Color Focus' Activated");
+          cardToPlay = this.chooseCardColorFocus(
+            currentPlayer,
+            playableCards,
+            match.currentColor!
+          );
+        } else {
+          cardToPlay =
+            playableCards[Math.floor(Math.random() * playableCards.length)];
+        }
+
+        // Wild Card
         if (cardToPlay.type === "wild" || cardToPlay.type === "wildDraw4") {
+          // 'Wild Instinct' Debuff is in here btw
           const chosenColor = this.chooseColorForWild(currentPlayer);
 
-          // Play Wild Card, passing in the chosen color
           this.playCard(cardToPlay.id, { color: chosenColor })!;
           return this.getGame();
         } else {
-          // playing a non-wild card
+          //non-wild card
           this.playCard(cardToPlay.id)!;
           return this.getGame();
         }
       } else {
-        // No playable cards, draw one card and go back to beginning of while loop
+        // No playable cards, draw one card and retry
         this.drawCards(1, match.currentPlayerIndex);
       }
     }
   }
 
+  // choose same color cards if ai has them
+  private chooseCardColorFocus(
+    player: Player,
+    playableCards: Card[],
+    currentColor: CardColor
+  ): Card {
+    // all cards with same color
+    const matchingColorCards = playableCards.filter(
+      (c) => c.color === currentColor
+    );
+    if (matchingColorCards.length > 0) {
+      // pick random same-color card
+      return matchingColorCards[
+        Math.floor(Math.random() * matchingColorCards.length)
+      ];
+    }
+    // fallback to random if no color match
+    return playableCards[Math.floor(Math.random() * playableCards.length)];
+  }
+
   // AI Choosing Wild Color
   private chooseColorForWild(player: Player): CardColor {
+    // Check if "Wild Instinct" modifier is active
+    const hasWildInstinct = this.currentGame.modifiers?.some(
+      (m) => m.name === "Wild Instinct"
+    );
+
+    const colors: CardColor[] = ["red", "blue", "green", "yellow"];
+
+    // Default behavior: Random wild color ---
+    if (!hasWildInstinct) {
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    }
+
+    // "Wild Instinct"
+    console.log("Wild Instincts Activated.");
     const colorCounts: Record<string, number> = {
       red: 0,
       blue: 0,

@@ -41,11 +41,6 @@ export const BUFFS: Modifier[] = [
     modifierType: "buff",
   },
   {
-    name: "Wild Surge",
-    description: "Playing a Wild automatically skips the next AI’s turn.",
-    modifierType: "buff",
-  },
-  {
     name: "Reflex UNO",
     description: "You automatically call UNO when down to one card.",
     modifierType: "buff",
@@ -76,6 +71,17 @@ export const BUFFS: Modifier[] = [
 
 // Debuffs
 export const DEBUFFS: Modifier[] = [
+  {
+    name: "Color Focus",
+    description: "AI Players prefer to play cards matching the current color.",
+    modifierType: "buff",
+  },
+  {
+    name: "Wild Instinct",
+    description:
+      "AI Players will pick the best wild card color for themsleves.",
+    modifierType: "debuff",
+  },
   {
     name: "Sluggish Hands",
     description: "Every 3 turns, you must draw an extra card automatically.",
