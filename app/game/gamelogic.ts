@@ -160,7 +160,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // returns null if play is invalid
-  public playCard(cardId: string, color: CardColor | null = null): Boolean {
+  public playCard(cardId: string, color: CardColor | null = null, targetPlayer: (Player | null) = null): Boolean {
     // a reference to the current match and current player
     const match = this.getCurrentUnoMatch();
     const currentPlayer = this.getCurrentPlayer();

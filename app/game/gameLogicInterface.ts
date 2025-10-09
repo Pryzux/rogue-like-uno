@@ -19,7 +19,7 @@ export interface GameLogicInterface {
   getCurrentUnoMatch(): UnoMatch;
 
   // Plays a card within an Uno match.
-  playCard(cardId: string, color?: CardColor | null): Boolean;
+  playCard(cardId: string, color?: CardColor | null, targetPlayer?: Player | null): Boolean;
 
   // draws a number of cards for a given player
   drawCards(cardNumber: number, playerIndex: number): void;

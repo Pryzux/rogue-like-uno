@@ -49,6 +49,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
             card.type === 'draw2' &&
             gameState.modifiers.find(m => m.name === 'Good Aim')
         ) {
+            setColorPickerCardId(card.id)
             setShowPlayerPicker(true)
         }
 
