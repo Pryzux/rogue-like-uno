@@ -442,6 +442,11 @@ export class GameLogic implements GameLogicInterface {
     return this.currentGame.modifiers;
   }
 
+  // remove a modifier from the current game's modifiers
+  public removeModifier(modifier: Modifier): void {
+    this.currentGame.modifiers = this.currentGame.modifiers.filter(m => m.name !== modifier.name)
+  }
+
   public addModifier(modifier: Modifier): void {
     // 1 modifier of each type for every match in matches
     const chosenOfType = this.currentGame.modifiers.filter(
