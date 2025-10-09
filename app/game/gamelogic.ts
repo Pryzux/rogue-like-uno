@@ -221,6 +221,8 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "skip") {
         // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
+        //if there 
+        this.getCurrentModifiers().some(m => m.name === "Double Skip") ? match.currentPlayerIndex = this.getNextPlayerIndex(match) : undefined;
       }
 
       if (card.type === "draw2") {
@@ -414,7 +416,7 @@ export class GameLogic implements GameLogicInterface {
 
     // Return up to `count` modifiers
 
-    return shuffled.slice(0, 2);
+    return shuffled.slice(0, 10);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.

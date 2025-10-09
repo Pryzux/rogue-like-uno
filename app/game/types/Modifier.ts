@@ -52,16 +52,22 @@ export const BUFFS: Modifier[] = [
     description: "When a Draw 4 card is pulled, this card becomes a Draw 5 card",
     modifierType: "buff",
   },
-   {
+  {
     name: "+3 card",
     description: "When a Draw 2 card is pulled, this card becomes a Draw 3 card",
     modifierType: "buff",
-   },
+  },
    {
     name: "Good Aim",
     description: "You can choose which player a +2 applies to",
     modifierType: 'buff'
-   }
+   },
+  {
+    name: "Double Skip",
+    description: "Double Skip skips 2 players instead of 1",
+    modifierType: "buff",
+  },
+
 ];
 
 // Debuffs
