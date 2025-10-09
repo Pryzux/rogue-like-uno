@@ -9,6 +9,7 @@ import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
 import HandV0 from "~/UserInterface/HandV0";
+import { AIPlayer } from "~/UserInterface/AIPlayer";
 
 
 
@@ -137,71 +138,74 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                 </div>
             </header>
 
-            {/* DRAW + DISCARD */}
-            <section className="bg-amber-50 border border-amber-300 rounded-lg p-4">
+            {/* new game board */}
+            <div className='flex flex-col bg-amber-100 border-lime-400 rounded-lg p-4'>
                 {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
                 {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
-                <div>
-                    <h2 className="font-bold text-lg">Draw deck</h2>
-                    <div className="w-24 h-36 flex items-center justify-center">
-                        <SimpleCard
-                            card={drawDeckCard}
-                            onClick={() => {
-                                const currentPlayer = matchState.players[matchState.currentPlayerIndex];
-                                if (!currentPlayer.isHuman) {
-                                    console.log("Can't draw")
-                                    return; // Disable during AI turn
-                                }
-                                   
-                                drawCard(1);
-                            }}
-                        />
-
+                {/* Top row with AI players */}
+                <div className='flex-none p-4'>
+                    <h2 className="font-bold text-lg text-amber-900 mb-4">Opponents</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {players.filter(player => !player.isHuman).map((player, i) => (
+                            <div
+                                key={player.id}
+                                className={`p-4 rounded-lg border shadow-sm ${i === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
+                                    }`}
+                            >
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="font-semibold text-amber-900">{player.name}</h3>
+                                    {i === currentPlayerIndex && (
+                                        <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
+                                            Current Turn
+                                        </span>
+                                    )}
+                                </div>
+                                <AIPlayer player={player} />
+                                {/* Render player's hand */}
+                                {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
+                                <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                            </div>
+                        ))}
                     </div>
                 </div>
-
-                <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
-                <div className="w-24 h-36 flex items-center justify-center">
-                    <SimpleCard card={topCard!} />
-                </div>
-            </section>
-
-            {/* PLAYERS */}
-            <section>
-                <h2 className="font-bold text-lg text-amber-900 mb-4">Players</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {players.map((player, i) => (
-                        <div
-                            key={player.id}
-                            className={`p-4 rounded-lg border shadow-sm ${i === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
-                                }`}
-                        >
-                            <div className="flex justify-between items-center mb-2">
-                                <h3 className="font-semibold text-amber-900">{player.name}</h3>
-                                {i === currentPlayerIndex && (
-                                    <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
-                                        Current Turn
-                                    </span>
-                                )}
-                            </div>
-
-                            {/* Render player's hand */}
-                            {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
-                            <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
-                            {/* <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> */}
+                {/* Middle row with draw deck and discard */}
+                <div className='flex-1 flex items-center justify-center p-4'>
+                    <div className="w-24 h-36">
+                        <h2 className="font-bold text-lg mb-3 text-amber-900">Draw deck</h2>
+                        <div className="w-24 h-36 flex items-center justify-center">
+                            <SimpleCard
+                                card={drawDeckCard}
+                                onClick={() => {
+                                    const currentPlayer = matchState.players[matchState.currentPlayerIndex];
+                                    if (!currentPlayer.isHuman) {
+                                        console.log("Can't draw")
+                                        return; // Disable during AI turn
+                                    }
+                                    drawCard(1);
+                                }}
+                            />
                         </div>
-                    ))}
+                    </div>
+                    <div className="w-24 h-36">
+                        <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
+                        <SimpleCard card={topCard!} />
+                    </div>
                 </div>
-            </section>
+                {/* Bottom row with the user's hand */}
+                <div className='flex-none p-4'>
+                    {players.filter(player => player.isHuman).map((player, i) => (
+                        <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                    ))}
+                    
+                </div>
+            </div>
             <button className="border" onClick={() => {
-
                 setGameState(GameLogic.get().setWin())
-
-            }}>WIN</button>
+            }}>
+                WIN
+            </button>
         </div>
-
     )
-
 }
 
 
