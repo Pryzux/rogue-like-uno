@@ -4,11 +4,9 @@ import ColorPicker from "../UserInterface/ColorPicker";
 import PlayerPicker from "~/UserInterface/PlayerPicker";
 import Hand from "../UserInterface/Hand";
 import type { Game } from "../game/types/Game";
-import SimpleCard from "../UserInterface/simpleCard";
 import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
-import HandV0 from "~/UserInterface/HandV0";
 import { AIPlayer } from "~/UserInterface/AIPlayer";
 
 
@@ -163,7 +161,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                                 <AIPlayer player={player} />
                                 {/* Render player's hand */}
                                 {/* Replaced with Hand.tsx, and it currently works but the cards look kinda shitty- replace with HandV0 if you need to test with organized cards */}
-                                <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                                <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                             </div>
                         ))}
                     </div>
@@ -173,7 +171,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                     <div className="w-24 h-36">
                         <h2 className="font-bold text-lg mb-3 text-amber-900">Draw deck</h2>
                         <div className="w-24 h-36 flex items-center justify-center">
-                            <SimpleCard
+                            <SingleCard
                                 card={drawDeckCard}
                                 onClick={() => {
                                     const currentPlayer = matchState.players[matchState.currentPlayerIndex];
@@ -188,13 +186,13 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                     </div>
                     <div className="w-24 h-36">
                         <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
-                        <SimpleCard card={topCard!} />
+                        <SingleCard card={topCard!} />
                     </div>
                 </div>
                 {/* Bottom row with the user's hand */}
                 <div className='flex-none p-4'>
                     {players.filter(player => player.isHuman).map((player, i) => (
-                        <HandV0 hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                        <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                     ))}
                     
                 </div>
