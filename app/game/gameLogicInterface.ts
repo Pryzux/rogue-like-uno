@@ -62,4 +62,6 @@ export interface GameLogicInterface {
   resetModifiers(): Game;
 
   startGameAfterModifierSelection(): Boolean;
+
+  hasModifier(name: string): boolean;
 }

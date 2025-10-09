@@ -40,6 +40,7 @@ export class GameLogic implements GameLogicInterface {
         hand: [],
         calledUno: false,
         extraCards: [],
+        turns: 0,
       },
       {
         id: "ai-1",
@@ -48,6 +49,7 @@ export class GameLogic implements GameLogicInterface {
         hand: [],
         calledUno: false,
         extraCards: [],
+        turns: 0,
       },
       {
         id: "ai-2",
@@ -56,6 +58,7 @@ export class GameLogic implements GameLogicInterface {
         hand: [],
         calledUno: false,
         extraCards: [],
+        turns: 0,
       },
       {
         id: "ai-3",
@@ -64,6 +67,7 @@ export class GameLogic implements GameLogicInterface {
         hand: [],
         calledUno: false,
         extraCards: [],
+        turns: 0,
       },
     ];
 
@@ -138,6 +142,7 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
+
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
       const newCard = drawOneCard(currentMatch);
@@ -146,7 +151,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // has('modifier name') -> true/false
-  private hasModifier = (name: string): boolean =>
+  public hasModifier = (name: string): boolean =>
     this.currentGame.modifiers?.some((m) => m.name === name) ?? false;
 
   // Handle the Color Blind debuff
@@ -182,6 +187,9 @@ export class GameLogic implements GameLogicInterface {
       canPlayCard(card, match.discardPile[0], match.currentColor!) &&
       this.checkForColorBlind(card, currentPlayer)
     ) {
+      // A valid play is considered a turn
+      currentPlayer.turns++;
+
       // removing the played card from the player's hand
       currentPlayer.hand = currentPlayer.hand.filter(
         (card) => card.id !== cardId
