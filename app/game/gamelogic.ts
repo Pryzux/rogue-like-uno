@@ -69,8 +69,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [BUFFS.find(b => b.name === 'Good Aim')],
-      modifiers: [BUFFS.find(b => b.name === 'Good Aim')],
+      modifiers: [],
       status: "Not Started",
       nextRoundStatus:
         "Please Select 1 buff and 1 debuff, before starting the next round",
