@@ -74,7 +74,7 @@ export const DEBUFFS: Modifier[] = [
   {
     name: "Color Focus",
     description: "AI Players prefer to play cards matching the current color.",
-    modifierType: "buff",
+    modifierType: "debuff",
   },
   {
     name: "Wild Instinct",
