@@ -7,7 +7,7 @@ import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
 
 // the number of cards added to the user's starting hand from the Lazy Dealer debuff
-export const LAZY_DEALER_AMOUNT = 3
+export const LAZY_DEALER_AMOUNT = 3;
 
 // Singleton implementation of GameLogicInterface.
 export class GameLogic implements GameLogicInterface {
@@ -71,6 +71,8 @@ export class GameLogic implements GameLogicInterface {
       currentScreen: null,
       modifiers: [BUFFS.find(b => b.name === 'Good Aim')],
       status: "Not Started",
+      nextRoundStatus:
+        "Please Select 1 buff and 1 debuff, before starting the next round",
     };
 
     console.log("Initialized Game");
@@ -87,21 +89,20 @@ export class GameLogic implements GameLogicInterface {
 
   // Initialize Uno Round -- Pushes a new Match to Matches[UnoMatch]
   public initializeUno(): Game {
-
     // Create a deck
     let deck = shuffleDeck(createDeck());
     // deal cards to all players
     this.currentGame.players.forEach((player) => {
       player.hand = [];
-      let numberOfStartingCards = 7
+      let numberOfStartingCards = 7;
 
       // Handle Lazy Dealer debuff
       // If the current player is human and they have the Lazy Dealer debuff
       if (
         player.isHuman &&
-        this.currentGame.modifiers.find(m => m.name === 'Lazy Dealer')
+        this.currentGame.modifiers.find((m) => m.name === "Lazy Dealer")
       ) {
-        numberOfStartingCards += LAZY_DEALER_AMOUNT
+        numberOfStartingCards += LAZY_DEALER_AMOUNT;
       }
 
       for (let i = 0; i < numberOfStartingCards && deck.length > 0; i++) {
@@ -221,8 +222,10 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "skip") {
         // if the card is a skip, we have to run the getNextPlayerIndex logic again to advance the index by another 1
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
-        //if there 
-        this.getCurrentModifiers().some(m => m.name === "Double Skip") ? match.currentPlayerIndex = this.getNextPlayerIndex(match) : undefined;
+        //if there
+        this.getCurrentModifiers().some((m) => m.name === "Double Skip")
+          ? (match.currentPlayerIndex = this.getNextPlayerIndex(match))
+          : undefined;
       }
 
       if (card.type === "draw2") {
@@ -244,7 +247,9 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "wildDraw4") {
         //adding logic to handle a Buff, where a draw4 card becomes a draw5 card
-        this.getCurrentModifiers().some(m => m.name === "+5 card") ? this.drawCards(5, match.currentPlayerIndex) : this.drawCards(4, match.currentPlayerIndex);
+        this.getCurrentModifiers().some((m) => m.name === "+5 card")
+          ? this.drawCards(5, match.currentPlayerIndex)
+          : this.drawCards(4, match.currentPlayerIndex);
         console.log("chosen color is", color);
         match.currentColor = color! as CardColor;
       }
@@ -414,9 +419,9 @@ export class GameLogic implements GameLogicInterface {
     // Shuffle the remaining options
     const shuffled = [...available].sort(() => Math.random() - 0.5);
 
-    // Return up to `count` modifiers
+    // Return up to `count` modifiers (ex: 2 = 2 buffs and 2 debuffs)
 
-    return shuffled.slice(0, 10);
+    return shuffled.slice(0, 2);
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.
@@ -443,30 +448,77 @@ export class GameLogic implements GameLogicInterface {
 
     const maxForType = this.currentGame.matches.length; // one per match
     const canChooseOfType = chosenOfType < maxForType;
-
-    if (!canChooseOfType) {
-      console.warn(
-        `You have already chosen the maximum number of ${modifier.modifierType}s for ${maxForType} match(es).`
-      );
-      return;
-    }
-
     // Block exact duplicate by name (clicking multiple times)
     const alreadyChosen = this.currentGame.modifiers.some(
       (m) => m.name === modifier.name
     );
+
+    // this shouldn't matter if I got around to implementing removing modifier from buff/debuff list
+    if (this.canStartNextMatch()) {
+      this.currentGame.nextRoundStatus =
+        "You have selected enough modifiers, Ready to Play!";
+      return;
+    }
     if (alreadyChosen) {
-      console.warn(`You already chose "${modifier.name}".`);
+      this.currentGame.nextRoundStatus = `You already Selected "${modifier.name}".`;
+      return;
+    } else if (!canChooseOfType) {
+      this.currentGame.nextRoundStatus = `You have already Selected a ${modifier.modifierType}.`;
       return;
     }
 
     // Add modifier
     this.currentGame.modifiers.push(modifier);
-    console.log(`Added ${modifier.modifierType}: ${modifier.name}`);
+    this.currentGame.nextRoundStatus = `Selected the ${modifier.name} ${modifier.modifierType}`;
   }
 
   public resetModifiers(): Game {
     this.currentGame.modifiers = [];
     return this.getGame();
+  }
+
+  // Helper for startGameAfterModifier Selction -- number of current modifiers (buff or debuff)
+  private countModifiersOfType(type: "buff" | "debuff"): number {
+    return this.currentGame.modifiers.filter((m) => m.modifierType === type)
+      .length;
+  }
+  // Helper for startGameAfterModifier Selction -- checks if chosen 1 new buff & debuff by comparing required amount (length of matches = we want 1 extra per match)
+  private canStartNextMatch(): boolean {
+    const requiredPerType = this.currentGame.matches.length; // one per past match
+    const buffCount = this.countModifiersOfType("buff");
+    const debuffCount = this.countModifiersOfType("debuff");
+    return buffCount === requiredPerType && debuffCount === requiredPerType;
+  }
+
+  // Wrapper for readability
+  public startGameAfterModifierSelection(): boolean {
+    // if player chosen buffs
+    if (!this.canStartNextMatch()) {
+      const required = this.currentGame.matches.length;
+      const haveB = this.countModifiersOfType("buff");
+      const haveD = this.countModifiersOfType("debuff");
+
+      // Determine missing modifier types
+      const missing: string[] = [];
+      if (haveB < required) missing.push("buff");
+      if (haveD < required) missing.push("debuff");
+
+      // Build message based on what's missing
+      let message = "";
+
+      if (missing.length === 2) {
+        message = `You still need to choose One buff and debuff before starting`;
+      } else if (missing.length === 1) {
+        message = `You still need to choose a ${missing[0]} before starting the next round`;
+      }
+
+      this.currentGame.nextRoundStatus = message;
+
+      console.warn(message);
+      return false;
+    }
+    // pushes a new match
+    this.initializeUno();
+    return true;
   }
 } // end of class

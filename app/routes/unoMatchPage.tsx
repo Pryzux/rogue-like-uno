@@ -70,6 +70,8 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         }
     }
 
+    const modifiers = GameLogic.get().getCurrentModifiers()
+
     useEffect(() => {
 
         if (!matchState) return

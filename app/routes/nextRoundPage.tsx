@@ -21,7 +21,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
 
     const handleStartNewGame = () => {
         console.log("Starting New Game..");
-        GameLogic.get().initializeUno()
+        const success = GameLogic.get().startGameAfterModifierSelection()
         setGameState(GameLogic.get().getGame())
     };
 
@@ -60,7 +60,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
             {/* --- Buffs and Debuffs (Right Column) --- */}
             <div className="col-span-2 flex flex-col items-center space-y-6">
                 <h2 className="text-xl font-bold text-amber-700">
-                    Choose Your Next Buff and Debuff
+                    {gameState.nextRoundStatus}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-6 w-full">
