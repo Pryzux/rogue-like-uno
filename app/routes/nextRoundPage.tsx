@@ -69,7 +69,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                         <h3 className="text-lg font-semibold text-green-700 mb-3 text-center">Buffs</h3>
                         <div className="space-y-4">
                             {options.buffs?.length ? (
-                                options.buffs.map((mod, i) => (
+                                options.buffs.filter(buff => !gameState.modifiers.find(mod => mod.name === buff.name)).map((mod, i) => (
                                     <div
                                         key={i}
                                         onClick={() => handleSelectModifier(mod)}
@@ -92,7 +92,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                         <h3 className="text-lg font-semibold text-red-700 mb-3 text-center">Debuffs</h3>
                         <div className="space-y-4">
                             {options.debuffs?.length ? (
-                                options.debuffs.map((mod, i) => (
+                                options.debuffs.filter(debuff => !gameState.modifiers.find(mod => mod.name === debuff.name)).map((mod, i) => (
                                     <div
                                         key={i}
                                         onClick={() => handleSelectModifier(mod)}
