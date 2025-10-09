@@ -51,6 +51,8 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
         }
     }
 
+    const modifiers = GameLogic.get().getCurrentModifiers()
+
     useEffect(() => {
 
         if (!matchState) return
@@ -126,9 +128,10 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                             card={drawDeckCard}
                             onClick={() => {
                                 const currentPlayer = matchState.players[matchState.currentPlayerIndex];
-                                if (!currentPlayer.isHuman)
+                                if (!currentPlayer.isHuman) {
                                     console.log("Can't draw")
-                                return; // Disable during AI turn
+                                    return;
+                                }// Disable during AI turn
                                 drawCard(1);
                             }}
                         />

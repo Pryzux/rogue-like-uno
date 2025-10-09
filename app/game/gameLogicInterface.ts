@@ -55,4 +55,6 @@ export interface GameLogicInterface {
 
   // Wipe the modifiers for the game (after they lose)
   resetModifiers(): Game;
+
+  startGameAfterModifierSelection(): Boolean;
 }
