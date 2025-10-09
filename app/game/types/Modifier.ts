@@ -100,8 +100,7 @@ export const DEBUFFS: Modifier[] = [
   },
   {
     name: "Draw Fatigue",
-    description:
-      "Every Draw 2 or Draw 4 played against you adds one extra card.",
+    description: "Every Draw 2 played against you adds one extra card.",
     modifierType: "debuff",
   },
   {
