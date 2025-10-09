@@ -78,6 +78,14 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
 
         if (!currentPlayer) return
 
+        if (currentPlayer.isHuman) {
+
+            if (currentPlayer.isHuman && GameLogic.get().hasModifier("Sluggish Hands") && (currentPlayer.turns % 3 === 0)) {
+                console.log('Sluggish Hands Activated')
+                drawCard(1)
+            }
+        }
+
         if (!currentPlayer.isHuman) {
 
             // 'delay' the ai's turn
@@ -151,7 +159,7 @@ export function UnoMatchPage({ gameState, setGameState }: GameProps) {
                                     return; // Disable during AI turn
                                 }
 
-                                drawCard(1);
+                                drawCard(1)
                             }}
                         />
 
