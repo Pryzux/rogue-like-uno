@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import type { Game } from "../game/types/Game";
 import type { Modifier } from "../game/types/Modifier";
 import { GameLogic } from "~/game/gamelogic";
+import type RoundOptions from "~/game/types/RoundOptions";
 
 interface GameProps {
     gameState: Game;
@@ -11,7 +12,7 @@ interface GameProps {
 export default function NextRound({ gameState, setGameState }: GameProps) {
 
     // Pull the random round modifiers from GameLogic
-    const [options] = useState(() => GameLogic.get().getNextRoundOptions());
+    const [options] = useState<RoundOptions>(GameLogic.get().getNextRoundOptions());
 
     // The buff and debuff that were chosen for this next round, we need to keep track of this so we can let the player
     // toggle them on or off while in the selection screen

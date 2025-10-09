@@ -6,6 +6,7 @@ import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
 import type Player from "./types/Player";
 import type { UnoMatch } from "./types/UnoMatch";
 import type { PlayCardOptions } from "./types/PlayCardOptions";
+import type RoundOptions from "./types/RoundOptions";
 
 // the number of cards added to the user's starting hand from the Lazy Dealer debuff
 export const LAZY_DEALER_AMOUNT = 3;
@@ -427,7 +428,7 @@ export class GameLogic implements GameLogicInterface {
   }
 
   // Return a fresh selection of 2 buffs and 2 debuffs.
-  public getNextRoundOptions(): {} {
+  public getNextRoundOptions(): RoundOptions {
     return {
       buffs: this.getRandomModifiers(BUFFS),
       debuffs: this.getRandomModifiers(DEBUFFS),
@@ -445,6 +446,7 @@ export class GameLogic implements GameLogicInterface {
   // remove a modifier from the current game's modifiers
   public removeModifier(modifier: Modifier): void {
     this.currentGame.modifiers = this.currentGame.modifiers.filter(m => m.name !== modifier.name)
+    this.currentGame.nextRoundStatus = ''
   }
 
   public addModifier(modifier: Modifier): void {
@@ -526,6 +528,8 @@ export class GameLogic implements GameLogicInterface {
     }
     // pushes a new match
     this.initializeUno();
+    // reset next round message
+    this.currentGame.nextRoundStatus = ''
     return true;
   }
 } // end of class
