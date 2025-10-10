@@ -137,6 +137,7 @@ export class GameLogic implements GameLogicInterface {
       discardPile,
       currentColor: startingColor,
       status: "Match 1",
+      modifiersAddedThisRound: [],
     };
 
     this.currentGame.matches.push(newMatch);
@@ -633,8 +634,11 @@ export class GameLogic implements GameLogicInterface {
     }
     // pushes a new match
     this.initializeUno();
+    this.getCurrentUnoMatch().modifiersAddedThisRound =
+      this.currentGame.modifiers.slice(-2);
     // reset next round message
     this.currentGame.nextRoundStatus = "";
+
     return true;
   }
 
