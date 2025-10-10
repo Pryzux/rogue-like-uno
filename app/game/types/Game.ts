@@ -10,4 +10,5 @@ export interface Game {
   modifiers: Modifier[];
   status: "Not Started" | "Match Created" | "Next Round" | "Lost";
   nextRoundStatus: string;
+  modifierAlert: null | string;
 }
