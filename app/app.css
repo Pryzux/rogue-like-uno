@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+:root {
+    --gradient-1: linear-gradient(
+        45deg,
+        hsl(261deg 51% 69%) 0%,
+        hsl(309deg 60% 69%) 8%,
+        hsl(332deg 100% 75%) 16%,
+        hsl(354deg 100% 76%) 24%,
+        hsl(23deg 100% 70%) 32%,
+        hsl(42deg 100% 60%) 40%,
+        hsl(55deg 100% 50%) 48%,
+        hsl(84deg 91% 66%) 56%,
+        hsl(138deg 94% 71%) 64%,
+        hsl(169deg 94% 52%) 73%,
+        hsl(181deg 92% 51%) 81%,
+        hsl(191deg 100% 71%) 90%,
+        hsl(205deg 96% 82%) 100%
+  );
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20 rounded-xl;
+}
+
+.glass-lite {
+  @apply bg-white/50 border border-white/20 rounded-xl;
+}
+
 /* adding this box style for a single Card */
 .png-box {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px,

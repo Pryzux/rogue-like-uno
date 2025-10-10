@@ -124,67 +124,57 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
 
     return (
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 " style={{
+    background: "var(--gradient-1)",
+    minHeight: "100vh",
+  }}>
             {/* HEADER BAR */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <h1 className="text-3xl font-bold text-amber-800">Rogue-Like Uno NEW</h1>
+                <h1 className="text-xl font-bold text-amber-800">Rogue-Like Uno NEW</h1>
 
                 <div className="text-sm text-amber-700">
                     <p>
-                        Match Status: <span className="font-medium">{status}</span>
+                        <span className="glass p-2 font-medium">{status}</span>
                     </p>
-                    <p>
-                        Current Color:{" "}
-                        <span
-                            className={`font-semibold capitalize`}
-                            style={{ color: currentColor === "yellow" ? "#ca8a04" : currentColor }}
-                        >
-                            {currentColor}
-                        </span>
-                    </p>
-                    <p>Turn Direction: {turnDirection === 1 ? "Clockwise" : "Counter-Clockwise"}</p>
+                    
+                    
                 </div>
             </header>
 
             {/* new game board */}
-            <div className='flex flex-col items-center bg-amber-100 border-lime-400 rounded-lg p-4'>
+            <div className='glass flex flex-col items-center bg-amber-100 rounded-lg p-4'>
                 {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
                 {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
-                <h2 className="font-bold text-lg text-amber-900 mb-4">Opponents</h2>
                 {/* Top row with AI players */}
-                <div className='flex-none p-4 items-center'>
+                {/* Holds the AI player icons */}
+                <div className='flex-none flex gap-30 p-4 items-center justify-center'>
+                    {/* Holds individual AI player icon */}
+                    {players.filter(player => !player.isHuman).map((player, i) => (
+                        <div
+                            key={player.id}
+                            className={`p-4 flex-lg flex flex-col items-center rounded-lg border shadow-sm
+                                ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
+                            }`}
+                        >
+                            <AIPlayer player={player} />
+                            {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
+                                <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded m-4">
+                                    Current Turn
+                                </span>
+                            )}
+                            {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
+                            {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}
+                        </div>
+                    ))}
                     
-                    {/* Holds the AI player icons */}
-                    <div className="flex gap-30 items-center justify-center">
-                        {/* Holds individual AI player icon */}
-                        {players.filter(player => !player.isHuman).map((player, i) => (
-                            <div
-                                key={player.id}
-                                className={`p-4 flex-lg rounded-lg border shadow-sm
-                                    ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
-                                }`}
-                            >
-                                <div className=" justify-between items-center mb-2">
-                                    <h3 className="font-semibold text-amber-900">{player.name}</h3>
-                                    {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
-                                        <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
-                                            Current Turn
-                                        </span>
-                                    )}
-                                </div>
-                                <AIPlayer player={player} />
-                                {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
-                                {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}
-                            </div>
-                        ))}
-                    </div>
                 </div>
-
+                <p className="text-4xl">{turnDirection === 1 ? "⏩" : "⏪"}</p>
                 {/* Middle row with draw deck and discard */}
                 <div className='flex flex-none items-center justify-center p-4'>
-                    <div className="m-4">
-                        <h2 className="font-bold text-lg mb-3 text-amber-900">Draw deck</h2>
-                        <div className="flex items-center justify-center">
+                    <div className='flex items-center justify-center glass-lite shadow-lg'>
+                    {/* DRAW DECK */}
+                    <div className="m-4 glass">
+                        <div className="flex items-center justify-center glow-text">
                             <SingleCard
                                 card={drawDeckCard}
                                 onClick={() => {
@@ -195,17 +185,30 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                                     }
                                     drawCard(1)
                                 }}
+                                isLarge={true}
                             />
                         </div>
                     </div>
-                    <div className="m-4">
-                        <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
-                        <div className="flex items-center justify-center">
-                            <SingleCard card={topCard!} />
+                    {/* DISCARD PILE */}
+                    <div className="m-4 ">
+                        <div className="flex flex-col items-center justify-center">
+                        <SingleCard card={topCard!} isLarge={true} />
                         </div>
                     </div>
+                    </div>
                 </div>
-
+                <div>
+                     <p>
+                        Current Color:{" "}
+                        <span
+                            className={`font-semibold capitalize`}
+                            style={{ color: currentColor === "yellow" ? "#ca8a04" : currentColor }}
+                        >
+                            {currentColor}
+                        </span>
+                    </p>
+                    
+                </div>
                 {/* Bottom row with the user's hand */}
                 <div className='flex-none p-4'>
                     

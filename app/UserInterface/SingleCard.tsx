@@ -117,28 +117,36 @@ type SingleCardProps = {
     onClick?: () => void;
     isPlayable?: boolean;
     isClickable?: boolean;
+    isLarge?: boolean
 }
 
 //takes in a Card type, onClick, whether a card is playable and whether the card  returns an image 
 //TODO: remove pre-set boolean values when using this- but values must be set somewhere 
-export default function SingleCard({ card, onClick, isPlayable = false, isClickable = true }: SingleCardProps): JSX.Element {
+export default function SingleCard({ card, onClick, isPlayable = false, isClickable = true, isLarge = false }: SingleCardProps): JSX.Element {
 
     //if a card is not clickable, nothing happens to the image
     //if a card is clickable, depending on whether it can be played(isPlayable as filter), the image will move when the cursor navigates to it or the images is faded
     const classes = [
         isClickable && "cursor-pointer hover:scale-110 transition-transform",
         isClickable && isPlayable && "ring-2 ring-green-400",
-        isClickable && !isPlayable && "opacity-50 cursor-not-allowed",
+        isClickable && !isPlayable && "cursor-not-allowed",
     ]
         //turns the classes array into a usable CSS class string
         .filter(Boolean)
         .join(" ");
 
+    let sizeClasses = ''
+    if (isLarge) {
+        sizeClasses += 'w-26 h-auto'
+    } else {
+        sizeClasses += 'w-16 h-24'
+    }
+
     return (
         <img
             src={determineCardType(card.color, card.type, card.value)}
             alt="Standard back of Uno Card"
-            className={`${classes} w-16 h-24 object-contain`}
+            className={`${classes} ${sizeClasses} object-contain`}
             onClick={isClickable ? onClick : undefined}
         />
 
