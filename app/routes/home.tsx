@@ -5,6 +5,7 @@ import NextRound from "./nextRoundPage";
 import { TestUi } from "~/UserInterface/TestUi";
 import { MatchPage } from "./MatchPage";
 import { LostSummary } from "./LostSummary"
+import Header from "~/UserInterface/Header";
 
 export function UnoTitle({ scheme = "red" }: { scheme?: "red" | "blue" | "green" | "yellow" | "black" }) {
   const stops: Record<string, string> = {
@@ -111,23 +112,7 @@ export default function Home(testMode: false) {
 
         {/* FOREGROUND CONTENT */}
         <div className="relative z-10 mx-auto max-w-5xl px-6 pt-10 pb-12">
-          <div className="mb-8">
-            <div className="inline-flex items-center gap-3 rounded-2xl border border-neutral-200/70 bg-white/80 px-5 py-3 shadow-lg backdrop-blur-md">
-
-
-              <h1 className="text-4xl font-extrabold leading-none tracking-tight">
-                <span className="text-neutral-900">Rogue-Like </span>
-                <span className="bg-gradient-to-r from-rose-500 via-amber-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
-                  UNO
-                </span>
-              </h1>
-
-              <span className="ml-2 rounded-full bg-neutral-900/90 px-2 py-0.5 text-xs font-semibold text-white">
-                v0.1
-              </span>
-            </div>
-          </div>
-
+          <Header />
           <section className="rounded-2xl border border-neutral-200/70 bg-white/80 p-6 shadow-lg backdrop-blur-md">
             <div className="flex items-start justify-between">
               <div>

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
 import { ModifierCard } from "~/UserInterface/modifierCard";
 import { Section } from "~/UserInterface/NextRoundSections";
+import Header from "~/UserInterface/Header";
 
 
 interface GameProps {
@@ -65,23 +66,18 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
 
             />
 
-            <div className="glass mx-auto max-w-6xl px-6 py-10 space-y-8">
+            <div className="glass mx-auto max-w-6xl px-6 py-10 space-y-2">
                 {/* Header */}
-                <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
-                    <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <h1 className="text-3xl font-bold text-amber-900">
-                                Rogue Uno: Next Round Modifier Selection
-                            </h1>
-                        </div>
-
-                        {/* Status Box */}
-                        <div className="rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-sm font-medium">
-                            {gameState.nextRoundStatus ?? "Preparing next round..."}
-                        </div>
+                <Header nextRoundStatus={gameState.nextRoundStatus} />
+                <div className="flex items-center m-2 mt-3">
+                    <h3 className="glass-lite p-2 text-xl font-bold text-amber-900">
+                        Next Round Modifier Selection
+                    </h3>
+                    <div className="ml-auto items-center rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-sm font-medium">
+                        {gameState.nextRoundStatus ?? "Preparing next round..."}
                     </div>
                 </div>
-
+                
                 {/* Main Grid */}
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     {/* Current Modifiers */}
