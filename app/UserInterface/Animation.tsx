@@ -68,12 +68,15 @@ export default function TriggerFn({ play, src = "/ErrorRobot.json" }: Props) {
   if (!data) return null;
 
   return (
+    <div className="w-48 h-48 flex items-center justify-center">
     <Lottie
       lottieRef={lottieRef}
       animationData={data}
       loop={false}
       autoplay={false} // critical: never autoplay; we control it via ref
+      style={{ width: 150, height: 150 }}
     />
+    </div>
   );
 }
 
@@ -140,22 +143,22 @@ export function PlayerHeader({
   }, [playerId]);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-start gap-6">
+    {/* one robot */}
+    <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
       {bubble && (
-        <div
-          className="relative max-w-[16rem] rounded-2xl bg-white/95 px-4 py-2 text-sm shadow-md ring-1 ring-black/5
-                     select-none pointer-events-none focus:outline-none"
-          tabIndex={-1}
-        >
-          <span className="absolute -left-2 top-4 h-0 w-0 border-y-8 border-y-transparent border-r-8 border-r-white drop-shadow" />
-          {bubble}
+        <div className="absolute top-1/2 left-[120%] -translate-y-1.7 z-20 pointer-events-none">
+          <SpeechBubble>
+            <Typewriter text={bubble} speed={35} />
+          </SpeechBubble>
         </div>
       )}
 
-      <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
-        {/* Always mounted; stays static until play flips true */}
-        <TriggerFn play={play} />
-      </div>
+      {/* the animation */}
+      <TriggerFn play={play} />
     </div>
+
+    {/* ...other siblings like your arrow, other robots, etc. */}
+  </div>
   );
 }
