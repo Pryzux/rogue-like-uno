@@ -89,6 +89,7 @@ export class GameLogic implements GameLogicInterface {
       status: "Not Started",
       nextRoundStatus:
         "Please Select 1 buff and 1 debuff, before starting the next round",
+      modifierAlert: null,
     };
 
     console.log("Initialized Game");
@@ -149,6 +150,7 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
+    this.currentGame.modifierAlert = "tets";
 
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
