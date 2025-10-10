@@ -9,7 +9,7 @@ import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
 import { AIPlayer } from "~/UserInterface/AIPlayer";
 import Header from "~/UserInterface/Header";
-
+import { ModifierCard } from "~/UserInterface/modifierCard";
 
 
 interface GameProps {
@@ -41,7 +41,6 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     }
 
     const handlePlayerPickerChoice = (cardId: string, targetPlayer: Player) => {
-        console.log('handle player pickerf choice called')
         GameLogic.get().playCard(cardId, { targetPlayer: targetPlayer })
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
@@ -124,15 +123,11 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     const developerMode = false
 
     return (
-
         <div className="p-6 space-y-6 " style={{
             background: "var(--gradient-1)",
             minHeight: "100vh",
         }}>
-            {/* HEADER BAR */}
             <Header currentStatus={status} />
-
-               
             {/* new game board */}
             <div className='glass flex flex-col items-center rounded-lg p-2'>
 
@@ -209,6 +204,24 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
             </div>
             {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
             {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
+            
+            {/* CURRENT MODIFIERS */}
+            <div className='flex flex-col glass p-2 '>
+                <h3 className='archivo-black-regular'>Active Modifiers</h3>
+                <div className='flex gap-5 '>
+                    <div className="flex flex-col space-y-2 archivo-normal">
+                        {gameState.modifiers.filter(mod => mod.modifierType === 'buff').map(mod => (
+                            <ModifierCard mod={mod} selected={false} onToggle={() => null}/>
+                        ))}
+                    </div>
+                    <div className="flex flex-col space-y-2 archivo-normal">
+                        {gameState.modifiers.filter(mod => mod.modifierType === 'debuff').map(mod => (
+                            <ModifierCard mod={mod} selected={false} onToggle={() => null}/>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
             <button className="border blue-button text-white p-4" onClick={() => {
                 setGameState(GameLogic.get().setWin())
             }}>
