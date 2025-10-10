@@ -19,7 +19,7 @@ export class GameLogic implements GameLogicInterface {
   private lazyDealerAmount: number;
 
   // Buffs are static
-  private modifiers: { Buffs: typeof BUFFS; DEBUFFS: typeof DEBUFFS };
+  // private modifiers: { Buffs: typeof BUFFS; DEBUFFS: typeof DEBUFFS };
 
   private static instance: GameLogicInterface = new GameLogic();
 
