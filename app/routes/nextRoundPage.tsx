@@ -51,21 +51,21 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
     }, [setGameState]);
 
     return (
-        <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+        <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-blue-300 via-red-100 to-red-400 ">
             {/* Background */}
             <img
                 src="/unobg-cards-side.png"
                 alt="UNO background"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+                className="absolute inset-0 h-full w-full object-cover object-center "
                 style={{
-                    opacity: 0.8,
+                    opacity: 0.2,
                     minWidth: "100%",
                     minHeight: "100%",
                 }}
             />
 
             {/* Main Container */}
-            <div className="relative z-10 flex flex-col w-full max-w-4xl items-center justify-center px-6 py-6 space-y-4 glass text-sm leading-snug">
+            <div className="relative z-10 flex flex-col w-full max-w-4xl items-center justify-center px-6 py-6 space-y-4 glass text-sm leading-snug ">
                 {/* Header */}
                 <Header nextRoundStatus={gameState.nextRoundStatus} />
 
