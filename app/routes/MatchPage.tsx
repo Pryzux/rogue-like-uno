@@ -196,19 +196,6 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                     </div>
                     </div>
                 </div>
-                
-                <div>
-                     <p>
-                        Current Color:{" "}
-                        <span
-                            className={`font-semibold capitalize`}
-                            style={{ color: currentColor === "yellow" ? "#ca8a04" : currentColor }}
-                        >
-                            {currentColor}
-                        </span>
-                    </p>
-                    
-                </div>
                 {/* Bottom row with the user's hand */}
                 <div className='flex-none pr-4 pl-4 pt-2 pb-4 glass-lite special-shadow'>
                     
