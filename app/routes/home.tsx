@@ -3,15 +3,16 @@ import { GameLogic } from "~/game/gamelogic";
 import type { Game } from "../game/types/Game";
 import NextRound from "./nextRoundPage";
 import { TestUi } from "~/UserInterface/TestUi";
-import { MatchPage } from "./MatchPage";  
+import { MatchPage } from "./MatchPage";
+import { LostSummary } from "./LostSummary"
 
-export function UnoTitle({ scheme = "red" }: { scheme?: "red"|"blue"|"green"|"yellow"|"black" }) {
-  const stops: Record<string,string> = {
-    red:    "from-red-600 via-amber-400 to-orange-500",
-    blue:   "from-blue-500 via-cyan-300 to-sky-400",
-    green:  "from-green-600 via-lime-300 to-emerald-500",
+export function UnoTitle({ scheme = "red" }: { scheme?: "red" | "blue" | "green" | "yellow" | "black" }) {
+  const stops: Record<string, string> = {
+    red: "from-red-600 via-amber-400 to-orange-500",
+    blue: "from-blue-500 via-cyan-300 to-sky-400",
+    green: "from-green-600 via-lime-300 to-emerald-500",
     yellow: "from-amber-500 via-yellow-300 to-orange-400",
-    black:  "from-neutral-900 via-neutral-600 to-neutral-900",
+    black: "from-neutral-900 via-neutral-600 to-neutral-900",
   };
 
   return (
@@ -52,10 +53,10 @@ export default function Home(testMode: false) {
   }
 
   if (gameState.status === 'Lost') {
-    console.log(gameState.status)
-    setGameState(GameLogic.get().resetGame())
+    // console.log(gameState.status)
+    // setGameState(GameLogic.get().resetGame())
     // CHANGE TO UNOMATCHPAGE FOR ORIGINAL DEV MATCH PAGE
-    return <MatchPage gameState={gameState} setGameState={setGameState} />;
+    return <LostSummary gameState={gameState} setGameState={setGameState} />;
   }
 
   else {
@@ -184,22 +185,57 @@ return (
                     .map((s) => s[0]!.toUpperCase())
                     .join("")}
                 </span>
-                <span className="text-neutral-800">{p.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
 
-        <div className="mt-6 flex items-center justify-between text-sm">
-          <a href="#rules" className="text-sky-700 underline-offset-4 hover:underline">
-            Read rules
-          </a>
-          <span className="text-neutral-500">Autosaves between turns</span>
+              <button
+                onClick={handleStartNewGame}
+                className="group inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:shadow-md active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              >
+                Start Game
+                <svg
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                >
+                  <path d="M7.5 5l6 5-6 5V5z" fill="currentColor" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
+
+            <div className="mt-6">
+              <p className="text-sm font-medium text-neutral-500">Players</p>
+              <ul className="mt-3 flex flex-wrap items-center gap-2">
+                {gameState.players.map((p: { name: string }, i: number) => (
+                  <li
+                    key={p.name + i}
+                    className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white/80 px-3 py-1.5 text-sm shadow-sm"
+                  >
+                    <span className="grid h-6 w-6 place-items-center rounded-lg bg-neutral-100 text-xs font-semibold text-neutral-700">
+                      {p.name
+                        .split(" ")
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map((s) => s[0]!.toUpperCase())
+                        .join("")}
+                    </span>
+                    <span className="text-neutral-800">{p.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-6 flex items-center justify-between text-sm">
+              <a href="#rules" className="text-sky-700 underline-offset-4 hover:underline">
+                Read rules
+              </a>
+              <span className="text-neutral-500">Autosaves between turns</span>
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
-  </div>
-);
+      </div>
+    );
 
   }
 

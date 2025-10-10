@@ -242,7 +242,6 @@ export class GameLogic implements GameLogicInterface {
         const firstSkipped = match.currentPlayerIndex;
         emitAIHit(match, firstSkipped, "skip");
 
-
         // Base Skip behavior — advance by one player
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
 
@@ -637,6 +636,12 @@ export class GameLogic implements GameLogicInterface {
     // reset next round message
     this.currentGame.nextRoundStatus = "";
     return true;
+  }
+
+  public setLoss(): Game {
+    this.currentGame.status = "Lost";
+    this.getCurrentUnoMatch().status = "Lost";
+    return this.getGame();
   }
 } // end of class
 

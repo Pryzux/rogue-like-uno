@@ -39,13 +39,16 @@ export interface GameLogicInterface {
   getPlayerFromIndex(index: number): Player;
 
   // Get a player's index using their player instance
-  getPlayerIndexFromPlayer(player: Player): number
+  getPlayerIndexFromPlayer(player: Player): number;
 
   // Play for the ai
   playAITurn(): undefined | Game;
 
   // Set Win (For Dev)
   setWin(): Game;
+
+  // For Dev
+  setLoss(): Game;
 
   // --- Buffs and Debuffs Functions ---
 

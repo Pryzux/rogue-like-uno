@@ -33,7 +33,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     }
 
     const handleColorPickerChoice = (cardId: string, color: CardColor) => {
-        GameLogic.get().playCard(cardId, {color: color})
+        GameLogic.get().playCard(cardId, { color: color })
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
         setShowColorPicker(false)
@@ -41,7 +41,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
 
     const handlePlayerPickerChoice = (cardId: string, targetPlayer: Player) => {
         console.log('handle player pickerf choice called')
-        GameLogic.get().playCard(cardId, {targetPlayer: targetPlayer})
+        GameLogic.get().playCard(cardId, { targetPlayer: targetPlayer })
         setGameState(GameLogic.get().getGame())
         setMatchState(GameLogic.get().getCurrentUnoMatch())
         setShowPlayerPicker(false)
@@ -125,9 +125,9 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     return (
 
         <div className="p-6 space-y-6 " style={{
-    background: "var(--gradient-1)",
-    minHeight: "100vh",
-  }}>
+            background: "var(--gradient-1)",
+            minHeight: "100vh",
+        }}>
             {/* HEADER BAR */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 archivo-black-regular">
                 <h1 className="text-xl font-bold text-amber-800">Rogue-Like Uno</h1>
@@ -140,7 +140,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
 
             {/* new game board */}
             <div className='glass flex flex-col items-center rounded-lg p-2'>
-                
+
                 {/* Top row with AI players */}
                 {/* Holds the AI player icons */}
                 <div className='flex-none flex gap-30 p-1 items-center justify-center'>
@@ -151,67 +151,65 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                             className={`p-4 flex-lg flex flex-col items-center justify-center}`}
                         >
                             <span
-                            className={`text-xs bg-amber-500 text-white p-1 m-1 rounded ${
-                                GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
-                                ? "visible"
-                                : "invisible"
-                            }`}
+                                className={`text-xs bg-amber-500 text-white p-1 m-1 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
+                                        ? "visible"
+                                        : "invisible"
+                                    }`}
                             >
-                            Current Turn
+                                Current Turn
                             </span>
                             <AIPlayer player={player} />
-                            
+
                             {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
                             {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}
                         </div>
                     ))}
-                    
+
                 </div>
                 <p className="text-4xl">{turnDirection === 1 ? "⏩" : "⏪"}</p>
                 {/* Middle row with draw deck and discard */}
                 <div className='flex flex-none items-center justify-center p-4'>
                     <div className='flex items-center justify-center glass-lite'>
-                    {/* DRAW DECK */}
-                    <div className="m-4">
-                        <div className="flex items-center justify-center">
-                            <SingleCard
-                                card={drawDeckCard}
-                                onClick={() => {
-                                    const currentPlayer = matchState.players[matchState.currentPlayerIndex];
-                                    if (!currentPlayer.isHuman) {
-                                        console.log("Can't draw")
-                                        return; // Disable during AI turn
-                                    }
-                                    drawCard(1)
-                                }}
-                                isLarge={true}
-                            />
+                        {/* DRAW DECK */}
+                        <div className="m-4">
+                            <div className="flex items-center justify-center">
+                                <SingleCard
+                                    card={drawDeckCard}
+                                    onClick={() => {
+                                        const currentPlayer = matchState.players[matchState.currentPlayerIndex];
+                                        if (!currentPlayer.isHuman) {
+                                            console.log("Can't draw")
+                                            return; // Disable during AI turn
+                                        }
+                                        drawCard(1)
+                                    }}
+                                    isLarge={true}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    {/* DISCARD PILE */}
-                    <div className="m-4">
-                        <div className="flex flex-col items-center justify-center">
-                        <SingleCard card={topCard!} isLarge={true} currentColor={currentColor} />
+                        {/* DISCARD PILE */}
+                        <div className="m-4">
+                            <div className="flex flex-col items-center justify-center">
+                                <SingleCard card={topCard!} isLarge={true} currentColor={currentColor} />
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
                 {/* Bottom row with the user's hand */}
                 <div className='flex-none pr-4 pl-4 pt-2 pb-4 glass-lite special-shadow'>
-                    
+
                     {players.filter(player => player.isHuman).map((player, i) => (
                         <div id={player.id} className="flex flex-col items-center">
-                        <span
-                            className={`text-xs bg-amber-500 text-white p-0.5 m-0.5 rounded ${
-                                GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
-                                ? "visible"
-                                : "invisible"
-                            }`}
-                        >Your turn!</span>
-                        <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
+                            <span
+                                className={`text-xs bg-amber-500 text-white p-0.5 m-0.5 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
+                                        ? "visible"
+                                        : "invisible"
+                                    }`}
+                            >Your turn!</span>
+                            <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                         </div>
                     ))}
-                    
+
                 </div>
             </div>
             {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
@@ -220,6 +218,11 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                 setGameState(GameLogic.get().setWin())
             }}>
                 WIN
+            </button>
+            <button className="border blue-button text-white p-4" onClick={() => {
+                setGameState(GameLogic.get().setLoss())
+            }}>
+                LOSE
             </button>
         </div>
     )
