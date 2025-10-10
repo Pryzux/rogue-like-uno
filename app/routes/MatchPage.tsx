@@ -120,66 +120,59 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     const drawDeckCard: Card = { id: "card-draw-deck", type: "deck", color: "black" };
 
     // this is the flag to show all AI hands!!!!!!!
-    const developerMode = true
+    const developerMode = false
 
     return (
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 " style={{
+    background: "var(--gradient-1)",
+    minHeight: "100vh",
+  }}>
             {/* HEADER BAR */}
-            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <h1 className="text-3xl font-bold text-amber-800">Rogue-Like Uno NEW</h1>
-
+            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 archivo-black-regular">
+                <h1 className="text-xl font-bold text-amber-800">Rogue-Like Uno</h1>
                 <div className="text-sm text-amber-700">
                     <p>
-                        Match Status: <span className="font-medium">{status}</span>
+                        <span className="glass p-2 font-medium">{status}</span>
                     </p>
-                    <p>
-                        Current Color:{" "}
-                        <span
-                            className={`font-semibold capitalize`}
-                            style={{ color: currentColor === "yellow" ? "#ca8a04" : currentColor }}
-                        >
-                            {currentColor}
-                        </span>
-                    </p>
-                    <p>Turn Direction: {turnDirection === 1 ? "Clockwise" : "Counter-Clockwise"}</p>
                 </div>
             </header>
 
             {/* new game board */}
-            <div className='flex flex-col bg-amber-100 border-lime-400 rounded-lg p-4'>
-                {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
-                {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
+            <div className='glass flex flex-col items-center rounded-lg p-2'>
+                
                 {/* Top row with AI players */}
-                <div className='flex-none p-4 items-center'>
-                    <h2 className="font-bold text-lg text-amber-900 mb-4">Opponents</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 content-center">
-                        {players.filter(player => !player.isHuman).map((player, i) => (
-                            <div
-                                key={player.id}
-                                className={`p-4 rounded-lg border shadow-sm ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex ? "border-amber-500 bg-amber-50" : "border-gray-300 bg-white"
-                                    }`}
+                {/* Holds the AI player icons */}
+                <div className='flex-none flex gap-30 p-1 items-center justify-center'>
+                    {/* Holds individual AI player icon */}
+                    {players.filter(player => !player.isHuman).map((player, i) => (
+                        <div
+                            key={player.id}
+                            className={`p-4 flex-lg flex flex-col items-center justify-center}`}
+                        >
+                            <span
+                            className={`text-xs bg-amber-500 text-white p-1 m-1 rounded ${
+                                GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
+                                ? "visible"
+                                : "invisible"
+                            }`}
                             >
-                                <div className="flex justify-between items-center mb-2">
-                                    <h3 className="font-semibold text-amber-900">{player.name}</h3>
-                                    {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
-                                        <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
-                                            Current Turn
-                                        </span>
-                                    )}
-                                </div>
-                                <AIPlayer player={player} />
-                                {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
-                                {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}
-                            </div>
-                        ))}
-                    </div>
+                            Current Turn
+                            </span>
+                            <AIPlayer player={player} />
+                            
+                            {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
+                            {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}
+                        </div>
+                    ))}
+                    
                 </div>
-
+                <p className="text-4xl">{turnDirection === 1 ? "⏩" : "⏪"}</p>
                 {/* Middle row with draw deck and discard */}
                 <div className='flex flex-none items-center justify-center p-4'>
+                    <div className='flex items-center justify-center glass-lite'>
+                    {/* DRAW DECK */}
                     <div className="m-4">
-                        <h2 className="font-bold text-lg mb-3 text-amber-900">Draw deck</h2>
                         <div className="flex items-center justify-center">
                             <SingleCard
                                 card={drawDeckCard}
@@ -191,34 +184,39 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                                     }
                                     drawCard(1)
                                 }}
+                                isLarge={true}
                             />
                         </div>
                     </div>
+                    {/* DISCARD PILE */}
                     <div className="m-4">
-                        <h2 className="font-bold text-lg mb-3 text-amber-900">Top of Discard Pile</h2>
-                        <div className="flex items-center justify-center">
-                            <SingleCard card={topCard!} />
+                        <div className="flex flex-col items-center justify-center">
+                        <SingleCard card={topCard!} isLarge={true} currentColor={currentColor} />
                         </div>
                     </div>
+                    </div>
                 </div>
-
                 {/* Bottom row with the user's hand */}
-                <div className='flex-none p-4'>
+                <div className='flex-none pr-4 pl-4 pt-2 pb-4 glass-lite special-shadow'>
                     
                     {players.filter(player => player.isHuman).map((player, i) => (
-                        <div>
-                            {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
-                            <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded">
-                                Current Turn
-                            </span>
-                        )}
+                        <div id={player.id} className="flex flex-col items-center">
+                        <span
+                            className={`text-xs bg-amber-500 text-white p-0.5 m-0.5 rounded ${
+                                GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
+                                ? "visible"
+                                : "invisible"
+                            }`}
+                        >Your turn!</span>
                         <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                         </div>
                     ))}
                     
                 </div>
             </div>
-            <button className="border" onClick={() => {
+            {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
+            {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
+            <button className="border blue-button text-white p-4" onClick={() => {
                 setGameState(GameLogic.get().setWin())
             }}>
                 WIN

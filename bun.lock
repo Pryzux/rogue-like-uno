@@ -6,6 +6,8 @@
       "dependencies": {
         "@radix-ui/react-separator": "^1.1.7",
         "@radix-ui/react-slot": "^1.2.3",
+        "@lottiefiles/dotlottie-react": "^0.17.5",
+        "@lottiefiles/dotlottie-web": "^0.54.1",
         "@react-router/node": "^7.9.2",
         "@react-router/serve": "^7.9.2",
         "class-variance-authority": "^0.7.1",
@@ -13,6 +15,7 @@
         "isbot": "^5.1.31",
         "lucide-react": "^0.545.0",
         "motion": "^12.23.22",
+        "lottie-react": "^2.4.1",
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
         "react-router": "^7.9.2",
@@ -154,6 +157,10 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
+
+    "@lottiefiles/dotlottie-react": ["@lottiefiles/dotlottie-react@0.17.5", "", { "dependencies": { "@lottiefiles/dotlottie-web": "0.54.1" }, "peerDependencies": { "react": "^17 || ^18 || ^19" } }, "sha512-7CRfJOvA5EjPgiQok972Tg9zCY0/XsIhagiDCdb4zlywExmwYZoN4KOjf4KvwJVMRCrYtHp/txoXPG7se9ijfA=="],
+
+    "@lottiefiles/dotlottie-web": ["@lottiefiles/dotlottie-web@0.54.1", "", {}, "sha512-Xq6wKvQ1hJUAalctrrVSZNIPStJBEAzSsQl4rtinPEfl6LBZdos0GGfVLdyGjZZYODzoG28SMN09YKAC9Kz6RQ=="],
 
     "@mjackson/node-fetch-server": ["@mjackson/node-fetch-server@0.2.0", "", {}, "sha512-EMlH1e30yzmTpGLQjlFmaDAjyOeZhng1/XCd7DExR8PNAnG/G1tyruZxEoUe11ClnwGhGrtsdnyyUx1frSzjng=="],
 
@@ -466,6 +473,10 @@
     "lightningcss-win32-x64-msvc": ["lightningcss-win32-x64-msvc@1.30.1", "", { "os": "win32", "cpu": "x64" }, "sha512-PVqXh48wh4T53F/1CCu8PIPCxLzWyCnn/9T5W1Jpmdy5h9Cwd+0YQS6/LwhHXSafuc61/xg9Lv5OrCby6a++jg=="],
 
     "lodash": ["lodash@4.17.21", "", {}, "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="],
+
+    "lottie-react": ["lottie-react@2.4.1", "", { "dependencies": { "lottie-web": "^5.10.2" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-LQrH7jlkigIIv++wIyrOYFLHSKQpEY4zehPicL9bQsrt1rnoKRYCYgpCUe5maqylNtacy58/sQDZTkwMcTRxZw=="],
+
+    "lottie-web": ["lottie-web@5.13.0", "", {}, "sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ=="],
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="],
 

@@ -1,12 +1,13 @@
+import { uiBus, type PlayerEffect } from "~/UIBus";
 import { canPlayCard, createDeck, drawOneCard, shuffleDeck } from "./deck";
 import type { GameLogicInterface } from "./gameLogicInterface";
 import type { Card, CardColor } from "./types/Card";
 import type { Game } from "./types/Game";
 import { BUFFS, DEBUFFS, type Modifier } from "./types/Modifier";
-import type Player from "./types/Player";
-import type { UnoMatch } from "./types/UnoMatch";
 import type { PlayCardOptions } from "./types/PlayCardOptions";
+import type Player from "./types/Player";
 import type RoundOptions from "./types/RoundOptions";
+import type { UnoMatch } from "./types/UnoMatch";
 
 // Singleton implementation of GameLogicInterface.
 export class GameLogic implements GameLogicInterface {
@@ -237,6 +238,11 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "skip") {
+        //adding animation if AI player recieves a skip card played at them
+        const firstSkipped = match.currentPlayerIndex;
+        emitAIHit(match, firstSkipped, "skip");
+
+
         // Base Skip behavior — advance by one player
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
 
@@ -248,6 +254,9 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "draw2") {
+        const draw2victim = match.currentPlayerIndex;
+        //calling the fn to make the animation move and show a message
+        emitAIHit(match, draw2victim, "draw2");
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
 
@@ -630,3 +639,9 @@ export class GameLogic implements GameLogicInterface {
     return true;
   }
 } // end of class
+
+function emitAIHit(match: UnoMatch, playerIndex: number, effect: PlayerEffect) {
+  const p = match.players[playerIndex];
+  if (!p || p.isHuman) return; // <-- guard: never fire for human
+  uiBus.emitPlayerEffect({ playerId: p.id, effect });
+}
