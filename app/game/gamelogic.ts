@@ -150,7 +150,6 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    this.currentGame.modifierAlert = "tets";
 
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
@@ -237,6 +236,7 @@ export class GameLogic implements GameLogicInterface {
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
       } else {
         console.log("Reverse Momentum Activated");
+        this.currentGame.modifierAlert = "Reverse Momentum Activated";
         // reverse momentum activated
       }
 
@@ -250,6 +250,7 @@ export class GameLogic implements GameLogicInterface {
 
         // Check if "Double Skip" modifier is active
         if (this.hasModifier("Double Skip") && currentPlayer.isHuman) {
+          this.currentGame.modifierAlert = "Reverse Momentum Activated";
           console.log("'Double Skip' Activated");
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
@@ -272,6 +273,7 @@ export class GameLogic implements GameLogicInterface {
 
         // '+3 card' -> if current player making others draw -> modify
         if (currentPlayer.isHuman && this.hasModifier("+3 card")) {
+          this.currentGame.modifierAlert = "+3 Card Draw Activated";
           this.drawCards(3, draw2TargetPlayer);
         }
 
@@ -282,6 +284,8 @@ export class GameLogic implements GameLogicInterface {
 
           // if the person recieving the draw is human
           if (targetIsHuman) {
+            this.currentGame.modifierAlert =
+              "Draw Fatigue Activated: Recieving an Extra Card";
             this.drawCards(3, draw2TargetPlayer);
           } else {
             this.drawCards(2, draw2TargetPlayer);
@@ -297,6 +301,7 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "wild") {
         if (this.hasModifier("Wild Surge") && currentPlayer.isHuman) {
           console.log("'Wild Surge' Activated");
+
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
         // Set color for Wild card
@@ -305,6 +310,7 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "wildDraw4") {
         if (this.hasModifier("+5 card") && currentPlayer.isHuman) {
+          this.currentGame.modifierAlert = "+5 Cards Activated";
           this.drawCards(5, match.currentPlayerIndex);
         } else {
           this.drawCards(4, match.currentPlayerIndex);
@@ -474,6 +480,8 @@ export class GameLogic implements GameLogicInterface {
 
     // "Wild Instinct"
     console.log("Wild Instincts Activated.");
+    this.currentGame.modifierAlert =
+      "Wild Instinct Activated: AI Choosing Best Color For Them";
     const colorCounts: Record<string, number> = {
       red: 0,
       blue: 0,
