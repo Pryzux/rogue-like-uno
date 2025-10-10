@@ -1,4 +1,13 @@
-export type PlayerEffect = "skip" | "draw2";
+
+export type PlayerEffect =
+    | { kind: "skip"; }
+    | { kind: "reverse"; }
+    | { kind: "draw2"; count: 2 }
+    | { kind: "draw4"; count: 4 }
+    | { kind: "wild"; }
+    | { kind: "uno"; }
+    | { kind: "wilddraw4"; };
+
 
 
 export interface PlayerEffectPayload {
@@ -12,5 +21,7 @@ class _UIBus extends EventTarget {
     this.dispatchEvent(new CustomEvent<PlayerEffectPayload>("playerEffect", { detail }));
   }
 }
+
+
 
 export const uiBus = new _UIBus();
