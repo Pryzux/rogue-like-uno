@@ -8,6 +8,7 @@ import SingleCard from "../UserInterface/SingleCard"
 import type Player from "../game/types/Player";
 import type { Card, CardColor } from "../game/types/Card"
 import { AIPlayer } from "~/UserInterface/AIPlayer";
+import Header from "~/UserInterface/Header";
 
 
 
@@ -129,15 +130,9 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
             minHeight: "100vh",
         }}>
             {/* HEADER BAR */}
-            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 archivo-black-regular">
-                <h1 className="text-xl font-bold text-amber-800">Rogue-Like Uno</h1>
-                <div className="text-sm text-amber-700">
-                    <p>
-                        <span className="glass p-2 font-medium">{status}</span>
-                    </p>
-                </div>
-            </header>
+            <Header currentStatus={status} />
 
+               
             {/* new game board */}
             <div className='glass flex flex-col items-center rounded-lg p-2'>
 
