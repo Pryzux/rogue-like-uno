@@ -11,12 +11,10 @@ import { ModifierCard } from "~/UserInterface/modifierCard";
 import { Section } from "~/UserInterface/NextRoundSections";
 import Header from "~/UserInterface/Header";
 
-
 interface GameProps {
     gameState: Game;
     setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
-
 
 export default function NextRound({ gameState, setGameState }: GameProps) {
     const [options] = useState<RoundOptions>(() => GameLogic.get().getNextRoundOptions());
@@ -53,7 +51,8 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
     }, [setGameState]);
 
     return (
-        <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+            {/* Background */}
             <img
                 src="/unobg-cards-side.png"
                 alt="UNO background"
@@ -63,54 +62,59 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                     minWidth: "100%",
                     minHeight: "100%",
                 }}
-
             />
 
-            <div className="glass mx-auto max-w-6xl px-6 py-10 space-y-2">
+            {/* Main Container */}
+            <div className="relative z-10 flex flex-col w-full max-w-4xl items-center justify-center px-6 py-6 space-y-4 glass text-sm leading-snug">
                 {/* Header */}
                 <Header nextRoundStatus={gameState.nextRoundStatus} />
-                <div className="flex items-center m-2 mt-3">
-                    <h3 className="glass-lite p-2 text-xl font-bold text-amber-900">
+
+                {/* Title and Status */}
+                <div className="flex items-center w-full mt-2">
+                    <h3 className="glass-lite p-2 text-lg font-bold text-amber-900">
                         Next Round Modifier Selection
                     </h3>
-                    <div className="ml-auto items-center rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-sm font-medium">
+                    <div className="ml-auto items-center rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-xs font-medium">
+
                         {gameState.nextRoundStatus ?? "Preparing next round..."}
                     </div>
                 </div>
-                
+
                 {/* Main Grid */}
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 w-full">
                     {/* Current Modifiers */}
                     <Section title="Current Modifiers" tone="neutral">
                         {gameState.modifiers?.length ? (
-                            <ul className="space-y-3">
+                            <ul className="space-y-2">
                                 {gameState.modifiers.map((mod) => (
                                     <li key={mod.name} className="glass-lite rounded-2xl border p-4">
                                         <div className="flex items-start justify-between gap-3">
                                             <div>
                                                 <p className="font-medium">{mod.name}</p>
-                                                <p className="text-sm text-muted-foreground">{mod.description}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {mod.description}
+                                                </p>
                                             </div>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
-                            <div className="flex flex-col items-center gap-2 py-8 text-muted-foreground">
-                                <Hand className="h-5 w-5" />
-                                <p className="text-sm">
+                            <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
+                                <Hand className="h-4 w-4" />
+                                <p className="text-xs">
                                     No modifiers yet. Pick buffs and debuffs for this round.
                                 </p>
                             </div>
                         )}
                     </Section>
 
-                    {/* Buffs & Debuffs */}
-                    <div className="lg:col-span-2 space-y-6">
+                    {/* Buffs and Debuffs */}
+                    <div className="lg:col-span-2 space-y-5">
                         {/* Buffs */}
                         <Section title="Buffs" tone="buff">
                             {options.buffs?.length ? (
-                                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     {options.buffs.map((mod) => (
                                         <ModifierCard
                                             key={mod.name}
@@ -121,7 +125,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="py-4 text-sm text-muted-foreground">
+                                <p className="py-3 text-xs text-muted-foreground">
                                     No buff options available.
                                 </p>
                             )}
@@ -130,7 +134,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                         {/* Debuffs */}
                         <Section title="Debuffs" tone="debuff">
                             {options.debuffs?.length ? (
-                                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     {options.debuffs.map((mod) => (
                                         <ModifierCard
                                             key={mod.name}
@@ -141,7 +145,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="py-4 text-sm text-muted-foreground">
+                                <p className="py-3 text-xs text-muted-foreground">
                                     No debuff options available.
                                 </p>
                             )}
@@ -149,23 +153,24 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
 
                         {/* Bottom Section */}
                         <Card className="glass-lite rounded-3xl border border-amber-200">
-                            <CardContent className="flex flex-col gap-4 p-6">
-                                <div className="flex flex-wrap items-center justify-between gap-3">
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                        <Undo2 className="h-4 w-4" />
+                            <CardContent className="flex flex-col gap-3 p-4">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                        <Undo2 className="h-3.5 w-3.5" />
                                         <span>Click again to deselect a modifier.</span>
                                     </div>
                                 </div>
 
-                                <Separator />
+                                <Separator className="bg-gray-200 h-px w-full" />
 
                                 <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-xs text-muted-foreground">
                                         Add or remove modifiers freely before starting the next round.
                                     </p>
                                     <div className="flex gap-2">
                                         <Button
                                             type="button"
+                                            className="h-8 px-3 text-xs"
                                             onClick={() => {
                                                 newMods.forEach((m) => GameLogic.get().removeModifier(m));
                                                 setNewMods([]);
@@ -174,7 +179,11 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                         >
                                             Clear Selections
                                         </Button>
-                                        <Button type="button" onClick={handleStartNewGame}>
+                                        <Button
+                                            type="button"
+                                            className="h-8 px-3 text-xs"
+                                            onClick={handleStartNewGame}
+                                        >
                                             Start Game
                                         </Button>
                                     </div>
@@ -186,7 +195,10 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
             </div>
         </div>
     );
+
+
 }
+
 
 
 
