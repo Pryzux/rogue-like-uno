@@ -10,6 +10,8 @@ import type { Card, CardColor } from "../game/types/Card"
 import { AIPlayer } from "~/UserInterface/AIPlayer";
 import Header from "~/UserInterface/Header";
 import { ModifierCard } from "~/UserInterface/modifierCard";
+import { ModifierNotification } from "~/UserInterface/ModifierNotification";
+
 
 
 interface GameProps {
@@ -128,6 +130,8 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
             minHeight: "100vh",
         }}>
             <Header currentStatus={status} />
+
+
             {/* new game board */}
             <div className='glass flex flex-col items-center rounded-lg p-2'>
 
@@ -142,8 +146,8 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                         >
                             <span
                                 className={`text-xs bg-amber-500 text-white p-1 m-1 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
-                                        ? "visible"
-                                        : "invisible"
+                                    ? "visible"
+                                    : "invisible"
                                     }`}
                             >
                                 Current Turn
@@ -192,8 +196,8 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                         <div id={player.id} className="flex flex-col items-center">
                             <span
                                 className={`text-xs bg-amber-500 text-white p-0.5 m-0.5 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
-                                        ? "visible"
-                                        : "invisible"
+                                    ? "visible"
+                                    : "invisible"
                                     }`}
                             >Your turn!</span>
                             <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
@@ -232,6 +236,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
             }}>
                 LOSE
             </button>
+            <ModifierNotification gameState={gameState} setGameState={setGameState} />;
         </div>
     )
 }
