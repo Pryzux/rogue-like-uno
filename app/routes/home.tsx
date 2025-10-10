@@ -60,35 +60,72 @@ export default function Home(testMode: false) {
 
   else {
 
-    return (
 
-      <div className="relative min-h-dvh overflow-hidden">
-    {/* PERFECT TILE WALLPAPER — no fade, no gaps */}
+return (
+  <div className="relative min-h-dvh overflow-hidden">
+    {/* LAYER 0: base gradient */}
+    <div className="absolute inset-0 -z-30 bg-gradient-to-b from-neutral-50 via-neutral-100 to-neutral-200" />
+
+    {/* LAYER 1: SVG filter defs (hidden) */}
+    <svg className="absolute -z-20 opacity-0 pointer-events-none" width="0" height="0">
+      <defs>
+        <filter id="waterRipple">
+          {/* animated noise */}
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.008 0.012"
+            numOctaves="2"
+            seed="3"
+            result="noise"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="10s"
+              values="0.006 0.010; 0.012 0.018; 0.006 0.010"
+              repeatCount="indefinite"
+            />
+          </feTurbulence>
+          {/* displace the layer with the noise */}
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="14"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+
+    {/* LAYER 2: faded, tiled cards with ripple */}
     <div
-      className="fixed inset-0 -z-10 bg-left-top bg-repeat"
+      className="absolute inset-0 -z-10 bg-left-top bg-repeat opacity-30"
       style={{
         backgroundImage: "url('unoCard-back.png')",
         backgroundSize: "160px 240px",
+        filter: "url(#waterRipple)",
+        willChange: "filter",
       }}
     />
 
     {/* FOREGROUND CONTENT */}
     <div className="relative z-10 mx-auto max-w-5xl px-6 pt-10 pb-12">
-      {/* Masthead */}
       <div className="mb-8">
-        <div className="inline-flex items-center gap-3 rounded-2xl border border-neutral-200/70 bg-white/80 px-5 py-3 shadow-lg backdrop-blur-md">
-         
+  <div className="inline-flex items-center gap-3 rounded-2xl border border-neutral-200/70 bg-white/80 px-5 py-3 shadow-lg backdrop-blur-md">
+   
 
-          <h1 className="text-4xl font-extrabold leading-none tracking-tight">
-            <span className="text-neutral-900">Rogue-Like </span>
-            <UnoTitle scheme="red" />
-          </h1>
+    <h1 className="text-4xl font-extrabold leading-none tracking-tight">
+      <span className="text-neutral-900">Rogue-Like </span>
+      <span className="bg-gradient-to-r from-rose-500 via-amber-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+        UNO
+      </span>
+    </h1>
 
-          <span className="ml-2 rounded-full bg-neutral-900/90 px-2 py-0.5 text-xs font-semibold text-white">
-            v0.1
-          </span>
-        </div>
-      </div>
+    <span className="ml-2 rounded-full bg-neutral-900/90 px-2 py-0.5 text-xs font-semibold text-white">
+      v0.1
+    </span>
+  </div>
+</div>
 
       <section className="rounded-2xl border border-neutral-200/70 bg-white/80 p-6 shadow-lg backdrop-blur-md">
         <div className="flex items-start justify-between">
@@ -123,11 +160,7 @@ export default function Home(testMode: false) {
             className="group inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:shadow-md active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             Start Game
-            <svg
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-              className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-            >
+            <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-0.5">
               <path d="M7.5 5l6 5-6 5V5z" fill="currentColor" />
             </svg>
           </button>
@@ -167,7 +200,6 @@ export default function Home(testMode: false) {
     </div>
   </div>
 );
-
 
   }
 
