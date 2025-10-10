@@ -2,14 +2,8 @@ import { useState } from "react";
 import { GameLogic } from "~/game/gamelogic";
 import type { Game } from "../game/types/Game";
 import NextRound from "./nextRoundPage";
-import { UnoMatchPage } from "./unoMatchPage";
 import { TestUi } from "~/UserInterface/TestUi";
-import { MatchPage } from "./MatchPage"; 
-
-
-
-
-//notes: there are two references to UnoMatchPage, which I(Aarti) have disabled in order to re-write it within  
+import { MatchPage } from "./MatchPage";  
 
 export function UnoTitle({ scheme = "red" }: { scheme?: "red"|"blue"|"green"|"yellow"|"black" }) {
   const stops: Record<string,string> = {
@@ -28,9 +22,6 @@ export function UnoTitle({ scheme = "red" }: { scheme?: "red"|"blue"|"green"|"ye
     </h1>
   );
 }
-
-
-
 
 export default function Home(testMode: false) {
 
@@ -58,16 +49,13 @@ export default function Home(testMode: false) {
     console.log(gameState.status)
     // CHANGE TO UNOMATCHPAGE FOR ORIGINAL DEV MATCH PAGE
     return <MatchPage gameState={gameState} setGameState={setGameState} />; //original return stmt
-    // return <UpdatedunoMatchPage gameState={gameState} setGameState={setGameState} />;
-
   }
 
   if (gameState.status === 'Lost') {
     console.log(gameState.status)
     setGameState(GameLogic.get().resetGame())
     // CHANGE TO UNOMATCHPAGE FOR ORIGINAL DEV MATCH PAGE
-    return <MatchPage gameState={gameState} setGameState={setGameState} />; //original return stmt
-    //  return <UpdatedunoMatchPage gameState={gameState} setGameState={setGameState} />;
+    return <MatchPage gameState={gameState} setGameState={setGameState} />;
   }
 
   else {

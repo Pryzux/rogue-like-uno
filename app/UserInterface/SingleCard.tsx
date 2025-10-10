@@ -65,15 +65,10 @@ const cardImages: Partial<Record<CardKey, string>> = {
     green_reverse: 'greenreverse.png',
     green_draw2: 'greendraw2.png',
    
-    
     black_wild: 'public/wild.png', //wild card used, since wild card is defined as black within deck creation
     black_wildDraw4: 'public/wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
 
     black_deck: 'unoCard-back.png', // the draw deck
-
-
-
-
 };
 
 const numberToType: Record<number, string> = {
@@ -89,11 +84,8 @@ const numberToType: Record<number, string> = {
     9: "nine",
 };
 
-
-
 //based on the color and type of card provided, the right png path is provided
 export function determineCardType(color: string, typeOrValue: string, value: number | undefined): string {
-
     //handling card types where type: number could mean zero-nine, so that I don't need to change the structure of the png lookup
     let typeString: string;
 
@@ -109,7 +101,6 @@ export function determineCardType(color: string, typeOrValue: string, value: num
     const key = `${color}_${typeString!}` as CardKey;
     const img = cardImages[key]!;
     return (img)
-
 }
 
 type SingleCardProps = {
@@ -118,11 +109,12 @@ type SingleCardProps = {
     isPlayable?: boolean;
     isClickable?: boolean;
     isLarge?: boolean
+    currentColor?: string
 }
 
 //takes in a Card type, onClick, whether a card is playable and whether the card  returns an image 
 //TODO: remove pre-set boolean values when using this- but values must be set somewhere 
-export default function SingleCard({ card, onClick, isPlayable = false, isClickable = true, isLarge = false }: SingleCardProps): JSX.Element {
+export default function SingleCard({ card, onClick, isPlayable = false, isClickable = true, isLarge = false, currentColor = '' }: SingleCardProps): JSX.Element {
 
     //if a card is not clickable, nothing happens to the image
     //if a card is clickable, depending on whether it can be played(isPlayable as filter), the image will move when the cursor navigates to it or the images is faded
@@ -142,14 +134,31 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
         sizeClasses += 'w-16 h-24'
     }
 
+    let wildColorOverlay = ''
+    let wildImageOverlay = ''
+    
+    const colorClasses: Record<CardColor, string> = {
+        red: "bg-red-500/60",
+        blue: "bg-blue-500/70",
+        green: "bg-green-500/60",
+        yellow: "bg-yellow-500/60",
+        black: ""
+    };
+
+    // CurrentColor should only be set if the card is a wild card (to show the color the player picked)
+    if (card.type.includes('wild') && isLarge && currentColor) {
+        wildColorOverlay = colorClasses[currentColor as CardColor]
+        wildImageOverlay = 'mix-blend-overlay'
+    }
+
     return (
+        <div className={`${wildColorOverlay}`}>
         <img
             src={determineCardType(card.color, card.type, card.value)}
             alt="Standard back of Uno Card"
-            className={`${classes} ${sizeClasses} object-contain`}
+            className={`${classes} ${sizeClasses} object-contain ${wildImageOverlay}`}
             onClick={isClickable ? onClick : undefined}
         />
-
+        </div>
     );
-
 }

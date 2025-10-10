@@ -140,8 +140,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
 
             {/* new game board */}
             <div className='glass flex flex-col items-center rounded-lg p-2'>
-                {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
-                {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
+                
                 {/* Top row with AI players */}
                 {/* Holds the AI player icons */}
                 <div className='flex-none flex gap-30 p-1 items-center justify-center'>
@@ -190,13 +189,14 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                         </div>
                     </div>
                     {/* DISCARD PILE */}
-                    <div className="m-4 ">
+                    <div className="m-4">
                         <div className="flex flex-col items-center justify-center">
-                        <SingleCard card={topCard!} isLarge={true} />
+                        <SingleCard card={topCard!} isLarge={true} currentColor={currentColor} />
                         </div>
                     </div>
                     </div>
                 </div>
+                
                 <div>
                      <p>
                         Current Color:{" "}
@@ -210,21 +210,25 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                     
                 </div>
                 {/* Bottom row with the user's hand */}
-                <div className='flex-none p-4 glass-lite special-shadow'>
+                <div className='flex-none pr-4 pl-4 pt-2 pb-4 glass-lite special-shadow'>
                     
                     {players.filter(player => player.isHuman).map((player, i) => (
-                        <div id={player.id}>
-                            {GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex && (
-                            <span className="text-xs bg-purple-300 text-white px-2 py-0.5 rounded">
-                                Current Turn
-                            </span>
-                        )}
+                        <div id={player.id} className="flex flex-col items-center">
+                        <span
+                            className={`text-xs bg-amber-500 text-white p-0.5 m-0.5 rounded ${
+                                GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
+                                ? "visible"
+                                : "invisible"
+                            }`}
+                        >Your turn!</span>
                         <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} />
                         </div>
                     ))}
                     
                 </div>
             </div>
+            {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
+            {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
             <button className="border blue-button text-white p-4" onClick={() => {
                 setGameState(GameLogic.get().setWin())
             }}>
