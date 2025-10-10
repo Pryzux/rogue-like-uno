@@ -1,142 +1,197 @@
 import { useState, useEffect } from "react";
 import type { Game } from "../game/types/Game";
 import type { Modifier } from "../game/types/Modifier";
-import { GameLogic } from "~/game/gamelogic";
 import type RoundOptions from "~/game/types/RoundOptions";
+import { GameLogic } from "~/game/gamelogic";
+import { Undo2, Hand } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Separator } from "@radix-ui/react-separator";
+import { ModifierCard } from "~/UserInterface/modifierCard";
+import { Section } from "~/UserInterface/NextRoundSections";
+
 
 interface GameProps {
     gameState: Game;
     setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
 
+
 export default function NextRound({ gameState, setGameState }: GameProps) {
-
-    // Pull the random round modifiers from GameLogic
-    const [options] = useState<RoundOptions>(GameLogic.get().getNextRoundOptions());
-
-    // The buff and debuff that were chosen for this next round, we need to keep track of this so we can let the player
-    // toggle them on or off while in the selection screen
+    const [options] = useState<RoundOptions>(() => GameLogic.get().getNextRoundOptions());
     const [newMods, setNewMods] = useState<Modifier[]>([]);
 
-    // Handle selecting a modifier (buff or debuff)
     const handleSelectModifier = (modifier: Modifier) => {
         GameLogic.get().addModifier(modifier);
         setGameState(GameLogic.get().getGame());
-        setNewMods([modifier, ...newMods])
+        setNewMods((prev) => [modifier, ...prev]);
     };
 
     const handleDeselectModifier = (modifier: Modifier) => {
-        GameLogic.get().removeModifier(modifier)
+        GameLogic.get().removeModifier(modifier);
         setGameState(GameLogic.get().getGame());
-        setNewMods(newMods.filter(m => m.name !== modifier.name))
-    }
-
-    const handleStartNewGame = () => {
-        console.log("Starting New Game..");
-        const success = GameLogic.get().startGameAfterModifierSelection()
-        setGameState(GameLogic.get().getGame())
+        setNewMods((prev) => prev.filter((m) => m.name !== modifier.name));
     };
 
-    // Refresh current modifiers when component mounts
-    useEffect(() => { setGameState(GameLogic.get().getGame()) }, []);
+    const toggleModifier = (modifier: Modifier) => {
+        const alreadySelected = newMods.find((m) => m.name === modifier.name);
+        if (alreadySelected) {
+            handleDeselectModifier(modifier);
+        } else {
+            handleSelectModifier(modifier);
+        }
+    };
+
+    const handleStartNewGame = () => {
+        GameLogic.get().startGameAfterModifierSelection();
+        setGameState(GameLogic.get().getGame());
+    };
+
+    useEffect(() => {
+        setGameState(GameLogic.get().getGame());
+    }, [setGameState]);
 
     return (
-        <div className="grid grid-cols-3 gap-6 p-6 bg-amber-50 min-h-screen text-amber-900">
-            {/* --- Current Modifiers (Left Column) --- */}
-            <div className="col-span-1 flex flex-col items-center">
-                <h2 className="text-xl font-bold mb-4 text-amber-700">Current Modifiers</h2>
-                <div className="w-full max-w-sm border-2 border-amber-300 rounded-xl bg-white p-4 shadow-sm">
+        <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <img
+                src="/unobg-cards-side.png"
+                alt="UNO background"
+                className="absolute inset-0 h-full w-full object-cover object-center"
+                style={{
+                    opacity: 0.8,
+                    minWidth: "100%",
+                    minHeight: "100%",
+                }}
 
-                    {gameState.modifiers?.length ? (
-                        <ul className="space-y-2">
-                            {gameState.modifiers.map((mod: Modifier, i: number) => (
-                                <li
-                                    key={i}
-                                    className={`border p-3 rounded-lg ${mod.modifierType === "buff"
-                                        ? "border-green-500 bg-green-100"
-                                        : "border-red-500 bg-red-100"
-                                        }`}
-                                        onClick={ () => {
-                                            if (newMods.find(m => m.name === mod.name)) {
-                                                handleDeselectModifier(mod)
-                                            }
-                                        }}
-                                >
-                                    <p className="font-semibold">{mod.name}</p>
-                                    <p className="text-sm text-amber-700">{mod.description}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className="italic text-amber-700 text-center">No modifiers yet</p>
-                    )}
+            />
 
+            <div className="glass mx-auto max-w-6xl px-6 py-10 space-y-8">
+                {/* Header */}
+                <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
+                    <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold text-amber-900">
+                                Rogue Uno: Next Round Modifier Selection
+                            </h1>
+                        </div>
+
+                        {/* Status Box */}
+                        <div className="rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-sm font-medium">
+                            {gameState.nextRoundStatus ?? "Preparing next round..."}
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            {/* --- Buffs and Debuffs (Right Column) --- */}
-            <div className="col-span-2 flex flex-col items-center space-y-6">
-                <h2 className="text-xl font-bold text-amber-700">
-                    {gameState.nextRoundStatus}
-                </h2>
+                {/* Main Grid */}
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    {/* Current Modifiers */}
+                    <Section title="Current Modifiers" tone="neutral">
+                        {gameState.modifiers?.length ? (
+                            <ul className="space-y-3">
+                                {gameState.modifiers.map((mod) => (
+                                    <li key={mod.name} className="glass-lite rounded-2xl border p-4">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div>
+                                                <p className="font-medium">{mod.name}</p>
+                                                <p className="text-sm text-muted-foreground">{mod.description}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className="flex flex-col items-center gap-2 py-8 text-muted-foreground">
+                                <Hand className="h-5 w-5" />
+                                <p className="text-sm">
+                                    No modifiers yet. Pick buffs and debuffs for this round.
+                                </p>
+                            </div>
+                        )}
+                    </Section>
 
-                <div className="grid grid-cols-2 gap-6 w-full">
-                    {/* --- Buffs --- */}
-                    <div className="border-2 border-green-500 bg-green-50 rounded-xl p-4 shadow-sm">
-                        <h3 className="text-lg font-semibold text-green-700 mb-3 text-center">Buffs</h3>
-                        <div className="space-y-4">
+                    {/* Buffs & Debuffs */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Buffs */}
+                        <Section title="Buffs" tone="buff">
                             {options.buffs?.length ? (
-                                options.buffs.filter(buff => !gameState.modifiers.find(mod => mod.name === buff.name)).map((mod, i) => (
-                                    <div
-                                        key={i}
-                                        onClick={() => handleSelectModifier(mod)}
-                                        className="cursor-pointer border border-green-400 bg-white hover:bg-green-100 rounded-lg p-3 transition"
-                                    >
-                                        <p className="font-semibold">{mod.name}</p>
-                                        <p className="text-sm text-amber-700">{mod.description}</p>
-                                    </div>
-                                ))
+                                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                    {options.buffs.map((mod) => (
+                                        <ModifierCard
+                                            key={mod.name}
+                                            mod={mod}
+                                            selected={!!newMods.find((m) => m.name === mod.name)}
+                                            onToggle={toggleModifier}
+                                        />
+                                    ))}
+                                </div>
                             ) : (
-                                <p className="text-sm italic text-center text-green-700">
-                                    Loading buffs...
+                                <p className="py-4 text-sm text-muted-foreground">
+                                    No buff options available.
                                 </p>
                             )}
-                        </div>
-                    </div>
+                        </Section>
 
-                    {/* --- Debuffs --- */}
-                    <div className="border-2 border-red-500 bg-red-50 rounded-xl p-4 shadow-sm">
-                        <h3 className="text-lg font-semibold text-red-700 mb-3 text-center">Debuffs</h3>
-                        <div className="space-y-4">
+                        {/* Debuffs */}
+                        <Section title="Debuffs" tone="debuff">
                             {options.debuffs?.length ? (
-                                options.debuffs.filter(debuff => !gameState.modifiers.find(mod => mod.name === debuff.name)).map((mod, i) => (
-                                    <div
-                                        key={i}
-                                        onClick={() => handleSelectModifier(mod)}
-                                        className="cursor-pointer border border-red-400 bg-white hover:bg-red-100 rounded-lg p-3 transition"
-                                    >
-                                        <p className="font-semibold">{mod.name}</p>
-                                        <p className="text-sm text-amber-700">{mod.description}</p>
-                                    </div>
-                                ))
+                                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                    {options.debuffs.map((mod) => (
+                                        <ModifierCard
+                                            key={mod.name}
+                                            mod={mod}
+                                            selected={!!newMods.find((m) => m.name === mod.name)}
+                                            onToggle={toggleModifier}
+                                        />
+                                    ))}
+                                </div>
                             ) : (
-                                <p className="text-sm italic text-center text-red-700">
-                                    Loading debuffs...
+                                <p className="py-4 text-sm text-muted-foreground">
+                                    No debuff options available.
                                 </p>
                             )}
-                        </div>
+                        </Section>
 
+                        {/* Bottom Section */}
+                        <Card className="glass-lite rounded-3xl border border-amber-200">
+                            <CardContent className="flex flex-col gap-4 p-6">
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                        <Undo2 className="h-4 w-4" />
+                                        <span>Click again to deselect a modifier.</span>
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+                                    <p className="text-sm text-muted-foreground">
+                                        Add or remove modifiers freely before starting the next round.
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            type="button"
+                                            onClick={() => {
+                                                newMods.forEach((m) => GameLogic.get().removeModifier(m));
+                                                setNewMods([]);
+                                                setGameState(GameLogic.get().getGame());
+                                            }}
+                                        >
+                                            Clear Selections
+                                        </Button>
+                                        <Button type="button" onClick={handleStartNewGame}>
+                                            Start Game
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
-                    <button
-                        // Clicking will add a new match to the gameState
-                        onClick={handleStartNewGame} className="px-4 py-2 bg-amber-200 border border-amber-300 rounded hover:bg-amber-300">
-                        Start Game
-                    </button>
                 </div>
             </div>
         </div>
     );
 }
+
 
 
 

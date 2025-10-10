@@ -20,6 +20,7 @@ export function makeModifier(
 // Buffs
 export const BUFFS: Modifier[] = [
   // Delete for Demo
+  // steal card?
 
   {
     name: "Dev Buff",
