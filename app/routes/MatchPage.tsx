@@ -11,7 +11,7 @@ import { AIPlayer } from "~/UserInterface/AIPlayer";
 import Header from "~/UserInterface/Header";
 import { ModifierCard } from "~/UserInterface/modifierCard";
 import { ModifierNotification } from "~/UserInterface/ModifierNotification";
-
+import { ModifierCard } from "~/UserInterface/modifierCard";
 
 
 interface GameProps {
