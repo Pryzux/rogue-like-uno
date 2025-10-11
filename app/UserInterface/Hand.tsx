@@ -7,31 +7,53 @@ type HandProps = {
     onCardClick?: (card: Card) => void;
     isHuman?: boolean;
     playerIndex: number;
-    //isClickable?: boolean;
-    //isPlayableFor?: (card: Card) => boolean;
     playCardFn: (card: Card) => void;
-}
+};
 
-//takes in props for a hand of cards (a card array)
-//TODO: boolean values are hard coded, will need to add logic elsewhere when calling Hand
 export default function Hand({
     hand,
     onCardClick,
     isHuman,
     playerIndex,
-    playCardFn
+    playCardFn,
 }: HandProps) {
-
     const gameLogic = GameLogic.get();
 
     return (
-        <div className="flex flex-wrap gap-1">
+        <div
+            className="
+                flex 
+                flex-row 
+                flex-nowrap 
+                gap-2 
+                overflow-x-auto 
+                overflow-y-hidden 
+                w-full 
+                justify-center
+                scrollbar-thin 
+                scrollbar-thumb-amber-500 
+                scrollbar-track-transparent
+                snap-x 
+                snap-mandatory
+                px-2
+                py-1
+            "
+        >
             {hand.map((card: Card) => (
-                <SingleCard key={card.id} card={card} onClick={() => {
-                    if (isHuman && playerIndex === gameLogic.getCurrentUnoMatch().currentPlayerIndex) {
-                        playCardFn(card)
-                    };
-                }} />
+                <div key={card.id} className="snap-center flex-shrink-0">
+                    <SingleCard
+                        card={card}
+                        onClick={() => {
+                            if (
+                                isHuman &&
+                                playerIndex ===
+                                gameLogic.getCurrentUnoMatch().currentPlayerIndex
+                            ) {
+                                playCardFn(card);
+                            }
+                        }}
+                    />
+                </div>
             ))}
         </div>
     );

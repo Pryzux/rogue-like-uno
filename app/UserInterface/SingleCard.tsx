@@ -64,7 +64,7 @@ const cardImages: Partial<Record<CardKey, string>> = {
     green_skip: 'greenskip.png',
     green_reverse: 'greenreverse.png',
     green_draw2: 'greendraw2.png',
-   
+
     black_wild: 'public/wild.png', //wild card used, since wild card is defined as black within deck creation
     black_wildDraw4: 'public/wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
 
@@ -136,7 +136,7 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
 
     let wildColorOverlay = ''
     let wildImageOverlay = ''
-    
+
     const colorClasses: Record<CardColor, string> = {
         red: "bg-red-500/60",
         blue: "bg-blue-500/70",
@@ -153,12 +153,12 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
 
     return (
         <div className={`${wildColorOverlay}`}>
-        <img
-            src={determineCardType(card.color, card.type, card.value)}
-            alt="Standard back of Uno Card"
-            className={`${classes} ${sizeClasses} object-contain ${wildImageOverlay}`}
-            onClick={isClickable ? onClick : undefined}
-        />
+            <img
+                src={determineCardType(card.color, card.type, card.value)}
+                alt="Standard back of Uno Card"
+                className={`${classes} ${sizeClasses} object-contain ${wildImageOverlay}`}
+                onClick={isClickable ? onClick : undefined}
+            />
         </div>
     );
 }

@@ -23,13 +23,12 @@ export function ModifierNotification({
                 message: alert,
             };
 
-            // Add to both local + parent queues
             setAlerts(prev => [...prev, newAlert]);
             setNotification(prev => [...prev, newAlert]);
         }
     }, [gameState]);
 
-    // 🧹 Auto-remove alerts after 1.2s
+
     useEffect(() => {
         if (alerts.length === 0) return;
 

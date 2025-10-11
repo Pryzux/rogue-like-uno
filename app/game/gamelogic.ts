@@ -673,7 +673,8 @@ export class GameLogic implements GameLogicInterface {
     return this.getGame();
   }
 
-  // --- Consume and reset the current modifier alert ---
+  // Consume and reset the current modifier alert
+  // can't keep in class cause when state updates it sends the message again unintentionally
   public consumeModifierAlert(): string | null {
     const msg = this.currentGame.modifierAlert;
     this.currentGame.modifierAlert = null;

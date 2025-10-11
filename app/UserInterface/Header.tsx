@@ -3,7 +3,7 @@ type HeaderProps = {
   nextRoundStatus?: string
 }
 
-export default function Header({currentStatus = '', nextRoundStatus = ''}: HeaderProps) {
+export default function Header({ currentStatus = '', nextRoundStatus = '' }: HeaderProps) {
   return (
     <div className="mb-2 flex items-center archivo-black-regular ">
       <div className="inline-flex items-center gap-3 border border-neutral-200/70 glass-lite px-5 py-3 shadow-lg backdrop-blur-md">
@@ -15,7 +15,7 @@ export default function Header({currentStatus = '', nextRoundStatus = ''}: Heade
         </h1>
         <span className="ml-2 rounded-full bg-neutral-900/90 px-2 py-0.5 text-xs font-semibold text-white">
           v0.1
-        </span>  
+        </span>
       </div>
       <div className='ml-auto inline-flex'>
         {currentStatus &&
