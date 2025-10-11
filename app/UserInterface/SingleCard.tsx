@@ -19,8 +19,8 @@ const cardImages: Partial<Record<CardKey, string>> = {
     red_skip: 'redskip.png',
     red_reverse: 'redreverse.png',
     red_draw2: 'reddraw2.png',
-    red_wild: 'public/unoCard-back.png',  //never used
-    red_wildDraw4: 'public/unoCard-back.png',  //never used
+    red_wild: 'unoCard-back.png',  //never used
+    red_wildDraw4: 'unoCard-back.png',  //never used
     blue_zero: 'bluezero.png',
     blue_one: 'blueone.png',
     blue_two: 'bluetwo.png',
@@ -34,8 +34,8 @@ const cardImages: Partial<Record<CardKey, string>> = {
     blue_skip: 'blueskip.png',
     blue_reverse: 'bluereverse.png',
     blue_draw2: 'bluedraw2.png',
-    blue_wild: '/UIResources/unoCard-back.png', //never used
-    blue_wildDraw4: '/UIResources/unoCard-back.png', //never used
+    blue_wild: 'unoCard-back.png', //never used
+    blue_wildDraw4: 'unoCard-back.png', //never used
     yellow_zero: 'yellowzero.png',
     yellow_one: 'yellowone.png',
     yellow_two: 'yellowtwo.png',
@@ -49,8 +49,8 @@ const cardImages: Partial<Record<CardKey, string>> = {
     yellow_skip: 'yellowskip.png',
     yellow_reverse: 'yellowreverse.png',
     yellow_draw2: 'yellowdraw2.png',
-    yellow_wild: '/UIResources/unoCard-back.png', //never used
-    yellow_wildDraw4: '/UIResources/unoCard-back.png', //never used
+    yellow_wild: 'unoCard-back.png', //never used
+    yellow_wildDraw4: 'unoCard-back.png', //never used
     green_zero: 'greenzero.png',
     green_one: 'greenone.png',
     green_two: 'greentwo.png',
@@ -65,8 +65,8 @@ const cardImages: Partial<Record<CardKey, string>> = {
     green_reverse: 'greenreverse.png',
     green_draw2: 'greendraw2.png',
 
-    black_wild: 'public/wild.png', //wild card used, since wild card is defined as black within deck creation
-    black_wildDraw4: 'public/wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
+    black_wild: 'wild.png', //wild card used, since wild card is defined as black within deck creation
+    black_wildDraw4: 'wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
 
     black_deck: 'unoCard-back.png', // the draw deck
 };
