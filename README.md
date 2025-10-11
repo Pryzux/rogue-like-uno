@@ -85,7 +85,7 @@ How many rounds can you survive before the debuffs stack too high?
 | Name | Role |
 |------|------|
 | **Maddie** | Gameplay Design & UI |
-| **Arthi** | Systems Architecture & Logic |
+| **Aarti** | Systems Architecture & Logic |
 | **Jared (Pryzux)** | Core Game Engine & Project Lead |
 
 ---
