@@ -259,8 +259,9 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "draw2") {
         const draw2victim = match.currentPlayerIndex;
+        let fired = false;
         //calling the fn to make the animation move and show a message
-        emitAIHit(match, draw2victim, "draw2");
+        //(!this.hasModifier("+3 card") && this.hasModifier("Good Aim"))! ? emitAIHit(match, draw2victim, "draw2") : null;
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
 
@@ -278,6 +279,8 @@ export class GameLogic implements GameLogicInterface {
           draw2TargetPlayer = this.getPlayerIndexFromPlayer(
             options!.targetPlayer!
           );
+          emitAIHit(match, draw2TargetPlayer, "draw2");
+          fired = true;
         }
 
         // '+3 card' -> if current player making others draw -> modify
@@ -285,6 +288,7 @@ export class GameLogic implements GameLogicInterface {
           this.drawCards(3, draw2TargetPlayer);
           console.log('+3 card activated')
           this.currentGame.modifierAlert = `${goodAimAndDraw3Text}+3 buff activated!!!!`;
+          !fired ? emitAIHit(match, draw2TargetPlayer, "draw2") : null;
         }
 
         // 'Draw Fatigue' -> if Human recieving draw -> enable +1
@@ -298,12 +302,14 @@ export class GameLogic implements GameLogicInterface {
             this.drawCards(3, draw2TargetPlayer);
           } else {
             this.drawCards(2, draw2TargetPlayer);
+
           }
         }
 
         // no buffs or ai
         else {
           this.drawCards(2, draw2TargetPlayer);
+          emitAIHit(match, draw2TargetPlayer, "draw2");
         }
       }
 
@@ -677,6 +683,8 @@ export class GameLogic implements GameLogicInterface {
   public setModifierAlert(alertText: string): void {
     this.currentGame.modifierAlert = alertText
   }
+
+
 } // end of class
 
 function emitAIHit(match: UnoMatch, playerIndex: number, effect: PlayerEffect) {
