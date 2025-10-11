@@ -68,7 +68,7 @@ export default function TriggerFn({ play, src = "/ErrorRobot.json" }: Props) {
   if (!data) return null;
 
   return (
-    <div className="w-48 h-48 flex items-center justify-center">
+    <div className="w-48 h-48 flex items-start justify-center">
     <Lottie
       lottieRef={lottieRef}
       animationData={data}
@@ -96,7 +96,7 @@ function SpeechBubble({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="relative max-w-[16rem] rounded-2xl bg-white/95 px-4 py-2 text-sm shadow-md ring-1 ring-black/5 
-                 select-none focus:outline-none pointer-events-none"
+                 select-none focus:outline-none pointer-events-none ml-4"
       tabIndex={-1}
     >
       <span className="absolute -left-2 top-4 h-0 w-0 border-y-8 border-y-transparent border-r-8 border-r-white drop-shadow" />
@@ -143,11 +143,11 @@ export function PlayerHeader({
   }, [playerId]);
 
   return (
-    <div className="flex items-start gap-6">
+    <div className="flex items-start gap-6 scale-110">
     {/* one robot */}
     <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
       {bubble && (
-        <div className="absolute top-1/2 left-[120%] -translate-y-1.7 z-20 pointer-events-none">
+        <div className="absolute items-start top-1/2 left-[120%] -translate-y-1.7 z-20 pointer-events-none">
           <SpeechBubble>
             <Typewriter text={bubble} speed={35} />
           </SpeechBubble>

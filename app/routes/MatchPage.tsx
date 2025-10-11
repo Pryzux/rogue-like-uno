@@ -139,12 +139,12 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
 
                 {/* Top row with AI players */}
                 {/* Holds the AI player icons */}
-                <div className='flex-none flex gap-30 p-1 items-center justify-center'>
+                <div className='flex-none flex gap-35 items-center justify-center'>
                     {/* Holds individual AI player icon */}
                     {players.filter(player => !player.isHuman).map((player, i) => (
                         <div
                             key={player.id}
-                            className={`p-4 flex-lg flex flex-col items-center justify-center}`}
+                            className={`flex-lg flex flex-col items-center justify-center}`}
                         >
                             <span
                                 className={`text-xs bg-amber-500 text-white p-1 m-1 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
