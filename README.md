@@ -2,7 +2,7 @@
 
 > _“Every victory makes the next round harder.”_  
 A chaotic, endurance-based twist on UNO built with **React**, **TypeScript**, and **Tailwind CSS**.  
-Created by **Maddie**, **Arthi**, and **Jared (Pryzux)**.
+Created by **Maddie**, **Aarti**, and **Jared (Pryzux)**.
 
 ---
 
