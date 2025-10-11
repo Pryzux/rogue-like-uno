@@ -86,8 +86,9 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
         if (!currentPlayer) return
 
         if (currentPlayer.isHuman) {
-            if (currentPlayer.isHuman && GameLogic.get().hasModifier("Sluggish Hands") && (currentPlayer.turns % 3 === 0)) {
+            if (currentPlayer.isHuman && GameLogic.get().hasModifier("Sluggish Hands") && (currentPlayer.turns % 3 === 0) && (currentPlayer.turns !== 0)) {
                 console.log('Sluggish Hands Activated')
+                GameLogic.get().setModifierAlert('Sluggish hands! +1 card every 3rd turn')
                 drawCard(1)
             }
         }
@@ -108,7 +109,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                     setMatchState({ ...newMatch });
                 }
 
-            }, 2000);
+            }, 1500);
 
         }
 
