@@ -42,13 +42,13 @@ export default function Home(testMode: false) {
   };
 
   if (gameState.status === 'Next Round') {
-    console.log(gameState.status)
+    //console.log(gameState.status)
     return <NextRound gameState={gameState} setGameState={setGameState} />;
   }
 
 
   if (gameState.status === 'Match Created') {
-    console.log(gameState.status)
+    //console.log(gameState.status)
     // CHANGE TO UNOMATCHPAGE FOR ORIGINAL DEV MATCH PAGE
     return <MatchPage gameState={gameState} setGameState={setGameState} />; //original return stmt
   }

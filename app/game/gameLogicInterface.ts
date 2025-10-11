@@ -72,4 +72,6 @@ export interface GameLogicInterface {
   hasModifier(name: string): boolean;
 
   consumeModifierAlert(): string | null;
+
+  setModifierAlert(alertText: string): void;
 }
