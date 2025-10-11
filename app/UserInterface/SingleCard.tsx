@@ -66,7 +66,7 @@ const cardImages: Partial<Record<CardKey, string>> = {
     green_draw2: 'greendraw2.png',
 
     black_wild: 'wild.png', //wild card used, since wild card is defined as black within deck creation
-    black_wildDraw4: 'wildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
+    black_wildDraw4: 'WildDraw4.png', //wild draw4 used, since wild card is defined as black within deck creation
 
     black_deck: 'unoCard-back.png', // the draw deck
 };
