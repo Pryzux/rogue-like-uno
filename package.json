@@ -2,12 +2,11 @@
   "name": "roguelike-uno",
   "private": true,
   "type": "module",
-  "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
-  },
+ "scripts": {
+  "build": "bunx react-router build",
+  "dev": "bunx react-router dev",
+  "start": "bunx react-router-serve ./build/server/index.js"
+},
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.17.5",
     "@lottiefiles/dotlottie-web": "^0.54.1",
