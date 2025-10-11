@@ -139,22 +139,23 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
 
                 {/* Top row with AI players */}
                 {/* Holds the AI player icons */}
-                <div className='flex-none flex gap-35 items-center justify-center'>
+                <div className='flex-none flex gap-35 items-center justify-center -mt-8'>
                     {/* Holds individual AI player icon */}
                     {players.filter(player => !player.isHuman).map((player, i) => (
                         <div
                             key={player.id}
                             className={`flex-lg flex flex-col items-center justify-center}`}
                         >
-                            <span
-                                className={`text-xs bg-amber-500 text-white p-1 m-1 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
+                             <AIPlayer player={player} />
+                            <div
+                                className={`text-xs bg-amber-500 text-white p-1 mt-4 m-1 rounded ${GameLogic.get().getPlayerIndexFromPlayer(player) === currentPlayerIndex
                                     ? "visible"
                                     : "invisible"
                                     }`}
                             >
                                 Current Turn
-                            </span>
-                            <AIPlayer player={player} />
+                            </div>
+                           
 
                             {/* DEVELOPER MODE TO SHOW ALL AI HANDS */}
                             {developerMode ? <Hand hand={player.hand} isHuman={player.isHuman} playerIndex={i} playCardFn={playCard} /> : null}

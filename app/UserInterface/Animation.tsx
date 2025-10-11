@@ -95,7 +95,7 @@ function Typewriter({ text, speed = 35, onDone }: { text: string; speed?: number
 function SpeechBubble({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="relative max-w-[16rem] rounded-2xl bg-white/95 px-4 py-2 text-sm shadow-md ring-1 ring-black/5 
+      className="relative max-w-[16rem] rounded-2xl bg-white/95 px-4 py-2 text-sm scale-80 shadow-md ring-1 ring-black/5 
                  select-none focus:outline-none pointer-events-none ml-4"
       tabIndex={-1}
     >
