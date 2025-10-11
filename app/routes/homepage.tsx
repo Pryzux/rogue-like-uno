@@ -21,8 +21,8 @@ function RogueLikeUnoHome({
     status === "In Progress"
       ? "bg-amber-500/15 text-amber-700 ring-1 ring-amber-500/30"
       : status === "Completed"
-      ? "bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30"
-      : "bg-sky-500/10 text-sky-700 ring-1 ring-sky-500/25";
+        ? "bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30"
+        : "bg-sky-500/10 text-sky-700 ring-1 ring-sky-500/25";
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-neutral-50 to-neutral-200 dark:from-neutral-900 dark:to-neutral-950 flex flex-col items-center justify-center">
@@ -38,13 +38,12 @@ function RogueLikeUnoHome({
             className={`mt-1 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ${statusColor}`}
           >
             <span
-              className={`block h-2 w-2 rounded-full ${
-                status === "In Progress"
-                  ? "bg-amber-500"
-                  : status === "Completed"
+              className={`block h-2 w-2 rounded-full ${status === "In Progress"
+                ? "bg-amber-500"
+                : status === "Completed"
                   ? "bg-emerald-500"
                   : "bg-sky-500"
-              }`}
+                }`}
             />
             {status}
           </span>
@@ -82,14 +81,14 @@ function RogueLikeUnoHome({
   );
 }
 
-// 👇 This is your game container: can live in the same file
+
 export default function RogueLikeUnoGame() {
   const [status, setStatus] = useState<Status>("Not Started");
   const players = ["You", "AI 1", "AI 2", "AI 3"];
 
   function handleStart() {
     setStatus("In Progress");
-    // TODO: kick off your actual game logic
+
     console.log("Game started!");
   }
 

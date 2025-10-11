@@ -4,192 +4,94 @@ import type { Game } from "../game/types/Game";
 import NextRound from "./nextRoundPage";
 import { TestUi } from "~/UserInterface/TestUi";
 import { MatchPage } from "./MatchPage";
-import { LostSummary } from "./LostSummary"
+import { LostSummary } from "./LostSummary";
 import Header from "~/UserInterface/Header";
+import { motion } from "framer-motion";
+import { UnoTitle } from "~/UserInterface/UnoTitle-homepage";
 
-export function UnoTitle({ scheme = "red" }: { scheme?: "red" | "blue" | "green" | "yellow" | "black" }) {
-  const stops: Record<string, string> = {
-    red: "from-red-600 via-amber-400 to-orange-500",
-    blue: "from-blue-500 via-cyan-300 to-sky-400",
-    green: "from-green-600 via-lime-300 to-emerald-500",
-    yellow: "from-amber-500 via-yellow-300 to-orange-400",
-    black: "from-neutral-900 via-neutral-600 to-neutral-900",
+
+export default function Home(testMode: false) {
+  const TEST_UI = false;
+  if (TEST_UI) return <TestUi />;
+
+  const [gameState, setGameState] = useState<Game>(() =>
+    GameLogic.get().getGame()
+  );
+
+  const handleStartNewGame = () => {
+    console.log("Starting New Game..");
+    GameLogic.get().initializeUno();
+    setGameState(GameLogic.get().getGame());
   };
 
+  if (gameState.status === "Next Round")
+    return <NextRound gameState={gameState} setGameState={setGameState} />;
+
+  if (gameState.status === "Match Created")
+    return <MatchPage gameState={gameState} setGameState={setGameState} />;
+
+  if (gameState.status === "Lost")
+    return <LostSummary gameState={gameState} setGameState={setGameState} />;
+
   return (
-    <h1 className="text-5xl font-extrabold tracking-tight">
-      <span className={`bg-gradient-to-r ${stops[scheme]} bg-clip-text text-transparent drop-shadow-[0_1px_0_rgba(0,0,0,0.6)]`}>
-        UNO
-      </span>
-    </h1>
+    <div className="relative min-h-dvh overflow-hidden flex flex-col items-center justify-center">
+      {/* bg */}
+      <div className="absolute inset-0 -z-30 bg-gradient-to-b from-amber-50 via-orange-100 to-red-200" />
+      <div
+        className="absolute inset-0 -z-20 bg-center bg-cover opacity-10"
+        style={{
+          backgroundImage: "url('/unobg-cards-side.png')",
+        }}
+      />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_60%)]" />
+
+      <div className="absolute top-0 left-0 w-full p-4">
+        <Header />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 space-y-6">
+        <UnoTitle scheme="red" />
+
+        <motion.p
+          className="max-w-2xl text-neutral-700 text-base sm:text-lg leading-relaxed font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 1 }}
+        >
+          A chaotic survival twist on the classic card game. Each round, pick one
+          <span className="text-emerald-600 font-semibold"> buff </span>and one
+          <span className="text-rose-600 font-semibold"> debuff</span>. Win to
+          stack new powers—but beware: every choice brings you closer to your
+          downfall. How many rounds can you survive?
+        </motion.p>
+
+        <motion.button
+          onClick={handleStartNewGame}
+          className="mt-4 rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 px-8 py-3 text-lg font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Start New Run
+        </motion.button>
+
+      </div>
+
+      <motion.img
+        src="/unoCard-back.png"
+        alt="UNO Card"
+        className="absolute bottom-10 left-10 w-24 opacity-40 rotate-[-15deg]"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 5 }}
+      />
+      <motion.img
+        src="/unoCard-back.png"
+        alt="UNO Card"
+        className="absolute top-12 right-12 w-28 opacity-40 rotate-[25deg]"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ repeat: Infinity, duration: 6 }}
+      />
+    </div>
   );
 }
 
-export default function Home(testMode: false) {
-
-  //testing flag to enable testUI.tsx
-  const TEST_UI = false;
-  if (TEST_UI) return <TestUi />
-
-  // Initialize the game state on first render
-  const [gameState, setGameState] = useState<Game>(() => GameLogic.get().getGame());
-
-  // Create new Uno Match
-  const handleStartNewGame = () => {
-    console.log("Starting New Game..");
-    GameLogic.get().initializeUno()
-    setGameState(GameLogic.get().getGame())
-  };
-
-  if (gameState.status === 'Next Round') {
-    //console.log(gameState.status)
-    return <NextRound gameState={gameState} setGameState={setGameState} />;
-  }
-
-
-  if (gameState.status === 'Match Created') {
-    //console.log(gameState.status)
-    // CHANGE TO UNOMATCHPAGE FOR ORIGINAL DEV MATCH PAGE
-    return <MatchPage gameState={gameState} setGameState={setGameState} />; //original return stmt
-  }
-
-  if (gameState.status === 'Lost') {
-    // console.log(gameState.status)
-    // setGameState(GameLogic.get().resetGame())
-    // CHANGE TO UNOMATCHPAGE FOR ORIGINAL DEV MATCH PAGE
-    return <LostSummary gameState={gameState} setGameState={setGameState} />;
-  }
-
-  else {
-
-
-    return (
-      <div className="relative min-h-dvh overflow-hidden">
-        {/* LAYER 0: base gradient */}
-        <div className="absolute inset-0 -z-30 bg-gradient-to-b from-neutral-50 via-neutral-100 to-neutral-200" />
-
-        {/* LAYER 1: SVG filter defs (hidden) */}
-        <svg className="absolute -z-20 opacity-0 pointer-events-none" width="0" height="0">
-          <defs>
-            <filter id="waterRipple">
-              {/* animated noise */}
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.008 0.012"
-                numOctaves="2"
-                seed="3"
-                result="noise"
-              >
-                <animate
-                  attributeName="baseFrequency"
-                  dur="10s"
-                  values="0.006 0.010; 0.012 0.018; 0.006 0.010"
-                  repeatCount="indefinite"
-                />
-              </feTurbulence>
-              {/* displace the layer with the noise */}
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="noise"
-                scale="14"
-                xChannelSelector="R"
-                yChannelSelector="G"
-              />
-            </filter>
-          </defs>
-        </svg>
-
-        {/* LAYER 2: faded, tiled cards with ripple */}
-        <div
-          className="absolute inset-0 -z-10 bg-left-top bg-repeat opacity-30"
-          style={{
-            backgroundImage: "url('unoCard-back.png')",
-            backgroundSize: "160px 240px",
-            filter: "url(#waterRipple)",
-            willChange: "filter",
-          }}
-        />
-
-        {/* FOREGROUND CONTENT */}
-        <div className="relative z-10 mx-auto max-w-5xl px-6 pt-10 pb-12">
-          <Header />
-          <section className="rounded-2xl border border-neutral-200/70 bg-white/80 p-6 shadow-lg backdrop-blur-md">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-medium text-neutral-500">Status</p>
-                <span
-                  className={[
-                    "mt-1 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ring-1",
-                    gameState.status === "In Progress"
-                      ? "bg-amber-500/15 text-amber-700 ring-amber-500/30"
-                      : gameState.status === "Completed"
-                        ? "bg-emerald-500/15 text-emerald-700 ring-emerald-500/30"
-                        : "bg-sky-500/10 text-sky-700 ring-sky-500/25",
-                  ].join(" ")}
-                >
-                  <span
-                    className={[
-                      "block h-2 w-2 rounded-full",
-                      gameState.status === "In Progress"
-                        ? "bg-amber-500"
-                        : gameState.status === "Completed"
-                          ? "bg-emerald-500"
-                          : "bg-sky-500",
-                    ].join(" ")}
-                  />
-                  {gameState.status}
-                </span>
-              </div>
-
-              <button
-                onClick={handleStartNewGame}
-                className="group inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:shadow-md active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
-              >
-                Start Game
-                <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-0.5">
-                  <path d="M7.5 5l6 5-6 5V5z" fill="currentColor" />
-                </svg>
-              </button>
-            </div>
-
-
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
-
-            <div className="mt-6">
-              <p className="text-sm font-medium text-neutral-500">Players</p>
-              <ul className="mt-3 flex flex-wrap items-center gap-2">
-                {gameState.players.map((p: { name: string }, i: number) => (
-                  <li
-                    key={p.name + i}
-                    className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white/80 px-3 py-1.5 text-sm shadow-sm"
-                  >
-                    <span className="grid h-6 w-6 place-items-center rounded-lg bg-neutral-100 text-xs font-semibold text-neutral-700">
-                      {p.name
-                        .split(" ")
-                        .filter(Boolean)
-                        .slice(0, 2)
-                        .map((s) => s[0]!.toUpperCase())
-                        .join("")}
-                    </span>
-                    <span className="text-neutral-800">{p.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-6 flex items-center justify-between text-sm">
-              <a href="#rules" className="text-sky-700 underline-offset-4 hover:underline">
-                Read rules
-              </a>
-              <span className="text-neutral-500">Autosaves between turns</span>
-            </div>
-          </section>
-        </div>
-      </div>
-    );
-
-  }
-
-
-}
 

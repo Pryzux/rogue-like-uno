@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion"; // 👈 added
 import type { Game } from "../game/types/Game";
 import type { Modifier } from "../game/types/Modifier";
 import type RoundOptions from "~/game/types/RoundOptions";
 import { GameLogic } from "~/game/gamelogic";
 import { Undo2, Hand } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
 import { ModifierCard } from "~/UserInterface/modifierCard";
 import { Section } from "~/UserInterface/NextRoundSections";
@@ -34,11 +35,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
 
     const toggleModifier = (modifier: Modifier) => {
         const alreadySelected = newMods.find((m) => m.name === modifier.name);
-        if (alreadySelected) {
-            handleDeselectModifier(modifier);
-        } else {
-            handleSelectModifier(modifier);
-        }
+        alreadySelected ? handleDeselectModifier(modifier) : handleSelectModifier(modifier);
     };
 
     const handleStartNewGame = () => {
@@ -51,36 +48,47 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
     }, [setGameState]);
 
     return (
-        <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-blue-300 via-red-100 to-red-400 ">
-            {/* Background */}
-            <img
+        <motion.div
+            className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-red-100 to-red-400"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+            {/* bakground fade */}
+            <motion.img
                 src="/unobg-cards-side.png"
                 alt="UNO background"
-                className="absolute inset-0 h-full w-full object-cover object-center "
+                className="absolute inset-0 h-full w-full object-cover object-center"
                 style={{
                     opacity: 0.2,
                     minWidth: "100%",
                     minHeight: "100%",
                 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.2 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
             />
 
-            {/* Main Container */}
-            <div className="relative z-10 flex flex-col w-full max-w-4xl items-center justify-center px-6 py-6 space-y-4 glass text-sm leading-snug ">
-                {/* Header */}
+            {/* main box */}
+            <motion.div
+                className="relative z-10 flex flex-col w-full max-w-4xl items-center justify-center px-6 py-3 space-y-2 glass text-sm leading-snug"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+            >
                 <Header nextRoundStatus={gameState.nextRoundStatus} />
 
-                {/* Title and Status */}
+                {/* title */}
                 <div className="flex items-center w-full mt-2">
                     <h3 className="glass-lite p-2 text-lg font-bold text-amber-900">
                         Next Round Modifier Selection
                     </h3>
                     <div className="ml-auto items-center rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-xs font-medium">
-
                         {gameState.nextRoundStatus ?? "Preparing next round..."}
                     </div>
                 </div>
 
-                {/* Main Grid */}
+                {/* big box */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 w-full">
                     {/* Current Modifiers */}
                     <Section title="Current Modifiers" tone="neutral">
@@ -109,9 +117,8 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                         )}
                     </Section>
 
-                    {/* Buffs and Debuffs */}
+                    {/* buffs/debuffs */}
                     <div className="lg:col-span-2 space-y-5">
-                        {/* Buffs */}
                         <Section title="Buffs" tone="buff">
                             {options.buffs?.length ? (
                                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -125,13 +132,10 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="py-3 text-xs text-muted-foreground">
-                                    No buff options available.
-                                </p>
+                                <p className="py-3 text-xs text-muted-foreground">No buff options available.</p>
                             )}
                         </Section>
 
-                        {/* Debuffs */}
                         <Section title="Debuffs" tone="debuff">
                             {options.debuffs?.length ? (
                                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -145,9 +149,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="py-3 text-xs text-muted-foreground">
-                                    No debuff options available.
-                                </p>
+                                <p className="py-3 text-xs text-muted-foreground">No debuff options available.</p>
                             )}
                         </Section>
 
@@ -192,12 +194,11 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                         </Card>
                     </div>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
-
-
 }
+
 
 
 
