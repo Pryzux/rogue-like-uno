@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Game } from "../game/types/Game";
 import type { AlertNotification } from "~/game/types/Alert";
+import { GameLogic } from "~/game/gamelogic";
 
 interface ModifierNotificationProps {
     setNotification: React.Dispatch<React.SetStateAction<AlertNotification[]>>;
@@ -15,20 +16,18 @@ export function ModifierNotification({
     const [alerts, setAlerts] = useState<AlertNotification[]>([]);
 
     useEffect(() => {
-        if (gameState.modifierAlert) {
+        const alert = GameLogic.get().consumeModifierAlert();
+        if (alert) {
             const newAlert: AlertNotification = {
                 id: Date.now(),
-                message: gameState.modifierAlert,
+                message: alert,
             };
 
-            // Add to both local + parent notification queues
+            // Add to both local + parent queues
             setAlerts(prev => [...prev, newAlert]);
             setNotification(prev => [...prev, newAlert]);
-
-            // Reset to null (no re-render)
-            (gameState as any).modifierAlert = null;
         }
-    }, [gameState.modifierAlert, setNotification]);
+    }, [gameState]);
 
     // 🧹 Auto-remove alerts after 1.2s
     useEffect(() => {

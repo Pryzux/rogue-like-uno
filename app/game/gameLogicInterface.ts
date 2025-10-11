@@ -70,4 +70,6 @@ export interface GameLogicInterface {
   startGameAfterModifierSelection(): Boolean;
 
   hasModifier(name: string): boolean;
+
+  consumeModifierAlert(): string | null;
 }
