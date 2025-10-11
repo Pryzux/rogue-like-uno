@@ -23,11 +23,6 @@ export const BUFFS: Modifier[] = [
   // steal card?
 
   {
-    name: "Dev Buff",
-    description: "Does Nothing, for Dev.",
-    modifierType: "buff",
-  },
-  {
     name: "Reverse Momentum",
     description: "When you play a Reverse, take an extra turn immediately.",
     modifierType: "buff",
@@ -71,12 +66,6 @@ export const BUFFS: Modifier[] = [
 
 // Debuffs
 export const DEBUFFS: Modifier[] = [
-  {
-    name: "Dev Debuff",
-    description: "Does nothing, for dev",
-    modifierType: "debuff",
-  },
-
   {
     name: "Color Focus",
     description: "AI Players prefer to play cards matching the current color.",
