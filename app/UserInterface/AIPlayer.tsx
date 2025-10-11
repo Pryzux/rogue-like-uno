@@ -10,7 +10,8 @@ export function AIPlayer({ player }: { player: Player }) {
     <div className='flex flex-col'>
     <div className="flex flex-col items-center justify-center">
       <PlayerHeader playerId={player.id} playerName={player.name} />
-      <div className='text-xs bg-lime-500 text-white p-2 m-0.5 rounded'>{player.hand.length} cards</div>
+      <div className='text-sm bg-lime-500 text-white p-2 m-0.5 rounded'>
+        <span className='text-xl'>{player.hand.length}</span> cards</div>
     </div>
     </div>
   );
