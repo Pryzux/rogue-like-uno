@@ -150,7 +150,11 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
+<<<<<<< Updated upstream
     this.currentGame.modifierAlert = "draw a card";
+=======
+    //this.currentGame.modifierAlert = "tets";
+>>>>>>> Stashed changes
 
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
@@ -257,8 +261,9 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "draw2") {
         const draw2victim = match.currentPlayerIndex;
+        let fired = false;
         //calling the fn to make the animation move and show a message
-        emitAIHit(match, draw2victim, "draw2");
+        //(!this.hasModifier("+3 card") && this.hasModifier("Good Aim"))! ? emitAIHit(match, draw2victim, "draw2") : null;
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
 
@@ -268,11 +273,16 @@ export class GameLogic implements GameLogicInterface {
           draw2TargetPlayer = this.getPlayerIndexFromPlayer(
             options!.targetPlayer!
           );
+          emitAIHit(match, draw2TargetPlayer, "draw2");
+          fired = true;
         }
 
         // '+3 card' -> if current player making others draw -> modify
         if (currentPlayer.isHuman && this.hasModifier("+3 card")) {
-          this.drawCards(3, draw2TargetPlayer);
+          const draw3victim = match.currentPlayerIndex;
+          //calling the fn to make the animation move and show a message
+          !fired ? emitAIHit(match, draw3victim, "draw2") : null;
+
         }
 
         // 'Draw Fatigue' -> if Human recieving draw -> enable +1
@@ -285,12 +295,14 @@ export class GameLogic implements GameLogicInterface {
             this.drawCards(3, draw2TargetPlayer);
           } else {
             this.drawCards(2, draw2TargetPlayer);
+
           }
         }
 
         // no buffs or ai
         else {
           this.drawCards(2, draw2TargetPlayer);
+          emitAIHit(match, draw2TargetPlayer, "draw2");
         }
       }
 
@@ -651,12 +663,16 @@ export class GameLogic implements GameLogicInterface {
     return this.getGame();
   }
 
+<<<<<<< Updated upstream
   // --- Consume and reset the current modifier alert ---
   public consumeModifierAlert(): string | null {
     const msg = this.currentGame.modifierAlert;
     this.currentGame.modifierAlert = null;
     return msg;
   }
+=======
+
+>>>>>>> Stashed changes
 } // end of class
 
 function emitAIHit(match: UnoMatch, playerIndex: number, effect: PlayerEffect) {
