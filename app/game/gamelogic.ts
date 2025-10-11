@@ -85,7 +85,7 @@ export class GameLogic implements GameLogicInterface {
       players: players,
       matches: [],
       currentScreen: null,
-      modifiers: [],
+      modifiers: [DEBUFFS.find(m => m.name === 'Wild Instinct'), DEBUFFS.find(m => m.name === 'Lazy Dealer')],
       status: "Not Started",
       nextRoundStatus:
         "Please Select 1 buff and 1 debuff, before starting the next round",
@@ -115,6 +115,7 @@ export class GameLogic implements GameLogicInterface {
 
       // Handle Lazy Dealer debuff
       if (player.isHuman && this.hasModifier("Lazy Dealer")) {
+        this.currentGame.modifierAlert = "Lazy dealer!! +3 cards to you"
         numberOfStartingCards += this.lazyDealerAmount;
       }
 
@@ -150,11 +151,6 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-<<<<<<< Updated upstream
-    this.currentGame.modifierAlert = "draw a card";
-=======
-    //this.currentGame.modifierAlert = "tets";
->>>>>>> Stashed changes
 
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
@@ -241,6 +237,7 @@ export class GameLogic implements GameLogicInterface {
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
       } else {
         console.log("Reverse Momentum Activated");
+        this.currentGame.modifierAlert = "Reverse Momentum!!!";
         // reverse momentum activated
       }
 
@@ -255,6 +252,7 @@ export class GameLogic implements GameLogicInterface {
         // Check if "Double Skip" modifier is active
         if (this.hasModifier("Double Skip") && currentPlayer.isHuman) {
           console.log("'Double Skip' Activated");
+          this.currentGame.modifierAlert = 'Double skip!!!!!'
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
       }
@@ -267,9 +265,17 @@ export class GameLogic implements GameLogicInterface {
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
 
+        // hack workaround to handle case where good aim and +3 are active - can't spawn 2 toasts from the same call to playCard
+        let goodAimAndDraw3Text = ''
+
         // Handling Good Aim buff
         // Note: the current player index has been updated, but currentPlayer is still the player who played this card
         if (currentPlayer.isHuman && this.hasModifier("Good Aim")) {
+          if (this.hasModifier('+3 card')) {
+            goodAimAndDraw3Text = 'Good aim!! '
+          } else {
+            this.currentGame.modifierAlert = 'Good aim!!!!'
+          }
           draw2TargetPlayer = this.getPlayerIndexFromPlayer(
             options!.targetPlayer!
           );
@@ -279,10 +285,10 @@ export class GameLogic implements GameLogicInterface {
 
         // '+3 card' -> if current player making others draw -> modify
         if (currentPlayer.isHuman && this.hasModifier("+3 card")) {
-          const draw3victim = match.currentPlayerIndex;
-          //calling the fn to make the animation move and show a message
-          !fired ? emitAIHit(match, draw3victim, "draw2") : null;
-
+          this.drawCards(3, draw2TargetPlayer);
+          console.log('+3 card activated')
+          this.currentGame.modifierAlert = `${goodAimAndDraw3Text}+3 buff activated!!!!`;
+          !fired ? emitAIHit(match, draw2TargetPlayer, "draw2") : null;
         }
 
         // 'Draw Fatigue' -> if Human recieving draw -> enable +1
@@ -292,6 +298,7 @@ export class GameLogic implements GameLogicInterface {
 
           // if the person recieving the draw is human
           if (targetIsHuman) {
+            this.currentGame.modifierAlert = "Draw Fatigue :((( +3 to you"
             this.drawCards(3, draw2TargetPlayer);
           } else {
             this.drawCards(2, draw2TargetPlayer);
@@ -309,7 +316,7 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "wild") {
         if (this.hasModifier("Wild Surge") && currentPlayer.isHuman) {
           console.log("'Wild Surge' Activated");
-          this.currentGame.modifierAlert = "wild surge activated"; //this line prints 3 times
+          this.currentGame.modifierAlert = "WIIIIIIDDD SUUUURGE!!!";
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
         // Set color for Wild card
@@ -318,6 +325,8 @@ export class GameLogic implements GameLogicInterface {
 
       if (card.type === "wildDraw4") {
         if (this.hasModifier("+5 card") && currentPlayer.isHuman) {
+          console.log('+5 card activated')
+          this.currentGame.modifierAlert = "+5 buff activated!!!!";
           this.drawCards(5, match.currentPlayerIndex);
         } else {
           this.drawCards(4, match.currentPlayerIndex);
@@ -486,7 +495,8 @@ export class GameLogic implements GameLogicInterface {
     }
 
     // "Wild Instinct"
-    console.log("Wild Instincts Activated.");
+    console.log("Wild Instinct Activated.");
+    this.currentGame.modifierAlert = 'Wild Instinct!! AI picked the best color for itself'
     const colorCounts: Record<string, number> = {
       red: 0,
       blue: 0,
@@ -663,16 +673,18 @@ export class GameLogic implements GameLogicInterface {
     return this.getGame();
   }
 
-<<<<<<< Updated upstream
   // --- Consume and reset the current modifier alert ---
   public consumeModifierAlert(): string | null {
     const msg = this.currentGame.modifierAlert;
     this.currentGame.modifierAlert = null;
     return msg;
   }
-=======
 
->>>>>>> Stashed changes
+  public setModifierAlert(alertText: string): void {
+    this.currentGame.modifierAlert = alertText
+  }
+
+
 } // end of class
 
 function emitAIHit(match: UnoMatch, playerIndex: number, effect: PlayerEffect) {
