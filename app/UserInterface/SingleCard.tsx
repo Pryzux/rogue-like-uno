@@ -34,8 +34,8 @@ const cardImages: Partial<Record<CardKey, string>> = {
     blue_skip: 'blueskip.png',
     blue_reverse: 'bluereverse.png',
     blue_draw2: 'bluedraw2.png',
-    blue_wild: '/UIResources/unoCard-back.png', //never used
-    blue_wildDraw4: '/UIResources/unoCard-back.png', //never used
+    blue_wild: 'unoCard-back.png', //never used
+    blue_wildDraw4: 'unoCard-back.png', //never used
     yellow_zero: 'yellowzero.png',
     yellow_one: 'yellowone.png',
     yellow_two: 'yellowtwo.png',
@@ -49,8 +49,8 @@ const cardImages: Partial<Record<CardKey, string>> = {
     yellow_skip: 'yellowskip.png',
     yellow_reverse: 'yellowreverse.png',
     yellow_draw2: 'yellowdraw2.png',
-    yellow_wild: '/UIResources/unoCard-back.png', //never used
-    yellow_wildDraw4: '/UIResources/unoCard-back.png', //never used
+    yellow_wild: 'unoCard-back.png', //never used
+    yellow_wildDraw4: 'unoCard-back.png', //never used
     green_zero: 'greenzero.png',
     green_one: 'greenone.png',
     green_two: 'greentwo.png',

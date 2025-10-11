@@ -248,7 +248,7 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "skip") {
         //adding animation if AI player recieves a skip card played at them
         const firstSkipped = match.currentPlayerIndex;
-        emitAIHit(match, firstSkipped, "skip");
+        emitAIHit(match, firstSkipped,{ kind: "skip" });
 
         // Base Skip behavior — advance by one player
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
@@ -265,7 +265,7 @@ export class GameLogic implements GameLogicInterface {
         const draw2victim = match.currentPlayerIndex;
         let fired = false;
         //calling the fn to make the animation move and show a message
-        //(!this.hasModifier("+3 card") && this.hasModifier("Good Aim"))! ? emitAIHit(match, draw2victim, "draw2") : null;
+        //(!this.hasModifier("+3 card") && this.hasModifier("Good Aim"))! ? emitAIHit(match, draw2victim, { kind: "draw2", count:2 }) : null;
         // the current player was updated above to the next player, so they have to draw
         let draw2TargetPlayer = match.currentPlayerIndex;
 
@@ -332,6 +332,9 @@ export class GameLogic implements GameLogicInterface {
           this.currentGame.modifierAlert = "+5 buff activated!!!!";
           this.drawCards(5, match.currentPlayerIndex);
         } else {
+          const draw4victim = match.currentPlayerIndex;
+        //calling the fn to make the animation move and show a message
+        emitAIHit(match, draw4victim, { kind: "draw4", count:4 });
           this.drawCards(4, match.currentPlayerIndex);
         }
 
