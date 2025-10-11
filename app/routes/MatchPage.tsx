@@ -11,6 +11,8 @@ import { AIPlayer } from "~/UserInterface/AIPlayer";
 import Header from "~/UserInterface/Header";
 import { ModifierCard } from "~/UserInterface/modifierCard";
 import { ModifierNotification } from "~/UserInterface/ModifierNotification";
+import type { AlertNotification } from "~/game/types/Alert";
+
 
 
 interface GameProps {
@@ -23,6 +25,9 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [pickerCardId, setPickerCardId] = useState('')
     const [showPlayerPicker, setShowPlayerPicker] = useState(false)
+
+    const [notification, setNotification] = useState<AlertNotification[]>([])
+
 
     const drawCard = (cardNumber: number) => {
 
@@ -208,19 +213,19 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
             </div>
             {showColorPicker ? <ColorPicker cardId={pickerCardId} handleChoice={handleColorPickerChoice} /> : null}
             {showPlayerPicker ? <PlayerPicker gameState={gameState} cardId={pickerCardId} handleChoice={handlePlayerPickerChoice} /> : null}
-            
+
             {/* CURRENT MODIFIERS */}
             <div className='flex flex-col glass p-2 '>
                 <h3 className='archivo-black-regular'>Active Modifiers</h3>
                 <div className='flex gap-5 '>
                     <div className="flex flex-col space-y-2 archivo-normal">
                         {gameState.modifiers.filter(mod => mod.modifierType === 'buff').map(mod => (
-                            <ModifierCard mod={mod} selected={false} onToggle={() => null}/>
+                            <ModifierCard mod={mod} selected={false} onToggle={() => null} />
                         ))}
                     </div>
                     <div className="flex flex-col space-y-2 archivo-normal">
                         {gameState.modifiers.filter(mod => mod.modifierType === 'debuff').map(mod => (
-                            <ModifierCard mod={mod} selected={false} onToggle={() => null}/>
+                            <ModifierCard mod={mod} selected={false} onToggle={() => null} />
                         ))}
                     </div>
                 </div>
@@ -236,7 +241,8 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
             }}>
                 LOSE
             </button>
-            <ModifierNotification gameState={gameState} setGameState={setGameState} />;
+            {/* const [notification, setNotification] = useState<AlertNotification[]>([]) */}
+            <ModifierNotification setNotification={setNotification} gameState={gameState} />;
         </div>
     )
 }

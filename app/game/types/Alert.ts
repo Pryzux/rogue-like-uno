@@ -1,4 +1,4 @@
-interface ModifierNotification {
+export interface AlertNotification {
   id: number;
-  message: string;
+  message: string | null;
 }

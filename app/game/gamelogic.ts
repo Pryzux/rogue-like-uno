@@ -150,7 +150,7 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    this.currentGame.modifierAlert = "tets";
+    this.currentGame.modifierAlert = "draw a card";
 
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
@@ -297,6 +297,7 @@ export class GameLogic implements GameLogicInterface {
       if (card.type === "wild") {
         if (this.hasModifier("Wild Surge") && currentPlayer.isHuman) {
           console.log("'Wild Surge' Activated");
+          this.currentGame.modifierAlert = "wild surge activated"; //this line prints 3 times
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
         // Set color for Wild card
@@ -648,6 +649,13 @@ export class GameLogic implements GameLogicInterface {
     this.currentGame.status = "Lost";
     this.getCurrentUnoMatch().status = "Lost";
     return this.getGame();
+  }
+
+  // --- Consume and reset the current modifier alert ---
+  public consumeModifierAlert(): string | null {
+    const msg = this.currentGame.modifierAlert;
+    this.currentGame.modifierAlert = null;
+    return msg;
   }
 } // end of class
 

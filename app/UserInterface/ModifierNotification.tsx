@@ -1,52 +1,65 @@
 import { useEffect, useState } from "react";
-import type { Game } from "../game/types/Game";
 import { motion, AnimatePresence } from "framer-motion";
-
+import type { Game } from "../game/types/Game";
+import type { AlertNotification } from "~/game/types/Alert";
+import { GameLogic } from "~/game/gamelogic";
 
 interface ModifierNotificationProps {
+    setNotification: React.Dispatch<React.SetStateAction<AlertNotification[]>>;
     gameState: Game;
-    setGameState: React.Dispatch<React.SetStateAction<Game>>;
 }
 
+export function ModifierNotification({
+    setNotification,
+    gameState,
+}: ModifierNotificationProps) {
+    const [alerts, setAlerts] = useState<AlertNotification[]>([]);
 
-export function ModifierNotification({ gameState, setGameState }: ModifierNotificationProps) {
-    const [alerts, setAlerts] = useState<ModifierNotification[]>([]);
-
-    // push to queue
     useEffect(() => {
-        if (gameState.modifierAlert) {
-            const newAlert: ModifierNotification = {
+        const alert = GameLogic.get().consumeModifierAlert();
+        if (alert) {
+            const newAlert: AlertNotification = {
                 id: Date.now(),
-                message: gameState.modifierAlert,
+                message: alert,
             };
+
+            // Add to both local + parent queues
             setAlerts(prev => [...prev, newAlert]);
-
-            // reset the gamestate to null - so can repush
-            setGameState(prev => ({ ...prev, modifierAlert: null }));
+            setNotification(prev => [...prev, newAlert]);
         }
-    }, [gameState.modifierAlert, setGameState]);
+    }, [gameState]);
 
+    // 🧹 Auto-remove alerts after 1.2s
     useEffect(() => {
         if (alerts.length === 0) return;
 
         const timers = alerts.map(alert =>
             setTimeout(() => {
                 setAlerts(prev => prev.filter(a => a.id !== alert.id));
+                setNotification(prev => prev.filter(a => a.id !== alert.id));
             }, 1200)
         );
 
         return () => timers.forEach(clearTimeout);
-    }, [alerts]);
+    }, [alerts, setNotification]);
 
     return (
-        <div className=" fixed top-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-2 opacity-90">
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-2 opacity-90 pointer-events-none">
             <AnimatePresence>
                 {alerts.map(alert => (
                     <motion.div
                         key={alert.id}
                         initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0, transition: { duration: 0.3 } }}
-                        exit={{ opacity: 0, y: -10, transition: { duration: 0.3 } }}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                            transition: { duration: 0.3 },
+                        }}
+                        exit={{
+                            opacity: 0,
+                            y: -10,
+                            transition: { duration: 0.3 },
+                        }}
                         className="glass-lite bg-amber-100 border border-amber-400 text-amber-900 px-6 py-3 rounded-xl shadow-md font-semibold"
                     >
                         {alert.message}
@@ -56,3 +69,4 @@ export function ModifierNotification({ gameState, setGameState }: ModifierNotifi
         </div>
     );
 }
+
