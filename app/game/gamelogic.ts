@@ -150,7 +150,7 @@ export class GameLogic implements GameLogicInterface {
   public drawCards(cardNumber: number, playerIndex: number) {
     const player = this.getPlayerFromIndex(playerIndex);
     const currentMatch = this.getCurrentUnoMatch();
-    this.currentGame.modifierAlert = "tets";
+    this.currentGame.modifierAlert = "draw a card";
 
     for (let i = 0; i < cardNumber; i++) {
       // remember drawOneCard updates the current match in place if the deck needs to be shuffled
