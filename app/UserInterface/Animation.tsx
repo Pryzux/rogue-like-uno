@@ -143,7 +143,7 @@ export function PlayerHeader({
   }, [playerId]);
 
   return (
-    <div className="flex items-start gap-6 scale-110">
+    <div className="flex items-start gap-6 scale-110 pl-8">
     {/* one robot */}
     <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
       {bubble && (
