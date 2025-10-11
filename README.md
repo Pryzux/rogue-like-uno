@@ -38,7 +38,6 @@ How many rounds can you survive before the debuffs stack too high?
 
 | Name | Description |
 |------|--------------|
-| **Dev Buff** | Does nothing. Used for development testing. |
 | **Reverse Momentum** | When you play a Reverse, take another turn immediately. |
 | **Wild Surge** | Playing a Wild automatically skips the next player’s turn. |
 | **+5 Card** | All Draw 4s become Draw 5s. |
@@ -52,7 +51,6 @@ How many rounds can you survive before the debuffs stack too high?
 
 | Name | Description |
 |------|--------------|
-| **Dev Debuff** | Does nothing. Used for development testing. |
 | **Color Focus** | AI prefers to play cards matching the current color. |
 | **Wild Instinct** | AI always picks the best wild color for itself. |
 | **Sluggish Hands** | Every 3 turns, you automatically draw 1 extra card. |
