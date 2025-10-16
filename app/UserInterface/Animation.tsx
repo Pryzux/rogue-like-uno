@@ -2,7 +2,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import { makeCard, type Card } from "../game/types/Card";
 import { useEffect, useRef, useState } from "react";
-import { uiBus, type PlayerEffectPayload } from '~/UIBus';
+import { uiBus, type PlayerEffect, type PlayerEffectPayload } from '~/UIBus';
 
 
 type Props = {
@@ -115,14 +115,20 @@ export function PlayerHeader({
   const [bubble, setBubble] = useState("");
   const [play, setPlay] = useState(false);   // <-- controls AppFn
   const hide = useRef<number | null>(null);
+  const effectMessages: Record<PlayerEffect, string> = {
+    skip: "Cut it out!",
+    draw2: "That's too many!",
+    wild: "Color chaos!",
+    wildDraw4: "Four cards?!",
+  };
 
   useEffect(() => {
     const handler = (e: Event) => {
-      const { playerId: id } = (e as CustomEvent<PlayerEffectPayload>).detail;
+      const { playerId: id, effect } = (e as CustomEvent<PlayerEffectPayload>).detail;
       if (id !== playerId) return;
 
       // show bubble
-      setBubble("that wasn't nice!");
+      setBubble(effectMessages[effect] ?? "That wasn't nice!");
 
       // trigger animation
       setPlay(true);

@@ -1,4 +1,4 @@
-export type PlayerEffect = "skip" | "draw2";
+export type PlayerEffect = "skip" | "draw2" | "wild" | "wildDraw4";
 
 
 export interface PlayerEffectPayload {

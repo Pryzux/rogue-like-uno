@@ -38,16 +38,16 @@ export default function Home(testMode: false) {
       {/* bg */}
       <div className="absolute inset-0 -z-30 bg-gradient-to-b from-amber-50 via-orange-100 to-red-200" />
       <div
-        className="absolute inset-0 -z-20 bg-center bg-cover opacity-10"
+        className="absolute inset-0 -z-20 bg-center bg-cover opacity-40"
         style={{
           backgroundImage: "url('/unobg-cards-side.png')",
         }}
       />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_60%)]" />
 
-      <div className="absolute top-0 left-0 w-full p-4">
+      {/* <div className="absolute top-0 left-0 w-full p-4">
         <Header />
-      </div>
+      </div> */}
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 space-y-6">
         <UnoTitle scheme="red" />
@@ -79,19 +79,17 @@ export default function Home(testMode: false) {
       <motion.img
         src="/unoCard-back.png"
         alt="UNO Card"
-        className="absolute bottom-10 left-10 w-24 opacity-40 rotate-[-15deg]"
+        className="absolute bottom-10 left-10 w-24 opacity-55 rotate-[-15deg]"
         animate={{ y: [0, -10, 0] }}
         transition={{ repeat: Infinity, duration: 5 }}
       />
       <motion.img
         src="/unoCard-back.png"
         alt="UNO Card"
-        className="absolute top-12 right-12 w-28 opacity-40 rotate-[25deg]"
+        className="absolute top-12 right-12 w-28 opacity-55 rotate-[25deg]"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 6 }}
       />
     </div>
   );
 }
-
-
