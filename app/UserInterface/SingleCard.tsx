@@ -121,7 +121,6 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
     //if a card is clickable, depending on whether it can be played(isPlayable as filter), the image will move when the cursor navigates to it or the images is faded
     const classes = [
         isClickable && "cursor-pointer hover:scale-110 transition-transform",
-        isClickable && isPlayable && "ring-2 ring-green-400",
         isClickable && !isPlayable && "cursor-not-allowed",
     ]
         //turns the classes array into a usable CSS class string
@@ -181,7 +180,7 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
             onClick={isClickable ? onClick : undefined}
         >
             <div
-                className="w-full h-full"
+                className={`w-full h-full transition-opacity ${!isPlayable && isClickable && !isLarge ? 'opacity-50' : 'opacity-100'}`}
                 style={glowFilter ? { filter: glowFilter } : undefined}
             >
                 <UnoCardSVG

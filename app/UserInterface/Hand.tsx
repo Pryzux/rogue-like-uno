@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GameLogic } from "~/game/gamelogic";
 import type { Card } from "~/game/types/Card";
 import SingleCard from "./SingleCard";
+import { canPlayCard } from "~/game/deck";
 
 type HandProps = {
     hand: Card[];
@@ -23,6 +24,11 @@ export default function Hand({
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const previousHandSizeRef = useRef(hand.length);
     const [isOverflowing, setIsOverflowing] = useState(false);
+
+    const match = gameLogic.getCurrentUnoMatch();
+    const topCard = match?.discardPile?.[0];
+    const currentColor = match?.currentColor;
+    const isCurrentPlayerTurn = match && playerIndex === match.currentPlayerIndex;
 
     useLayoutEffect(() => {
         const container = scrollContainerRef.current;
@@ -79,6 +85,7 @@ export default function Hand({
                 overflow-x-auto
                 overflow-y-hidden
                 w-full
+                h-28
                 scrollbar-thin
                 scrollbar-thumb-amber-500/30
                 scrollbar-track-transparent
@@ -128,6 +135,14 @@ export default function Hand({
                                     playCardFn(card);
                                 }
                             }}
+                            isPlayable={
+                                isHuman &&
+                                isCurrentPlayerTurn &&
+                                topCard &&
+                                currentColor ?
+                                    canPlayCard(card, topCard, currentColor) :
+                                    false
+                            }
                         />
                     </motion.div>
                 ))}
