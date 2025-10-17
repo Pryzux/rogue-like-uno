@@ -1,10 +1,12 @@
 import type { JSX } from 'react';
 import type { Card, CardColor, CardType } from '~/game/types/Card';
+import { UnoCardSVG } from '~/components/cards/UnoCardSVG';
 
+// Legacy PNG fallback (keeping for reference)
 //type used to populate a map
 type CardKey = `${CardColor}_${CardType}`;
 
-//map of color_cardType pairs
+//map of color_cardType pairs - DEPRECATED, using SVG now
 const cardImages: Partial<Record<CardKey, string>> = {
     red_zero: 'redzero.png',
     red_one: 'redone.png',
@@ -112,8 +114,7 @@ type SingleCardProps = {
     currentColor?: string
 }
 
-//takes in a Card type, onClick, whether a card is playable and whether the card  returns an image 
-//TODO: remove pre-set boolean values when using this- but values must be set somewhere 
+//takes in a Card type, onClick, whether a card is playable and whether the card returns an image
 export default function SingleCard({ card, onClick, isPlayable = false, isClickable = true, isLarge = false, currentColor = '' }: SingleCardProps): JSX.Element {
 
     //if a card is not clickable, nothing happens to the image
@@ -134,31 +135,63 @@ export default function SingleCard({ card, onClick, isPlayable = false, isClicka
         sizeClasses += 'w-16 h-24'
     }
 
-    let wildColorOverlay = ''
-    let wildImageOverlay = ''
+    // Determine card type for SVG
+    let cardType: 'number' | 'skip' | 'reverse' | 'draw2' | 'wild' | 'wildDraw4' | 'back' = 'number';
+    let cardColor: 'red' | 'blue' | 'green' | 'yellow' | 'black' = card.color as any;
 
-    const colorClasses: Record<CardColor, string> = {
-        red: "bg-red-500/60",
-        blue: "bg-blue-500/70",
-        green: "bg-green-500/60",
-        yellow: "bg-yellow-500/60",
-        black: ""
-    };
+    if (card.type === 'deck') {
+        cardType = 'back';
+        cardColor = 'black';
+    } else if (card.type === 'wild') {
+        cardType = 'wild';
+        cardColor = 'black';
+    } else if (card.type === 'wildDraw4') {
+        cardType = 'wildDraw4';
+        cardColor = 'black';
+    } else if (card.type === 'skip') {
+        cardType = 'skip';
+    } else if (card.type === 'reverse') {
+        cardType = 'reverse';
+    } else if (card.type === 'draw2') {
+        cardType = 'draw2';
+    } else if (card.type === 'number') {
+        cardType = 'number';
+    }
 
-    // CurrentColor should only be set if the card is a wild card (to show the color the player picked)
-    if (card.type.includes('wild') && isLarge && currentColor) {
-        wildColorOverlay = colorClasses[currentColor as CardColor]
-        wildImageOverlay = 'mix-blend-overlay'
+    // Wild card color overlay
+    let highlightColor: 'red' | 'blue' | 'green' | 'yellow' | undefined;
+    let glowFilter = "";
+    if (card.type.includes('wild') && currentColor) {
+        const allowedColors = ["red", "blue", "green", "yellow"] as const;
+        if (allowedColors.includes(currentColor as any)) {
+            highlightColor = currentColor as typeof allowedColors[number];
+        }
+        const glowMap: Record<string, string> = {
+            red: 'drop-shadow(0 0 12px rgba(229,57,53,0.55)) drop-shadow(0 0 20px rgba(229,57,53,0.35))',
+            blue: 'drop-shadow(0 0 12px rgba(30,136,229,0.55)) drop-shadow(0 0 20px rgba(30,136,229,0.35))',
+            green: 'drop-shadow(0 0 12px rgba(67,160,71,0.55)) drop-shadow(0 0 20px rgba(67,160,71,0.35))',
+            yellow: 'drop-shadow(0 0 12px rgba(253,216,53,0.55)) drop-shadow(0 0 20px rgba(253,216,53,0.35))',
+        };
+        glowFilter = glowMap[currentColor] ?? "";
     }
 
     return (
-        <div className={`${wildColorOverlay}`}>
-            <img
-                src={determineCardType(card.color, card.type, card.value)}
-                alt="Standard back of Uno Card"
-                className={`${classes} ${sizeClasses} object-contain ${wildImageOverlay}`}
-                onClick={isClickable ? onClick : undefined}
-            />
+        <div
+            className={`${classes} ${sizeClasses} relative`}
+            onClick={isClickable ? onClick : undefined}
+        >
+            <div
+                className="w-full h-full"
+                style={glowFilter ? { filter: glowFilter } : undefined}
+            >
+                <UnoCardSVG
+                    color={cardColor}
+                    type={cardType}
+                    value={card.value}
+                    className="w-full h-full"
+                    currentColor={highlightColor}
+                />
+            </div>
         </div>
     );
 }

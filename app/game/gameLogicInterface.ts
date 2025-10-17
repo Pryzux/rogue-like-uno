@@ -47,6 +47,9 @@ export interface GameLogicInterface {
   // Set Win (For Dev)
   setWin(): Game;
 
+  // Transition from Round Won to Next Round
+  transitionToNextRound(): Game;
+
   // For Dev
   setLoss(): Game;
 

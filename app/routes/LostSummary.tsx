@@ -37,17 +37,26 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
     };
 
     return (
+        <div className="relative min-h-screen w-full bg-gradient-to-b from-amber-50 via-orange-100 to-red-200 overflow-hidden">
+            {/* Subtle animated card background */}
+            <motion.img
+                src="/unobg-cards-side.png"
+                alt="UNO background"
+                className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+                style={{ opacity: 0.12 }}
+                initial={{ scale: 1.05, opacity: 0 }}
+                animate={{ scale: 1, opacity: 0.60 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+            />
 
-        <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-200 via-red-100 to-red-300 p-8">
-
-
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-4xl text-center space-y-8"
-            >
+            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-8">
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full max-w-4xl text-center space-y-8"
+                >
                 {/* --- Header --- */}
-                <div className="inline-flex items-center gap-3 rounded-2xl border border-neutral-200/70 bg-white/80 px-5 py-3 shadow-lg backdrop-blur-md">
+                <div className="inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/40 px-5 py-3 shadow-lg backdrop-blur-md">
 
 
                     <h1 className="text-4xl font-extrabold leading-none tracking-tight">
@@ -61,12 +70,12 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
                         v0.1
                     </span>
                 </div>
-                <div className="space-y-2">
-                    <h1 className="text-4xl font-bold text-amber-900 flex items-center justify-center gap-3">
-                        <Skull className="h-8 w-8 text-amber-700" />
+                <div className="space-y-2 bg-white/30 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20">
+                    <h1 className="text-4xl font-bold text-neutral-900 flex items-center justify-center gap-3 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+                        <Skull className="h-8 w-8 text-neutral-800" />
                         You Lost the Match
                     </h1>
-                    <p className="text-amber-800 text-lg">
+                    <p className="text-neutral-800 text-lg font-medium drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">
                         You survived{" "}
                         <span className="font-semibold">{totalMatches}</span>{" "}
                         match{totalMatches === 1 ? "" : "es"} before falling.
@@ -174,17 +183,18 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
                 </div>
 
                 {/* --- Footer / Restart Button --- */}
-                <div className="pt-8">
+                <div className="pt-8 flex justify-center">
                     <Button
                         onClick={handlePlayAgain}
                         size="lg"
-                        className="rounded-xl bg-black hover:bg-red-400 text-white flex items-center gap-2 px-6 py-3 text-lg"
+                        className="rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-xl text-white flex items-center gap-2 px-6 py-3 text-lg transition active:scale-95"
                     >
                         <RotateCcw className="w-5 h-5" />
                         Play Again
                     </Button>
                 </div>
             </motion.div>
+            </div>
         </div>
     );
 }

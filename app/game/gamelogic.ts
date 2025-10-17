@@ -10,6 +10,59 @@ import type RoundOptions from "./types/RoundOptions";
 import type { UnoMatch } from "./types/UnoMatch";
 
 // Singleton implementation of GameLogicInterface.
+const AI_NAME_POOL = [
+  "Aria",
+  "Asher",
+  "Bianca",
+  "Blake",
+  "Callum",
+  "Cleo",
+  "Dante",
+  "Delia",
+  "Elias",
+  "Elise",
+  "Felix",
+  "Freya",
+  "Gideon",
+  "Gia",
+  "Harper",
+  "Hugo",
+  "Isla",
+  "Ivan",
+  "Jasper",
+  "Juno",
+  "Kai",
+  "Kira",
+  "Lena",
+  "Leo",
+  "Maya",
+  "Micah",
+  "Nia",
+  "Nolan",
+  "Orion",
+  "Opal",
+  "Piper",
+  "Quinn",
+  "Remy",
+  "Rhea",
+  "Silas",
+  "Siena",
+  "Theo",
+  "Tessa",
+  "Uma",
+  "Vera",
+  "Wyatt",
+  "Wren",
+  "Xavier",
+  "Yara",
+  "Zane",
+  "Zara",
+  "Milo",
+  "Noa",
+  "Ada",
+  "Rowan",
+] as const;
+
 export class GameLogic implements GameLogicInterface {
   // The 'God' Object - Manages Global System State
   private currentGame: Game;
@@ -81,6 +134,8 @@ export class GameLogic implements GameLogicInterface {
       },
     ];
 
+    this.assignRandomAiNames(players);
+
     const game: Game = {
       players: players,
       matches: [],
@@ -106,6 +161,7 @@ export class GameLogic implements GameLogicInterface {
 
   // Initialize Uno Round -- Pushes a new Match to Matches[UnoMatch]
   public initializeUno(): Game {
+    this.assignRandomAiNames(this.currentGame.players);
     // Create a deck
     let deck = shuffleDeck(createDeck());
     // deal cards to all players
@@ -146,6 +202,18 @@ export class GameLogic implements GameLogicInterface {
     this.currentGame.status = "Match Created";
 
     return this.currentGame;
+  }
+
+  private assignRandomAiNames(players: Player[]): void {
+    const aiPlayers = players.filter((player) => !player.isHuman);
+    if (aiPlayers.length === 0) return;
+
+    const shuffled = [...AI_NAME_POOL].sort(() => Math.random() - 0.5);
+    aiPlayers.forEach((player, index) => {
+      if (shuffled[index]) {
+        player.name = shuffled[index];
+      }
+    });
   }
 
   public drawCards(cardNumber: number, playerIndex: number) {
@@ -219,7 +287,7 @@ export class GameLogic implements GameLogicInterface {
         } else {
           // human won!
           match.status = "Won";
-          this.currentGame.status = "Next Round";
+          this.currentGame.status = "Round Won";
         }
         return true;
       }
@@ -317,6 +385,7 @@ export class GameLogic implements GameLogicInterface {
       }
 
       if (card.type === "wild") {
+        const wildTargetPlayer = match.currentPlayerIndex;
         if (this.hasModifier("Wild Surge") && currentPlayer.isHuman) {
           console.log("'Wild Surge' Activated");
           this.currentGame.modifierAlert = "WIIIIIIDDD SUUUURGE!!!";
@@ -324,18 +393,21 @@ export class GameLogic implements GameLogicInterface {
         }
         // Set color for Wild card
         match.currentColor = options!.color as CardColor;
+        emitAIHit(match, wildTargetPlayer, "wild");
       }
 
       if (card.type === "wildDraw4") {
+        const wildDrawTargetPlayer = match.currentPlayerIndex;
         if (this.hasModifier("+5 card") && currentPlayer.isHuman) {
           console.log("+5 card activated");
           this.currentGame.modifierAlert = "+5 buff activated!!!!";
-          this.drawCards(5, match.currentPlayerIndex);
+          this.drawCards(5, wildDrawTargetPlayer);
         } else {
-          this.drawCards(4, match.currentPlayerIndex);
+          this.drawCards(4, wildDrawTargetPlayer);
         }
 
         match.currentColor = options!.color as CardColor;
+        emitAIHit(match, wildDrawTargetPlayer, "wildDraw4");
       }
 
       return true;
@@ -532,10 +604,16 @@ export class GameLogic implements GameLogicInterface {
   // -------------- END AI Functionality (Buffs, Debuffs, Turn -----------------------)
 
   public setWin(): Game {
-    this.currentGame.status = "Next Round";
+    this.currentGame.status = "Round Won";
     this.getCurrentUnoMatch().status = "Won";
     console.log("Set Win");
 
+    return this.getGame();
+  }
+
+  public transitionToNextRound(): Game {
+    this.currentGame.status = "Next Round";
+    console.log("Transitioning to Next Round");
     return this.getGame();
   }
 
