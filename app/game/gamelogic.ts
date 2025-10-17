@@ -287,7 +287,7 @@ export class GameLogic implements GameLogicInterface {
         } else {
           // human won!
           match.status = "Won";
-          this.currentGame.status = "Next Round";
+          this.currentGame.status = "Round Won";
         }
         return true;
       }
@@ -604,10 +604,16 @@ export class GameLogic implements GameLogicInterface {
   // -------------- END AI Functionality (Buffs, Debuffs, Turn -----------------------)
 
   public setWin(): Game {
-    this.currentGame.status = "Next Round";
+    this.currentGame.status = "Round Won";
     this.getCurrentUnoMatch().status = "Won";
     console.log("Set Win");
 
+    return this.getGame();
+  }
+
+  public transitionToNextRound(): Game {
+    this.currentGame.status = "Next Round";
+    console.log("Transitioning to Next Round");
     return this.getGame();
   }
 

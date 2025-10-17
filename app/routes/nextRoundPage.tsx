@@ -49,57 +49,61 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
 
     return (
         <motion.div
-            className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 via-red-100 to-red-400"
+            className="relative min-h-screen w-full bg-gradient-to-b from-amber-50 via-orange-100 to-red-200 overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
         >
-            {/* bakground fade */}
+            {/* Subtle animated card background */}
             <motion.img
                 src="/unobg-cards-side.png"
                 alt="UNO background"
-                className="absolute inset-0 h-full w-full object-cover object-center"
-                style={{
-                    opacity: 0.2,
-                    minWidth: "100%",
-                    minHeight: "100%",
-                }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.2 }}
+                className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+                style={{ opacity: 0.12 }}
+                initial={{ scale: 1.05, opacity: 0 }}
+                animate={{ scale: 1, opacity: 0.60 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
             />
 
             {/* main box */}
             <motion.div
-                className="relative z-10 flex flex-col w-full max-w-4xl items-center justify-center px-6 py-3 space-y-2 glass text-sm leading-snug"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                className="relative z-10 mx-auto w-full max-w-[1100px] px-3 sm:px-6 lg:px-8 py-4 space-y-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
             >
-                <Header nextRoundStatus={gameState.nextRoundStatus} />
-
-                {/* title */}
-                <div className="flex items-center w-full mt-2">
-                    <h3 className="glass-lite p-2 text-lg font-bold text-amber-900">
-                        Next Round Modifier Selection
-                    </h3>
-                    <div className="ml-auto items-center rounded-xl border border-amber-300 bg-amber-100 px-4 py-2 shadow-sm text-amber-900 text-xs font-medium">
-                        {gameState.nextRoundStatus ?? "Preparing next round..."}
+                {/* Header with Next Round title */}
+                <div className="mb-2 flex items-center gap-2 sm:gap-4 archivo-black-regular">
+                    <div className="inline-flex items-center gap-1 sm:gap-3 border border-white/20 rounded-xl drop-shadow-lg bg-white/40 px-3 sm:px-5 py-2 sm:py-3">
+                        <h1 className="text-2xl sm:text-4xl font-extrabold leading-none tracking-tight">
+                            <span className="text-neutral-900"> </span>
+                            <span className="bg-gradient-to-r from-rose-500 via-amber-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+                                Rogue-Like UNO
+                            </span>
+                        </h1>
+                        <span className="ml-1 sm:ml-2 rounded-full bg-neutral-900/90 px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-semibold text-white">
+                            v0.2
+                        </span>
+                    </div>
+                    <div className='ml-auto inline-flex'>
+                        <span className="border border-white/20 rounded-xl drop-shadow-lg bg-white/40 px-2 sm:px-3 py-2 sm:py-3 text-xl sm:text-3xl font-extrabold leading-none tracking-tight whitespace-nowrap">
+                            <span className="bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">Next Round</span>
+                        </span>
                     </div>
                 </div>
 
-                {/* big box */}
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 w-full">
+                {/* Main Grid */}
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 w-full">
                     {/* Current Modifiers */}
                     <Section title="Current Modifiers" tone="neutral">
                         {gameState.modifiers?.length ? (
                             <ul className="space-y-2">
                                 {gameState.modifiers.map((mod) => (
-                                    <li key={mod.name} className="glass-lite rounded-2xl border p-4">
+                                    <li key={mod.name} className="border border-white/20 rounded-xl bg-white/40 p-4">
                                         <div className="flex items-start justify-between gap-3">
                                             <div>
-                                                <p className="font-medium">{mod.name}</p>
-                                                <p className="text-xs text-muted-foreground">
+                                                <p className="font-medium text-neutral-900">{mod.name}</p>
+                                                <p className="text-xs text-neutral-700">
                                                     {mod.description}
                                                 </p>
                                             </div>
@@ -108,7 +112,7 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                 ))}
                             </ul>
                         ) : (
-                            <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
+                            <div className="flex flex-col items-center gap-2 py-6 text-neutral-600">
                                 <Hand className="h-4 w-4" />
                                 <p className="text-xs">
                                     No modifiers yet. Pick buffs and debuffs for this round.
@@ -117,11 +121,24 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                         )}
                     </Section>
 
-                    {/* buffs/debuffs */}
-                    <div className="lg:col-span-2 space-y-5">
-                        <Section title="Buffs" tone="buff">
+                    {/* Modifier Selection Box */}
+                    <div className="border border-white/20 rounded-xl bg-white/40 drop-shadow-lg p-4 space-y-4">
+                        {/* Status Indicator */}
+                        <div className="flex items-center justify-between pb-2 border-b border-white/30">
+                            <div className="flex items-center gap-2 text-xs font-medium text-neutral-900">
+                                <Undo2 className="h-3.5 w-3.5" />
+                                <span>Click again to deselect</span>
+                            </div>
+                            <div className="text-xs text-neutral-700">
+                                {gameState.nextRoundStatus ?? "Select modifiers"}
+                            </div>
+                        </div>
+
+                        {/* Buffs Section */}
+                        <div className="space-y-2">
+                            <h3 className="text-sm font-semibold text-green-700">Buffs</h3>
                             {options.buffs?.length ? (
-                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-2">
                                     {options.buffs.map((mod) => (
                                         <ModifierCard
                                             key={mod.name}
@@ -132,13 +149,15 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="py-3 text-xs text-muted-foreground">No buff options available.</p>
+                                <p className="py-3 text-xs text-neutral-600">No buff options available.</p>
                             )}
-                        </Section>
+                        </div>
 
-                        <Section title="Debuffs" tone="debuff">
+                        {/* Debuffs Section */}
+                        <div className="space-y-2">
+                            <h3 className="text-sm font-semibold text-red-700">Debuffs</h3>
                             {options.debuffs?.length ? (
-                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-2">
                                     {options.debuffs.map((mod) => (
                                         <ModifierCard
                                             key={mod.name}
@@ -149,49 +168,31 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="py-3 text-xs text-muted-foreground">No debuff options available.</p>
+                                <p className="py-3 text-xs text-neutral-600">No debuff options available.</p>
                             )}
-                        </Section>
+                        </div>
 
-                        {/* Bottom Section */}
-                        <Card className="glass-lite rounded-3xl border border-amber-200">
-                            <CardContent className="flex flex-col gap-3 p-4">
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <Undo2 className="h-3.5 w-3.5" />
-                                        <span>Click again to deselect a modifier.</span>
-                                    </div>
-                                </div>
-
-                                <Separator className="bg-gray-200 h-px w-full" />
-
-                                <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-                                    <p className="text-xs text-muted-foreground">
-                                        Add or remove modifiers freely before starting the next round.
-                                    </p>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            type="button"
-                                            className="h-8 px-3 text-xs"
-                                            onClick={() => {
-                                                newMods.forEach((m) => GameLogic.get().removeModifier(m));
-                                                setNewMods([]);
-                                                setGameState(GameLogic.get().getGame());
-                                            }}
-                                        >
-                                            Clear Selections
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            className="h-8 px-3 text-xs"
-                                            onClick={handleStartNewGame}
-                                        >
-                                            Start Game
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        {/* Action Buttons */}
+                        <div className="pt-2 border-t border-white/30 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center justify-end">
+                            <Button
+                                type="button"
+                                className="h-8 px-3 text-xs"
+                                onClick={() => {
+                                    newMods.forEach((m) => GameLogic.get().removeModifier(m));
+                                    setNewMods([]);
+                                    setGameState(GameLogic.get().getGame());
+                                }}
+                            >
+                                Clear Selections
+                            </Button>
+                            <Button
+                                type="button"
+                                className="h-8 px-3 text-xs"
+                                onClick={handleStartNewGame}
+                            >
+                                Start Game
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </motion.div>

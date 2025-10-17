@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GameLogic } from "~/game/gamelogic";
 import type { Game } from "../game/types/Game";
 import NextRound from "./nextRoundPage";
@@ -23,6 +23,52 @@ export default function Home(testMode: false) {
     GameLogic.get().initializeUno();
     setGameState(GameLogic.get().getGame());
   };
+
+  // Auto-transition from "Round Won" to "Next Round" after 2 seconds
+  useEffect(() => {
+    if (gameState.status === "Round Won") {
+      const timer = setTimeout(() => {
+        GameLogic.get().transitionToNextRound();
+        setGameState(GameLogic.get().getGame());
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [gameState.status]);
+
+  if (gameState.status === "Round Won")
+    return (
+      <motion.div
+        className="relative min-h-screen w-full bg-gradient-to-b from-amber-50 via-orange-100 to-red-200 overflow-hidden flex items-center justify-center px-4 sm:px-6 py-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
+        <motion.div
+          className="text-center space-y-3 sm:space-y-4"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h1
+            className="text-4xl sm:text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-rose-500 via-amber-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] pb-2"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            Congratulations!
+          </motion.h1>
+          <motion.p
+            className="text-lg sm:text-xl md:text-2xl text-neutral-700 font-semibold"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            You won the round!
+          </motion.p>
+        </motion.div>
+      </motion.div>
+    );
 
   if (gameState.status === "Next Round")
     return <NextRound gameState={gameState} setGameState={setGameState} />;
