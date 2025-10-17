@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { GameLogic } from "../game/gamelogic";
 import ColorPicker from "../UserInterface/ColorPicker";
@@ -13,7 +13,6 @@ import Header from "~/UserInterface/Header";
 import { ModifierCard } from "~/UserInterface/modifierCard";
 import { ModifierNotification } from "~/UserInterface/ModifierNotification";
 import type { AlertNotification } from "~/game/types/Alert";
-import { RefreshCcw } from "lucide-react";
 
 interface GameProps {
     gameState: Game;
@@ -27,12 +26,25 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
     const [showPlayerPicker, setShowPlayerPicker] = useState(false);
     const [notification, setNotification] = useState<AlertNotification[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const isDrawingRef = useRef(false);
 
     const drawCard = (cardNumber: number) => {
+        // Prevent double draws with a guard
+        if (isDrawingRef.current) {
+            return;
+        }
+
+        isDrawingRef.current = true;
+
         const match = GameLogic.get().getCurrentUnoMatch();
         GameLogic.get().drawCards(cardNumber, match.currentPlayerIndex);
         setGameState(GameLogic.get().getGame());
         setMatchState(GameLogic.get().getCurrentUnoMatch());
+
+        // Reset the guard after a short delay
+        setTimeout(() => {
+            isDrawingRef.current = false;
+        }, 100);
     };
 
     const handleColorPickerChoice = (cardId: string, color: CardColor) => {
@@ -78,7 +90,7 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                 currentPlayer.turns % 3 === 0 &&
                 currentPlayer.turns !== 0
             ) {
-                GameLogic.get().setModifierAlert("Sluggish hands! +1 card every 3rd turn");
+                GameLogic.get().setModifierAlert("Sluggish Hands: +1 Card (Every 3rd Turn)");
                 drawCard(1);
             }
         }
@@ -252,7 +264,10 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                                     className="glass-lite rounded-xl px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-center gap-4 sm:gap-8"
                                     style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
                                 >
-                                    <div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
                                         <SingleCard
                                             card={drawDeckCard}
                                             onClick={() => {
@@ -263,14 +278,30 @@ export function MatchPage({ gameState, setGameState }: GameProps) {
                                             }}
                                             isLarge={true}
                                         />
-                                    </div>
-                                    <div>
+                                    </motion.div>
+                                    <motion.div
+                                        key={topCard?.id}
+                                        initial={{
+                                            opacity: 0,
+                                            scale: 0.8,
+                                            rotateY: -90
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            scale: 1,
+                                            rotateY: 0
+                                        }}
+                                        transition={{
+                                            duration: 0.5,
+                                            ease: [0.34, 1.56, 0.64, 1]
+                                        }}
+                                    >
                                         <SingleCard
                                             card={topCard!}
                                             isLarge={true}
                                             currentColor={currentColor}
                                         />
-                                    </div>
+                                    </motion.div>
                                 </div>
                             </div>
                         </motion.div>

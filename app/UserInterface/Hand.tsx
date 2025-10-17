@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { GameLogic } from "~/game/gamelogic";
 import type { Card } from "~/game/types/Card";
 import SingleCard from "./SingleCard";
@@ -88,22 +89,49 @@ export default function Hand({
                     justifyContent: isOverflowing ? "flex-start" : "center",
                 }}
         >
-            {hand.map((card: Card) => (
-                <div key={card.id} className="flex-shrink-0">
-                    <SingleCard
-                        card={card}
-                        onClick={() => {
-                            if (
-                                isHuman &&
-                                playerIndex ===
-                                gameLogic.getCurrentUnoMatch().currentPlayerIndex
-                            ) {
-                                playCardFn(card);
-                            }
+            <AnimatePresence mode="popLayout">
+                {hand.map((card: Card, index: number) => (
+                    <motion.div
+                        key={card.id}
+                        className="flex-shrink-0"
+                        initial={{
+                            opacity: 0,
+                            scale: 0.8,
+                            y: -20
                         }}
-                    />
-                </div>
-            ))}
+                        animate={{
+                            opacity: 1,
+                            scale: 1,
+                            y: 0
+                        }}
+                        exit={{
+                            opacity: 0,
+                            scale: 0.8,
+                            x: 5,
+                            y: -10,
+                            transition: { duration: 0.1 }
+                        }}
+                        transition={{
+                            duration: 0.2,
+                            ease: "easeOut"
+                        }}
+                        layout
+                    >
+                        <SingleCard
+                            card={card}
+                            onClick={() => {
+                                if (
+                                    isHuman &&
+                                    playerIndex ===
+                                    gameLogic.getCurrentUnoMatch().currentPlayerIndex
+                                ) {
+                                    playCardFn(card);
+                                }
+                            }}
+                        />
+                    </motion.div>
+                ))}
+            </AnimatePresence>
         </div>
     );
 }
