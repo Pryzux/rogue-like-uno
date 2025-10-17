@@ -56,7 +56,7 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
                     className="w-full max-w-4xl text-center space-y-8"
                 >
                 {/* --- Header --- */}
-                <div className="inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/40 px-5 py-3 shadow-lg backdrop-blur-md">
+                <div className="inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/50 px-5 py-3 drop-shadow-lg">
 
 
                     <h1 className="text-4xl font-extrabold leading-none tracking-tight">
@@ -70,15 +70,15 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
                         v0.1
                     </span>
                 </div>
-                <div className="space-y-2 bg-white/30 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20">
+                <div className="space-y-2 bg-white/50 rounded-2xl px-6 py-4 border border-white/20 drop-shadow-lg">
                     <h1 className="text-4xl font-bold text-neutral-900 flex items-center justify-center gap-3 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
                         <Skull className="h-8 w-8 text-neutral-800" />
-                        You Lost the Match
+                        You Lost the Run
                     </h1>
                     <p className="text-neutral-800 text-lg font-medium drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">
                         You survived{" "}
                         <span className="font-semibold">{totalMatches}</span>{" "}
-                        match{totalMatches === 1 ? "" : "es"} before falling.
+                        round{totalMatches === 1 ? "" : "s"} before falling.
                     </p>
                 </div>
 
@@ -105,7 +105,7 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
                                             </CollapsibleTrigger>
                                         </div>
 
-                                        <CollapsibleContent className="mt-2 rounded-lg border px-5 text-sm text-amber-800">
+                                        <CollapsibleContent className="mt-2 rounded-lg border px-5 pb-3 text-sm text-amber-800">
 
                                             <p className="mb-1"></p>
                                             <p className="mb-1">
@@ -184,14 +184,15 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
 
                 {/* --- Footer / Restart Button --- */}
                 <div className="pt-8 flex justify-center">
-                    <Button
+                    <motion.button
                         onClick={handlePlayAgain}
-                        size="lg"
-                        className="rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-xl text-white flex items-center gap-2 px-6 py-3 text-lg transition active:scale-95"
+                        className="rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 px-8 py-3 text-lg font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 flex items-center gap-2"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.98 }}
                     >
                         <RotateCcw className="w-5 h-5" />
                         Play Again
-                    </Button>
+                    </motion.button>
                 </div>
             </motion.div>
             </div>

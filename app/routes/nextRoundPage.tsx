@@ -124,13 +124,13 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
                     {/* Modifier Selection Box */}
                     <div className="border border-white/20 rounded-xl bg-white/40 drop-shadow-lg p-4 space-y-4">
                         {/* Status Indicator */}
-                        <div className="flex items-center justify-between pb-2 border-b border-white/30">
-                            <div className="flex items-center gap-2 text-xs font-medium text-neutral-900">
-                                <Undo2 className="h-3.5 w-3.5" />
+                        <div className="flex items-center justify-between pb-3 border-b border-white/30">
+                            <div className="flex items-center gap-2 text-xs font-medium text-neutral-700">
+                                <Undo2 className="h-3.5 w-3.5 text-neutral-600" />
                                 <span>Click again to deselect</span>
                             </div>
-                            <div className="text-xs text-neutral-700">
-                                {gameState.nextRoundStatus ?? "Select modifiers"}
+                            <div className="text-sm font-semibold text-neutral-800">
+                                {gameState.nextRoundStatus || ""}
                             </div>
                         </div>
 
@@ -174,24 +174,28 @@ export default function NextRound({ gameState, setGameState }: GameProps) {
 
                         {/* Action Buttons */}
                         <div className="pt-2 border-t border-white/30 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center justify-end">
-                            <Button
+                            <motion.button
                                 type="button"
-                                className="h-8 px-3 text-xs"
+                                className="h-8 px-3 text-xs rounded-lg bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold shadow-md hover:shadow-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                                 onClick={() => {
                                     newMods.forEach((m) => GameLogic.get().removeModifier(m));
                                     setNewMods([]);
                                     setGameState(GameLogic.get().getGame());
                                 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
                                 Clear Selections
-                            </Button>
-                            <Button
+                            </motion.button>
+                            <motion.button
                                 type="button"
-                                className="h-8 px-3 text-xs"
+                                className="h-8 px-3 text-xs rounded-lg bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold shadow-md hover:shadow-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                                 onClick={handleStartNewGame}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
                                 Start Game
-                            </Button>
+                            </motion.button>
                         </div>
                     </div>
                 </div>
