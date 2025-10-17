@@ -171,7 +171,7 @@ export class GameLogic implements GameLogicInterface {
 
       // Handle Lazy Dealer debuff
       if (player.isHuman && this.hasModifier("Lazy Dealer")) {
-        this.currentGame.modifierAlert = "Lazy dealer!! +3 cards to you";
+        this.currentGame.modifierAlert = "Lazy Dealer: +3 Starting Cards";
         numberOfStartingCards += this.lazyDealerAmount;
       }
 
@@ -243,7 +243,7 @@ export class GameLogic implements GameLogicInterface {
       currentPlayer.hand.length > 3
     ) {
       if (this.hasModifier("Color Blind") && currentPlayer.isHuman) {
-        this.currentGame.modifierAlert = "Cannot Play Wild Card (Color Blind)";
+        this.currentGame.modifierAlert = "Color Blind: Cannot Play Wild Cards";
       }
 
       return false;
@@ -309,7 +309,7 @@ export class GameLogic implements GameLogicInterface {
         match.currentPlayerIndex = this.getNextPlayerIndex(match);
       } else {
         console.log("Reverse Momentum Activated");
-        this.currentGame.modifierAlert = "Reverse Momentum!!!";
+        this.currentGame.modifierAlert = "Reverse Momentum: Extra Turn!";
         // reverse momentum activated
       }
 
@@ -324,7 +324,7 @@ export class GameLogic implements GameLogicInterface {
         // Check if "Double Skip" modifier is active
         if (this.hasModifier("Double Skip") && currentPlayer.isHuman) {
           console.log("'Double Skip' Activated");
-          this.currentGame.modifierAlert = "Double skip!!!!!";
+          this.currentGame.modifierAlert = "Double Skip: Skipped 2 Players!";
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
       }
@@ -344,9 +344,9 @@ export class GameLogic implements GameLogicInterface {
         // Note: the current player index has been updated, but currentPlayer is still the player who played this card
         if (currentPlayer.isHuman && this.hasModifier("Good Aim")) {
           if (this.hasModifier("+3 card")) {
-            goodAimAndDraw3Text = "Good aim!! ";
+            goodAimAndDraw3Text = "Good Aim + ";
           } else {
-            this.currentGame.modifierAlert = "Good aim!!!!";
+            this.currentGame.modifierAlert = "Good Aim: Targeted Player!";
           }
           draw2TargetPlayer = this.getPlayerIndexFromPlayer(
             options!.targetPlayer!
@@ -359,7 +359,7 @@ export class GameLogic implements GameLogicInterface {
         if (currentPlayer.isHuman && this.hasModifier("+3 card")) {
           this.drawCards(3, draw2TargetPlayer);
           console.log("+3 card activated");
-          this.currentGame.modifierAlert = `${goodAimAndDraw3Text}+3 buff activated!!!!`;
+          this.currentGame.modifierAlert = `${goodAimAndDraw3Text}+3 Card: Drew 3 Cards!`;
           !fired ? emitAIHit(match, draw2TargetPlayer, "draw2") : null;
         }
 
@@ -370,7 +370,7 @@ export class GameLogic implements GameLogicInterface {
 
           // if the person recieving the draw is human
           if (targetIsHuman) {
-            this.currentGame.modifierAlert = "Draw Fatigue :((( +3 to you";
+            this.currentGame.modifierAlert = "Draw Fatigue: +3 Cards to You";
             this.drawCards(3, draw2TargetPlayer);
           } else {
             this.drawCards(2, draw2TargetPlayer);
@@ -388,7 +388,7 @@ export class GameLogic implements GameLogicInterface {
         const wildTargetPlayer = match.currentPlayerIndex;
         if (this.hasModifier("Wild Surge") && currentPlayer.isHuman) {
           console.log("'Wild Surge' Activated");
-          this.currentGame.modifierAlert = "WIIIIIIDDD SUUUURGE!!!";
+          this.currentGame.modifierAlert = "Wild Surge: Skipped a Player!";
           match.currentPlayerIndex = this.getNextPlayerIndex(match);
         }
         // Set color for Wild card
@@ -400,7 +400,7 @@ export class GameLogic implements GameLogicInterface {
         const wildDrawTargetPlayer = match.currentPlayerIndex;
         if (this.hasModifier("+5 card") && currentPlayer.isHuman) {
           console.log("+5 card activated");
-          this.currentGame.modifierAlert = "+5 buff activated!!!!";
+          this.currentGame.modifierAlert = "+5 Card: Drew 5 Cards!";
           this.drawCards(5, wildDrawTargetPlayer);
         } else {
           this.drawCards(4, wildDrawTargetPlayer);
@@ -572,7 +572,7 @@ export class GameLogic implements GameLogicInterface {
     // "Wild Instinct"
     console.log("Wild Instinct Activated.");
     this.currentGame.modifierAlert =
-      "Wild Instinct!! AI picked the best color for itself";
+      "Wild Instinct: AI Chose Best Color";
     const colorCounts: Record<string, number> = {
       red: 0,
       blue: 0,

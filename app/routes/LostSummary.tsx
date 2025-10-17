@@ -67,7 +67,7 @@ export function LostSummary({ gameState, setGameState }: GameProps) {
                     </h1>
 
                     <span className="ml-2 rounded-full bg-neutral-900/90 px-2 py-0.5 text-xs font-semibold text-white">
-                        v0.1
+                        v0.2
                     </span>
                 </div>
                 <div className="space-y-2 bg-white/50 rounded-2xl px-6 py-4 border border-white/20 drop-shadow-lg">
