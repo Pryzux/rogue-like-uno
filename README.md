@@ -1,12 +1,13 @@
-# 🎴 Rogue-Like UNO
+# Rogue-Like UNO
+
+https://rogue-uno.dev
 
 > _“Every victory makes the next round harder.”_  
 A chaotic, endurance-based twist on UNO built with **React**, **TypeScript**, and **Tailwind CSS**.  
-Created by **Maddie**, **Aarti**, and **Jared (Pryzux)**.
 
 ---
 
-## 🌀 Concept
+## Concept
 
 Rogue-Like UNO transforms the classic UNO experience into a **progressive survival challenge**.
 
@@ -15,6 +16,10 @@ If you win, you keep those modifiers and pick **two more** for the next round.
 Lose — and your run ends.
 
 How many rounds can you survive before the debuffs stack too high?
+
+---
+
+<img width="916" height="714" alt="Screenshot 2025-10-24 at 12 28 41 PM" src="https://github.com/user-attachments/assets/7587baf7-8841-410b-9b82-35534c7206f3" />
 
 ---
 
@@ -32,9 +37,9 @@ How many rounds can you survive before the debuffs stack too high?
 
 ---
 
-## 🧩 Modifiers
+## Modifiers
 
-### 🟩 Buffs — Helpful Effects
+### Buffs — Helpful Effects
 
 | Name | Description |
 |------|--------------|
@@ -47,7 +52,7 @@ How many rounds can you survive before the debuffs stack too high?
 
 ---
 
-### 🟥 Debuffs — Curses & Handicaps
+### Debuffs — Curses & Handicaps
 
 | Name | Description |
 |------|--------------|
@@ -60,7 +65,7 @@ How many rounds can you survive before the debuffs stack too high?
 
 ---
 
-## 🧠 Strategy Tips
+## Strategy Tips
 
 - Some Buffs can counter Debuffs — choose wisely.
 - Watch how AI behavior changes with certain modifiers.
@@ -69,49 +74,21 @@ How many rounds can you survive before the debuffs stack too high?
 
 ---
 
-## 🧱 Built With
+## Built With
 
-- ⚛️ [React](https://react.dev/) — Game UI and flow  
-- 💙 [TypeScript](https://www.typescriptlang.org/) — Type-safe core logic  
-- 🎨 [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) — Stylish, responsive components  
-- 🧠 Custom Game Logic Engine — Handles rounds, AI, and modifiers  
-
----
-
-## 👩‍💻 Contributors
-
-| Name | Role |
-|------|------|
-| **Maddie** | Gameplay Design & UI |
-| **Aarti** | Systems Architecture & Logic |
-| **Jared (Pryzux)** | Core Game Engine & Project Lead |
+- [React](https://react.dev/) — Game UI and flow  
+- [TypeScript](https://www.typescriptlang.org/) — Type-safe core logic  
+- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) — Stylish, responsive components  
+- Custom Game Logic Engine — Handles rounds, AI, and modifiers  
 
 ---
 
-## 🚀 Getting Started
+## Contributors
 
-### Prerequisites
-Make sure you have **Bun** or **Node.js** (v18+) installed.
+Jared, Maddie, and Aarti :)
 
-### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/<your-username>/rogue-like-uno.git
-cd rogue-like-uno
 
-# Install dependencies
-bun install
-# or
-npm install
 
-# Run locally
-bun dev
-# or
-npm run dev
 
-# Build for production
-bun run build
-# or
-npm run build
 
